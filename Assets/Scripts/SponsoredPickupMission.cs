@@ -4,7 +4,7 @@ using UnityEngine;
 public class SponsoredPickupCoinMission : MissionBase
 {
     private int _previousCoinAmount;
-    private Challenge challenge { get; set; }
+    public Challenge challenge { get; private set; }
 
     private float _lastUpdate;
 

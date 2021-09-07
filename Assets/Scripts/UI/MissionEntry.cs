@@ -1,5 +1,9 @@
-﻿using UnityEngine;
+﻿using System;
+using UnityEngine;
 using UnityEngine.UI;
+using System.Collections;
+using Monetizr.Challenges;
+using UnityEngine.Networking;
 
 public class MissionEntry : MonoBehaviour
 {
@@ -17,25 +21,44 @@ public class MissionEntry : MonoBehaviour
         descText.text = m.GetMissionDesc();
         rewardText.text = m.reward.ToString();
 
+        if (m.GetType() == typeof(SponsoredPickupCoinMission))
+        {
+	        SponsoredPickupCoinMission sponsoredMission = (SponsoredPickupCoinMission) m;
+	        StartCoroutine(AssetsHelper.DownloadAssets(sponsoredMission.challenge, (asset, sprite) =>
+	        {
+		        if (asset.type != "banner") return;
+
+		        background.sprite = sprite;
+	        }));
+        }
+
         if (m.isComplete)
         {
             claimButton.gameObject.SetActive(true);
             progressText.gameObject.SetActive(false);
 
-			background.color = completedColor;
+			//background.color = completedColor;
 
 			progressText.color = Color.white;
 			descText.color = Color.white;
 			rewardText.color = Color.white;
 
 			claimButton.onClick.AddListener(delegate { owner.Claim(m); } );
+
+			if (m.GetType() != typeof(SponsoredPickupCoinMission)) return;
+			
+			SponsoredPickupCoinMission sponsoredMission = (SponsoredPickupCoinMission) m;
+			claimButton.onClick.AddListener(delegate
+			{
+				SponsoredMissionsManager.instance.ClaimReward(sponsoredMission.challenge);
+			});
         }
         else
         {
             claimButton.gameObject.SetActive(false);
             progressText.gameObject.SetActive(true);
 
-			background.color = notCompletedColor;
+			//background.color = notCompletedColor;
 
 			progressText.color = Color.black;
 			descText.color = completedColor;
