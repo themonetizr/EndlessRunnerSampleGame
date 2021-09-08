@@ -2,6 +2,7 @@
 using UnityEngine;
 using UnityEngine.UI;
 using System.Collections;
+using System.Linq;
 using Monetizr.Challenges;
 using UnityEngine.Networking;
 
@@ -20,16 +21,17 @@ public class MissionEntry : MonoBehaviour
     {
         descText.text = m.GetMissionDesc();
         rewardText.text = m.reward.ToString();
+        
+        Debug.Log($"Filling with {m.GetMissionDesc()}");
 
         if (m.GetType() == typeof(SponsoredPickupCoinMission))
         {
 	        SponsoredPickupCoinMission sponsoredMission = (SponsoredPickupCoinMission) m;
-	        StartCoroutine(AssetsHelper.DownloadAssets(sponsoredMission.challenge, (asset, sprite) =>
+	        if (sponsoredMission.challenge.assets.Any(asset => asset.type == "banner"))
 	        {
-		        if (asset.type != "banner") return;
-
-		        background.sprite = sprite;
-	        }));
+		        Challenge.Asset bannerAsset = sponsoredMission.challenge.assets.FirstOrDefault(asset => asset.type == "banner");
+		        StartCoroutine(AssetsHelper.DownloadAsset(bannerAsset, (asset, sprite) => background.sprite = sprite));
+	        }
         }
 
         if (m.isComplete)
@@ -58,7 +60,7 @@ public class MissionEntry : MonoBehaviour
             claimButton.gameObject.SetActive(false);
             progressText.gameObject.SetActive(true);
 
-			//background.color = notCompletedColor;
+			background.color = notCompletedColor;
 
 			progressText.color = Color.black;
 			descText.color = completedColor;

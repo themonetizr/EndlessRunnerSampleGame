@@ -15,14 +15,14 @@ public class SponsoredPickupCoinMission : MissionBase
 
     public override void Created()
     {
-
+        
     }
     
-    public void Created(Challenge challenge)
+    public void Created(Challenge sponsoredChallenge)
     {
-        Debug.Log("Creating");
+        Debug.Log("Sponsored mission was created.");
         
-        this.challenge = challenge;
+        challenge = sponsoredChallenge;
         
         max = 100; // This is the max value needed to be collected.
         reward = 5; // challenge.reward;

@@ -1,6 +1,5 @@
 ﻿using System;
 using System.Collections;
-using System.Linq;
 using UnityEngine;
 using UnityEngine.Networking;
 
@@ -8,14 +7,9 @@ namespace Monetizr.Challenges
 {
     public static class AssetsHelper
     {
-        public static IEnumerator DownloadAssets(Challenge challenge, Action<Challenge.Asset, Sprite> onAssetDownloaded)
-        {
-            return challenge.assets.Select(asset => DownloadAsset(asset, onAssetDownloaded)).GetEnumerator();
-        }
-
         public static IEnumerator DownloadAsset(Challenge.Asset asset, Action<Challenge.Asset, Sprite> onAssetDownloaded)
         {
-            using UnityWebRequest uwr = UnityWebRequestTexture.GetTexture(asset.obj);
+            using UnityWebRequest uwr = UnityWebRequestTexture.GetTexture(asset.url);
             yield return uwr.SendWebRequest();
 
             if (uwr.result != UnityWebRequest.Result.Success)

@@ -18,7 +18,7 @@ namespace Monetizr.Challenges
             public string id;
             public string type;
             public string title;
-            public string obj;
+            public string url;
         }
     }
 }

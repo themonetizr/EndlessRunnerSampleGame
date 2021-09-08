@@ -111,6 +111,8 @@ public class PlayerData
     {
         while (missions.Count < 2)
             AddMission();
+
+        SponsoredMissionsManager.instance.AddSponsoredMissions();
     }
 
     public void AddMission()

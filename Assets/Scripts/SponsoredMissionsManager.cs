@@ -8,29 +8,26 @@ public class SponsoredMissionsManager : MonoBehaviour
         public static SponsoredMissionsManager instance { get; private set; }
 
         [SerializeField] private string apiKey;
-
-        public ChallengesClient ChallengesClient;
-        
         [SerializeField] private List<Challenge> challenges = new List<Challenge>();
+        
+        private ChallengesClient _challengesClient;
         
         private void Awake()
         {
             instance = this;
             
-            ChallengesClient = new ChallengesClient(apiKey)
+            _challengesClient = new ChallengesClient(apiKey)
             {
                 playerInfo = new PlayerInfo("Riga", 29, "action", "janis_999")
             };
         }
 
-        private void Start() => AddSponsoredMissions();
-        
-        private async void AddSponsoredMissions()
+        public async void AddSponsoredMissions()
         {
             try
             {
-                challenges = await ChallengesClient.GetList();
-                
+                challenges = await _challengesClient.GetList();
+
                 for (int i = 0; i < challenges.Count; i++)
                 {
                     SponsoredPickupCoinMission newMission = new SponsoredPickupCoinMission();
@@ -46,7 +43,7 @@ public class SponsoredMissionsManager : MonoBehaviour
         {
             try
             {
-                await ChallengesClient.UpdateStatus(challenge, progress);
+                await _challengesClient.UpdateStatus(challenge, progress);
             } catch (Exception e) {
                 Debug.Log($"An error occured: {e.Message}");
             }
@@ -56,7 +53,7 @@ public class SponsoredMissionsManager : MonoBehaviour
         {
             try
             {
-                await ChallengesClient.Claim(challenge);
+                await _challengesClient.Claim(challenge);
             } catch (Exception e) {
                 Debug.Log($"An error occured: {e.Message}");
             }
