@@ -25,7 +25,10 @@ public class SponsoredPickupCoinMission : MissionBase
         challenge = sponsoredChallenge;
         
         max = 100; // This is the max value needed to be collected.
-        reward = 5; // challenge.reward;
+
+        if (challenge.reward == 0) // in-game money
+            reward = 5;
+
         progress = challenge.progress;
 
         _lastUpdate = Time.time;

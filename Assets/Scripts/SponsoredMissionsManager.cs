@@ -28,11 +28,13 @@ public class SponsoredMissionsManager : MonoBehaviour
             {
                 challenges = await _challengesClient.GetList();
 
+                Debug.Log("Sponsored challenges: " + challenges.Count);
+
                 for (int i = 0; i < challenges.Count; i++)
                 {
                     SponsoredPickupCoinMission newMission = new SponsoredPickupCoinMission();
                     newMission.Created(challenges[i]);
-                    PlayerData.instance.missions.Insert(i, newMission);
+                    PlayerData.instance.AddMission(newMission, i);
                 }
             } catch (Exception e) {
                 Debug.Log($"An error occured: {e.Message}");

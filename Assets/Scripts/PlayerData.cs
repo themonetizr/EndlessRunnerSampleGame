@@ -111,8 +111,6 @@ public class PlayerData
     {
         while (missions.Count < 2)
             AddMission();
-
-        SponsoredMissionsManager.instance.AddSponsoredMissions();
     }
 
     public void AddMission()
@@ -123,6 +121,11 @@ public class PlayerData
         newMission.Created();
 
         missions.Add(newMission);
+    }
+
+    public void AddMission(MissionBase newMission, int position = 0)
+    {
+        missions.Insert(position, newMission);
     }
 
     public void StartRunMissions(TrackManager manager)
@@ -207,6 +210,7 @@ public class PlayerData
 		if (m_Instance == null)
 		{
 			m_Instance = new PlayerData();
+            SponsoredMissionsManager.instance.AddSponsoredMissions();
 
             //if we create the PlayerData, mean it's the very first call, so we use that to init the database
             //this allow to always init the database at the earlier we can, i.e. the start screen if started normally on device
