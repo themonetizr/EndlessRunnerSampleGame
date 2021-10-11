@@ -5413,7 +5413,6 @@ MonoBehaviour:
   m_Name: 
   m_EditorClassIdentifier: 
   apiKey: PUHzF8UQLXJUuaW0vX0D0lTAFlWU2G0J2NaN2SHk6AA
-  challenges: []
 --- !u!4 &1903057764
 Transform:
   m_ObjectHideFlags: 0

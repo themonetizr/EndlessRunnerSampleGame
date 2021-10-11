@@ -8,7 +8,7 @@ public class SponsoredMissionsManager : MonoBehaviour
         public static SponsoredMissionsManager instance { get; private set; }
 
         [SerializeField] private string apiKey;
-        [SerializeField] private List<Challenge> challenges = new List<Challenge>();
+        private Challenge[] challenges = new Challenge[0];
         
         private ChallengesClient _challengesClient;
         
@@ -28,9 +28,9 @@ public class SponsoredMissionsManager : MonoBehaviour
             {
                 challenges = await _challengesClient.GetList();
 
-                Debug.Log("Sponsored challenges: " + challenges.Count);
+                Debug.Log("Sponsored challenges: " + challenges.Length);
 
-                for (int i = 0; i < challenges.Count; i++)
+                for (int i = 0; i < challenges.Length; i++)
                 {
                     SponsoredPickupCoinMission newMission = new SponsoredPickupCoinMission();
                     newMission.Created(challenges[i]);

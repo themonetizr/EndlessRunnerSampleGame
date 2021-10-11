@@ -4,7 +4,6 @@ using System.Net.Http;
 using System.Net.Http.Headers;
 using System.Text;
 using System.Threading.Tasks;
-using Newtonsoft.Json;
 using UnityEngine;
 
 namespace Monetizr.Challenges
@@ -15,7 +14,7 @@ namespace Monetizr.Challenges
         
         private const string k_BaseUri = "https://api3.themonetizr.com/";
         private static readonly HttpClient Client = new HttpClient();
-        
+
         public ChallengesClient(string apiKey, int timeout = 30)
         {
             Client.Timeout = TimeSpan.FromSeconds(timeout);
@@ -23,9 +22,17 @@ namespace Monetizr.Challenges
             Client.DefaultRequestHeaders
                 .Accept
                 .Add(new MediaTypeWithQualityHeaderValue("application/json"));
+
+            Debug.Log(apiKey);
         }
 
-        public async Task<List<Challenge>> GetList()
+        [Serializable]
+        private class Challenges
+        {
+            public Challenge[] challenges;
+        }
+
+        public async Task<Challenge[]> GetList()
         {
             HttpRequestMessage requestMessage = new HttpRequestMessage
             {
@@ -42,7 +49,13 @@ namespace Monetizr.Challenges
 
             HttpResponseMessage response = await Client.SendAsync(requestMessage);
 
-            return !response.IsSuccessStatusCode ? new List<Challenge>() : JsonConvert.DeserializeObject<List<Challenge>>(await response.Content.ReadAsStringAsync());
+            var challengesString = await response.Content.ReadAsStringAsync();
+            Debug.Log(challengesString);
+
+            if (!response.IsSuccessStatusCode) return new Challenge[0];
+
+            var challenges = JsonUtility.FromJson<Challenges>("{\"challenges\":" + challengesString + "}");
+            return challenges.challenges;
         }
         
         public async Task<Challenge> GetSingle(string id)
@@ -62,14 +75,19 @@ namespace Monetizr.Challenges
 
             HttpResponseMessage response = await Client.SendAsync(requestMessage);
 
-            return !response.IsSuccessStatusCode ? null : JsonConvert.DeserializeObject<Challenge>(await response.Content.ReadAsStringAsync());
+            return !response.IsSuccessStatusCode ? null : JsonUtility.FromJson<Challenge>(await response.Content.ReadAsStringAsync());
+        }
+
+        [Serializable]
+        private class Status
+        {
+            public double progress;
         }
 
         public async Task UpdateStatus(Challenge challenge, int progress)
         {
-            var requestBody = new
-            {
-               progress = Mathf.Clamp(progress, 0, 100).ToString()
+            var status = new Status{
+               progress = Mathf.Clamp(progress, 0, 100)
             };
             
             HttpRequestMessage requestMessage = new HttpRequestMessage
@@ -84,7 +102,7 @@ namespace Monetizr.Challenges
                     {"player-id", playerInfo.playerId},
                 },
                 Content = new StringContent(
-                    JsonConvert.SerializeObject(requestBody), 
+                    JsonUtility.ToJson(status), 
                     Encoding.UTF8, 
                     "application/json"
                 )
