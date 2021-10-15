@@ -5,6 +5,7 @@ using System.Net.Http.Headers;
 using System.Text;
 using System.Threading.Tasks;
 using UnityEngine;
+using Monetizr.Challenges.Analytics;
 
 namespace Monetizr.Challenges
 {
@@ -22,8 +23,6 @@ namespace Monetizr.Challenges
             Client.DefaultRequestHeaders
                 .Accept
                 .Add(new MediaTypeWithQualityHeaderValue("application/json"));
-
-            Debug.Log(apiKey);
         }
 
         [Serializable]
@@ -32,7 +31,10 @@ namespace Monetizr.Challenges
             public Challenge[] challenges;
         }
 
-        public async Task<Challenge[]> GetList()
+        /// <summary>
+        /// Returns a list of challenges available to the player.
+        /// </summary>
+        public async Task<List<Challenge>> GetList()
         {
             HttpRequestMessage requestMessage = new HttpRequestMessage
             {
@@ -50,14 +52,25 @@ namespace Monetizr.Challenges
             HttpResponseMessage response = await Client.SendAsync(requestMessage);
 
             var challengesString = await response.Content.ReadAsStringAsync();
-            Debug.Log(challengesString);
 
-            if (!response.IsSuccessStatusCode) return new Challenge[0];
+            if(response.IsSuccessStatusCode)
+            {
+                var challenges = JsonUtility.FromJson<Challenges>("{\"challenges\":" + challengesString + "}");
 
-            var challenges = JsonUtility.FromJson<Challenges>("{\"challenges\":" + challengesString + "}");
-            return challenges.challenges;
+                ChallengeAnalytics.Update(new List<Challenge>(challenges.challenges));
+
+                return new List<Challenge>(challenges.challenges);
+            }
+            else
+            {
+                return new List<Challenge>();
+            }
+            
         }
-        
+
+        /// <summary>
+        /// Returns a single challenge that matches the ID.
+        /// </summary>
         public async Task<Challenge> GetSingle(string id)
         {
             HttpRequestMessage requestMessage = new HttpRequestMessage
@@ -81,10 +94,13 @@ namespace Monetizr.Challenges
         [Serializable]
         private class Status
         {
-            public double progress;
+            public int progress;
         }
 
-        public async Task UpdateStatus(Challenge challenge, int progress)
+        /// <summary>
+        /// Updates challenge progress to a given value (in range 0 - 100)
+        /// </summary>
+        public async Task UpdateStatus(Challenge challenge, int progress, Action onSuccess = null, Action onFailure = null)
         {
             var status = new Status{
                progress = Mathf.Clamp(progress, 0, 100)
@@ -108,10 +124,24 @@ namespace Monetizr.Challenges
                 )
             };
             
-            await Client.SendAsync(requestMessage);
+            HttpResponseMessage response = await Client.SendAsync(requestMessage);
+
+            if (response.IsSuccessStatusCode)
+            {
+                ChallengeAnalytics.MarkChallengeStatusUpdate(challenge);
+                challenge.progress = progress;
+                onSuccess?.Invoke();
+            }
+            else
+            {
+                onFailure.Invoke();
+            }
         }
-        
-        public async Task Claim(Challenge challenge)
+
+        /// <summary>
+        /// Marks the challenge as claimed by the player.
+        /// </summary>
+        public async Task Claim(Challenge challenge, Action onSuccess = null, Action onFailure = null)
         {
             HttpRequestMessage requestMessage = new HttpRequestMessage
             {
@@ -126,7 +156,16 @@ namespace Monetizr.Challenges
                 }
             };
             
-            await Client.SendAsync(requestMessage);
+            HttpResponseMessage response = await Client.SendAsync(requestMessage);
+
+            if (response.IsSuccessStatusCode)
+            {
+                onSuccess?.Invoke();
+            }
+            else
+            {
+                onFailure?.Invoke();
+            }
         }
     }
 }

@@ -16,7 +16,7 @@ public class MissionUI : MonoBehaviour
         foreach (Transform t in missionPlace)
             Addressables.ReleaseInstance(t.gameObject);
 
-        for(int i = 0; i < 3; ++i)
+        for(int i = 0; i < PlayerData.instance.missions.Count; ++i)
         {
             if (PlayerData.instance.missions.Count > i)
             {
