@@ -30,7 +30,7 @@ public class MissionEntry : MonoBehaviour
 	        if (sponsoredMission.challenge.assets.Any(asset => asset.type == "banner"))
 	        {
 		        Challenge.Asset bannerAsset = sponsoredMission.challenge.assets.FirstOrDefault(asset => asset.type == "banner");
-		        StartCoroutine(AssetsHelper.DownloadAsset(bannerAsset, (asset, sprite) => background.sprite = sprite));
+		        StartCoroutine(AssetsHelper.Download2DAsset(bannerAsset, (asset, sprite) => background.sprite = sprite));
 	        }
         }
 

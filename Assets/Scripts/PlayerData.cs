@@ -210,26 +210,27 @@ public class PlayerData
 		if (m_Instance == null)
 		{
 			m_Instance = new PlayerData();
-            SponsoredMissionsManager.instance.AddSponsoredMissions();
 
             //if we create the PlayerData, mean it's the very first call, so we use that to init the database
             //this allow to always init the database at the earlier we can, i.e. the start screen if started normally on device
             //or the Loadout screen if testing in editor
 		    CoroutineHandler.StartStaticCoroutine(CharacterDatabase.LoadDatabase());
 		    CoroutineHandler.StartStaticCoroutine(ThemeDatabase.LoadDatabase());
-        }
 
-        m_Instance.saveFile = Application.persistentDataPath + "/save.bin";
+            m_Instance.saveFile = Application.persistentDataPath + "/save.bin";
 
-        if (File.Exists(m_Instance.saveFile))
-        {
-            // If we have a save, we read it.
-            m_Instance.Read();
-        }
-        else
-        {
-            // If not we create one with default data.
-			NewSave();
+            if (File.Exists(m_Instance.saveFile))
+            {
+                // If we have a save, we read it.
+                m_Instance.Read();
+            }
+            else
+            {
+                // If not we create one with default data.
+                NewSave();
+            }
+
+            SponsoredMissionsManager.instance.AddSponsoredMissions();
         }
 
         m_Instance.CheckMissionsCount();
@@ -258,7 +259,7 @@ public class PlayerData
 
         m_Instance.CheckMissionsCount();
 
-		m_Instance.Save();
+        m_Instance.Save();
 	}
 
     public void Read()
@@ -440,12 +441,26 @@ public class PlayerData
 			w.Write(highscores[i].score);
 		}
 
+        int notSponsoredMissionsCount = 0;
+
+        //Get count of not sponsored missions
+        for (int i = 0; i < missions.Count; ++i)
+        {
+            if (missions[i].GetType() != typeof(SponsoredPickupCoinMission))
+            {
+                notSponsoredMissionsCount++;
+            }
+        }
+
         // Write missions.
-        w.Write(missions.Count);
+        w.Write(notSponsoredMissionsCount);
         for(int i = 0; i < missions.Count; ++i)
         {
-            w.Write((int)missions[i].GetMissionType());
-            missions[i].Serialize(w);
+            if(missions[i].GetType() != typeof(SponsoredPickupCoinMission))
+            {
+                w.Write((int)missions[i].GetMissionType());
+                missions[i].Serialize(w);
+            }
         }
 
 		// Write name.
