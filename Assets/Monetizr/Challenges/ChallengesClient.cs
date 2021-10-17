@@ -12,7 +12,7 @@ namespace Monetizr.Challenges
     public class ChallengesClient
     {
         public PlayerInfo playerInfo { get; set; }
-        
+
         private const string k_BaseUri = "https://api3.themonetizr.com/";
         private static readonly HttpClient Client = new HttpClient();
 
@@ -53,7 +53,7 @@ namespace Monetizr.Challenges
 
             var challengesString = await response.Content.ReadAsStringAsync();
 
-            if(response.IsSuccessStatusCode)
+            if (response.IsSuccessStatusCode)
             {
                 var challenges = JsonUtility.FromJson<Challenges>("{\"challenges\":" + challengesString + "}");
 
@@ -65,7 +65,7 @@ namespace Monetizr.Challenges
             {
                 return new List<Challenge>();
             }
-            
+
         }
 
         /// <summary>
@@ -102,10 +102,11 @@ namespace Monetizr.Challenges
         /// </summary>
         public async Task UpdateStatus(Challenge challenge, int progress, Action onSuccess = null, Action onFailure = null)
         {
-            var status = new Status{
-               progress = Mathf.Clamp(progress, 0, 100)
+            var status = new Status
+            {
+                progress = Mathf.Clamp(progress, 0, 100)
             };
-            
+
             HttpRequestMessage requestMessage = new HttpRequestMessage
             {
                 Method = HttpMethod.Post,
@@ -118,12 +119,12 @@ namespace Monetizr.Challenges
                     {"player-id", playerInfo.playerId},
                 },
                 Content = new StringContent(
-                    JsonUtility.ToJson(status), 
-                    Encoding.UTF8, 
+                    JsonUtility.ToJson(status),
+                    Encoding.UTF8,
                     "application/json"
                 )
             };
-            
+
             HttpResponseMessage response = await Client.SendAsync(requestMessage);
 
             if (response.IsSuccessStatusCode)
@@ -153,9 +154,10 @@ namespace Monetizr.Challenges
                     {"age", playerInfo.age.ToString()},
                     {"game-type", playerInfo.gameType},
                     {"player-id", playerInfo.playerId},
+                    {"duration", ChallengeAnalytics.GetElapsedTime(challenge).ToString()}
                 }
             };
-            
+
             HttpResponseMessage response = await Client.SendAsync(requestMessage);
 
             if (response.IsSuccessStatusCode)
