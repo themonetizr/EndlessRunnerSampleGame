@@ -13,10 +13,11 @@ namespace Monetizr.Challenges
         /// </summary>
         public static IEnumerator Download2DAsset(Challenge.Asset asset, Action<Challenge.Asset, Sprite> onAssetDownloaded, Action onDownloadFailed = null)
         {
-            using UnityWebRequest uwr = UnityWebRequestTexture.GetTexture(asset.url);
+            UnityWebRequest uwr = UnityWebRequestTexture.GetTexture(asset.url);
+
             yield return uwr.SendWebRequest();
 
-            if (uwr.result != UnityWebRequest.Result.Success)
+            if (uwr.isNetworkError)
             {
                 Debug.LogError(uwr.error);
                 onDownloadFailed?.Invoke();
@@ -36,7 +37,7 @@ namespace Monetizr.Challenges
 
             yield return uwr.SendWebRequest();
 
-            if (uwr.result != UnityWebRequest.Result.Success)
+            if (uwr.isNetworkError)
             {
                 Debug.LogError(uwr.error);
                 onDownloadFailed?.Invoke();
