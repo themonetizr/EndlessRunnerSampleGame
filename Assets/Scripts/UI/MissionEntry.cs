@@ -13,6 +13,7 @@ public class MissionEntry : MonoBehaviour
     public Button claimButton;
     public Text progressText;
 	public Image background;
+	public Image banner;
 
 	public Color notCompletedColor;
 	public Color completedColor;
@@ -21,6 +22,7 @@ public class MissionEntry : MonoBehaviour
     {
         descText.text = m.GetMissionDesc();
         rewardText.text = m.reward.ToString();
+		banner.enabled = false;
         
         Debug.Log($"Filling with {m.GetMissionDesc()}");
 
@@ -30,7 +32,7 @@ public class MissionEntry : MonoBehaviour
 	        if (sponsoredMission.challenge.assets.Any(asset => asset.type == "banner"))
 	        {
 		        Challenge.Asset bannerAsset = sponsoredMission.challenge.assets.FirstOrDefault(asset => asset.type == "banner");
-		        StartCoroutine(AssetsHelper.Download2DAsset(bannerAsset, (asset, sprite) => background.sprite = sprite));
+		        StartCoroutine(AssetsHelper.Download2DAsset(bannerAsset, (asset, sprite) => { banner.sprite = sprite; banner.enabled = true; }));
 	        }
         }
 
@@ -39,11 +41,11 @@ public class MissionEntry : MonoBehaviour
             claimButton.gameObject.SetActive(true);
             progressText.gameObject.SetActive(false);
 
-			//background.color = completedColor;
+			background.color = completedColor;
 
-			progressText.color = Color.white;
-			descText.color = Color.white;
-			rewardText.color = Color.white;
+			progressText.color = Color.black;
+			descText.color = Color.black;
+			rewardText.color = Color.black;
 
 			claimButton.onClick.AddListener(delegate { owner.Claim(m); } );
 
