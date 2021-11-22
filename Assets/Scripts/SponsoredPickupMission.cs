@@ -13,6 +13,11 @@ public class SponsoredPickupCoinMission : MissionBase
         return challenge == null ? string.Empty : challenge.title;
     }
 
+    public override string GetMissionContent()
+    {
+        return challenge == null ? string.Empty : challenge.content;
+    }
+
     public override void Created()
     {
         
