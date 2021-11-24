@@ -1,7 +1,16 @@
 /[Ll]ibrary/
 /[Tt]emp/
 /[Oo]bj/
-/[Bb]uild/
+
+#/[Bb]uild/
+
+# Include Mac, Linux, Windows, webgl builds
+build/*
+!build/demo_web/
+!build/demo_linux/
+!build/demo_windows/
+!build/demo_mac.app
+
 /[Bb]uilds/
 /[Ll]ogs/
 /ServerData/
