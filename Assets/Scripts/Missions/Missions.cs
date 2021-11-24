@@ -45,6 +45,7 @@ public abstract class MissionBase
     public abstract void Created();
     public abstract MissionType GetMissionType();
     public abstract string GetMissionDesc();
+    public abstract string GetMissionContent();
     public abstract void RunStart(TrackManager manager);
     public abstract void Update(TrackManager manager);
 
@@ -90,6 +91,11 @@ public class SingleRunMission : MissionBase
         return "Run " + ((int)max) + "m in a single run";
     }
 
+    public override string GetMissionContent()
+    {
+        return string.Empty;
+    }
+
     public override MissionType GetMissionType()
     {
         return MissionType.SINGLE_RUN;
@@ -123,6 +129,11 @@ public class PickupMission : MissionBase
     public override string GetMissionDesc()
     {
         return "Pickup " + max + " fishbones";
+    }
+
+    public override string GetMissionContent()
+    {
+        return string.Empty;
     }
 
     public override MissionType GetMissionType()
@@ -165,6 +176,11 @@ public class BarrierJumpMission : MissionBase
     public override string GetMissionDesc()
     {
         return "Jump over " + ((int)max) + " barriers";
+    }
+
+    public override string GetMissionContent()
+    {
+        return string.Empty;
     }
 
     public override MissionType GetMissionType()
@@ -224,6 +240,11 @@ public class SlidingMission : MissionBase
         return "Slide for " + ((int)max) + "m";
     }
 
+    public override string GetMissionContent()
+    {
+        return string.Empty;
+    }
+
     public override MissionType GetMissionType()
     {
         return MissionType.SLIDING;
@@ -267,6 +288,11 @@ public class MultiplierMission : MissionBase
     public override string GetMissionDesc()
     {
         return "Reach a x" + ((int)max) + " multiplier";
+    }
+
+    public override string GetMissionContent()
+    {
+        return string.Empty;
     }
 
     public override MissionType GetMissionType()

@@ -19,7 +19,7 @@ public class SponsoredMissionsManager : MonoBehaviour
             
             _challengesClient = new ChallengesClient(apiKey)
             {
-                playerInfo = new PlayerInfo("Riga", 29, "action", "janis_999")
+                playerInfo = new PlayerInfo("Riga", 29, "action", "monetizr_mj")
             };
         }
 
@@ -48,7 +48,7 @@ public class SponsoredMissionsManager : MonoBehaviour
             {
                 await _challengesClient.UpdateStatus(challenge, progress);
             } catch (Exception e) {
-                Debug.Log($"An error occured: {e.Message}");
+                Debug.Log($" Monetizr An error occured: {e.Message}");
             }
         }
 

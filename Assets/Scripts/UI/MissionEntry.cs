@@ -5,22 +5,27 @@ using System.Collections;
 using System.Linq;
 using Monetizr.Challenges;
 using UnityEngine.Networking;
+using System.Text.RegularExpressions;
 
 public class MissionEntry : MonoBehaviour
 {
     public Text descText;
+
     public Text rewardText;
     public Button claimButton;
     public Text progressText;
 	public Image background;
+	public Image banner;
 
-	public Color notCompletedColor;
-	public Color completedColor;
+	public Color backgroundColor;
+	public Color titleColor;
+
 
     public void FillWithMission(MissionBase m, MissionUI owner)
     {
         descText.text = m.GetMissionDesc();
         rewardText.text = m.reward.ToString();
+		banner.enabled = false;
         
         Debug.Log($"Filling with {m.GetMissionDesc()}");
 
@@ -30,7 +35,7 @@ public class MissionEntry : MonoBehaviour
 	        if (sponsoredMission.challenge.assets.Any(asset => asset.type == "banner"))
 	        {
 		        Challenge.Asset bannerAsset = sponsoredMission.challenge.assets.FirstOrDefault(asset => asset.type == "banner");
-		        StartCoroutine(AssetsHelper.Download2DAsset(bannerAsset, (asset, sprite) => background.sprite = sprite));
+		        StartCoroutine(AssetsHelper.Download2DAsset(bannerAsset, (asset, sprite) => { banner.sprite = sprite; banner.enabled = true; }));
 	        }
         }
 
@@ -39,11 +44,11 @@ public class MissionEntry : MonoBehaviour
             claimButton.gameObject.SetActive(true);
             progressText.gameObject.SetActive(false);
 
-			//background.color = completedColor;
+			background.color = backgroundColor;
 
-			progressText.color = Color.white;
-			descText.color = Color.white;
-			rewardText.color = Color.white;
+			progressText.color = Color.black;
+			descText.color = titleColor;
+			rewardText.color = Color.black;
 
 			claimButton.onClick.AddListener(delegate { owner.Claim(m); } );
 
@@ -60,10 +65,10 @@ public class MissionEntry : MonoBehaviour
             claimButton.gameObject.SetActive(false);
             progressText.gameObject.SetActive(true);
 
-			background.color = notCompletedColor;
+			background.color = backgroundColor;
 
 			progressText.color = Color.black;
-			descText.color = completedColor;
+			descText.color = titleColor;
 
 			progressText.text = ((int)m.progress) + " / " + ((int)m.max);
         }

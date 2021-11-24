@@ -11,7 +11,7 @@ public class CountdownSound : MonoBehaviour
 	{
 		m_Source = GetComponent<AudioSource>();
 		m_TimeToDisable = m_Source.clip.length;
-        m_Source.PlayDelayed(k_StartDelay);
+		m_Source.PlayDelayed(k_StartDelay);
 	}
 
 	void Update()
