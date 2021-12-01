@@ -8,8 +8,11 @@
 build/*
 !build/demo_web/
 !build/demo_linux/
+!build/demo_linux.7z
 !build/demo_windows/
+!build/demo_windows.7z
 !build/demo_mac.app
+!build/demo_mac.app.7z
 
 /[Bb]uilds/
 /[Ll]ogs/
