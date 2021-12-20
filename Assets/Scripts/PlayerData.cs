@@ -177,6 +177,15 @@ public class PlayerData
         Save();
     }
 
+    public void RemoveMission(MissionBase mission)
+    {        
+        missions.Remove(mission);
+
+        CheckMissionsCount();
+
+        Save();
+    }
+
 	// High Score management
 
 	public int GetScorePlace(int score)

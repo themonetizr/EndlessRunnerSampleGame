@@ -103,6 +103,7 @@ namespace Monetizr.Challenges
 
             await request.SendWebRequest();
 
+
             if (request.result != UnityWebRequest.Result.Success) {
                 Debug.Log($"{request.error}");
                 return new List<Challenge>();
@@ -113,7 +114,7 @@ namespace Monetizr.Challenges
                 var challenges = JsonUtility.FromJson<Challenges>("{\"challenges\":" + challengesString + "}");
 
                 ChallengeAnalytics.Update(new List<Challenge>(challenges.challenges));
-
+                
                 return new List<Challenge>(challenges.challenges);
             }
         }

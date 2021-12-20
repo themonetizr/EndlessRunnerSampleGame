@@ -10,6 +10,10 @@ public class SettingPopup : MonoBehaviour
     public Slider musicSlider;
     public Slider masterSFXSlider;
 
+    public InputField apiKeyInput;
+
+    public Toggle monetizrToggle;
+
     public LoadoutState loadoutState;
     public DataDeleteConfirmation confirmationPopup;
 
@@ -70,5 +74,16 @@ public class SettingPopup : MonoBehaviour
         m_MasterSFXVolume = k_MinVolume * (1.0f - value);
         mixer.SetFloat(k_MasterSFXVolumeFloatName, m_MasterSFXVolume);
 		PlayerData.instance.masterSFXVolume = m_MasterSFXVolume;
+    }
+
+    // Invoked when the value of the text field changes.
+    public void ValueChangeCheck()
+    {
+        SponsoredMissionsManager.instance.changeAPIKey(apiKeyInput.text);
+    }
+
+    public void MonetizrToggleChange()
+    {
+        SponsoredMissionsManager.instance.changeOnOff(monetizrToggle.isOn);
     }
 }

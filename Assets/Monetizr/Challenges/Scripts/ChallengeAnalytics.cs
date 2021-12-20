@@ -24,6 +24,7 @@ namespace Monetizr.Challenges
 
                 foreach (Challenge challenge in challenges)
                 {
+
                     if (challengesWithTimes.ContainsKey(challenge.id))
                     {
                         updatedChallengesWithTimes.Add(challenge.id, challengesWithTimes[challenge.id]);

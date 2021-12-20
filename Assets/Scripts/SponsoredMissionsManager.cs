@@ -13,13 +13,25 @@ public class SponsoredMissionsManager : MonoBehaviour
         
         private ChallengesClient _challengesClient;
         
+        private string city = "Riga";
+
+        private int age = 29;
+
+        private string gameType = "action";
+
+        private string playerid = "monetizr_mj";
+
+        private bool turnedOn = true;
+
+        private static Dictionary<string, SponsoredPickupCoinMission> missions = new Dictionary<string, SponsoredPickupCoinMission>();
+
         private void Awake()
         {
             instance = this;
             
             _challengesClient = new ChallengesClient(apiKey)
             {
-                playerInfo = new PlayerInfo("Riga", 29, "action", "monetizr_mj")
+                playerInfo = new PlayerInfo(city, age, gameType, playerid)
             };
         }
 
@@ -29,16 +41,15 @@ public class SponsoredMissionsManager : MonoBehaviour
             {
                 challenges = await _challengesClient.GetList();
 
-                Debug.Log("Sponsored challenges: " + challenges.Count);
-
                 for (int i = 0; i < challenges.Count; i++)
                 {
                     SponsoredPickupCoinMission newMission = new SponsoredPickupCoinMission();
                     newMission.Created(challenges[i]);
+                    missions.Add(i.ToString(), newMission);
                     PlayerData.instance.AddMission(newMission, i);
                 }
             } catch (Exception e) {
-                Debug.Log($"An error occured: {e.Message}");
+                Debug.Log($"Monetizr An error occured in adding: {e.Message}");
             }
         }
 
@@ -59,6 +70,42 @@ public class SponsoredMissionsManager : MonoBehaviour
                 await _challengesClient.Claim(challenge);
             } catch (Exception e) {
                 Debug.Log($"An error occured: {e.Message}");
+            }
+        }
+
+        public void changeAPIKey(string apiKeyValue)
+        {
+            apiKey = apiKeyValue;
+            _challengesClient = new ChallengesClient(apiKey)
+            {
+                playerInfo = new PlayerInfo(city, age, gameType, playerid)
+            };
+
+            if (turnedOn) {
+                RemoveMissions();
+                AddSponsoredMissions();
+            }
+        }
+
+        private void RemoveMissions(){
+            
+            foreach(var mission in missions)
+            {
+                PlayerData.instance.RemoveMission(mission.Value);
+            }
+
+            missions = new Dictionary<string, SponsoredPickupCoinMission>();
+        }
+
+        public void changeOnOff(bool toggleOn) {
+            turnedOn = toggleOn;
+
+            if (toggleOn) {
+                // Turned on
+                AddSponsoredMissions();
+            } else {
+                // Turned off
+                RemoveMissions();
             }
         }
     }
