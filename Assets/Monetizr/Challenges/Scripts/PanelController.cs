@@ -1,4 +1,5 @@
-﻿using System.Collections;
+﻿using System;
+using System.Collections;
 using System.Collections.Generic;
 using UnityEngine;
 using UnityEngine.Assertions;
@@ -9,8 +10,9 @@ namespace Monetizr.Challenges
     {
         private Animator animator;
         private CanvasGroup canvasGroup;
+        protected Action onComplete;
 
-        public abstract void PreparePanel();
+        public abstract void PreparePanel(Action onComplete);
 
         protected void Awake()
         {
@@ -46,7 +48,9 @@ namespace Monetizr.Challenges
                     animator.Play("PanelAnimator_Hide");
                 }
                 else
+                {
                     OnAnimationHide();
+                }
 
             }
         }
@@ -75,6 +79,8 @@ namespace Monetizr.Challenges
         private void OnAnimationHide()
         {
             gameObject.SetActive(false);
+
+            onComplete?.Invoke();
         }
     }
 

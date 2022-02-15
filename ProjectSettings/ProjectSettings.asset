@@ -134,7 +134,7 @@ PlayerSettings:
     16:10: 0
     16:9: 0
     Others: 1
-  bundleVersion: 1.1
+  bundleVersion: 1.1.1
   preloadedAssets: []
   metroInputSource: 0
   wsaTransparentSwapchain: 0
@@ -156,13 +156,13 @@ PlayerSettings:
     Android: com.themonetizr.TrashDash
     Standalone: com.themonetizr.TrashDash
     Tizen: 
-    iPhone: com.themonetizr.TrashDash
+    iPhone: com.themonetizr.demo
     tvOS: 
   buildNumber:
     Standalone: 0
     iPhone: 0
     tvOS: 0
-  overrideDefaultApplicationIdentifier: 0
+  overrideDefaultApplicationIdentifier: 1
   AndroidBundleVersionCode: 351
   AndroidMinSdkVersion: 22
   AndroidTargetSdkVersion: 30
@@ -228,9 +228,9 @@ PlayerSettings:
   iOSRenderExtraFrameOnPause: 1
   iosCopyPluginsCodeInsteadOfSymlink: 0
   appleDeveloperTeamID: 
-  iOSManualSigningProvisioningProfileID: 54256bdb-ab72-4bff-9fea-cfd64081e1df
+  iOSManualSigningProvisioningProfileID: b87ef391-435e-4c73-9a7f-622a20de1814
   tvOSManualSigningProvisioningProfileID: 
-  iOSManualSigningProvisioningProfileType: 0
+  iOSManualSigningProvisioningProfileType: 1
   tvOSManualSigningProvisioningProfileType: 0
   appleEnableAutomaticSigning: 2
   iOSRequireARKit: 0

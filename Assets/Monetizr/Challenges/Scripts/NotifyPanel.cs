@@ -1,4 +1,5 @@
-﻿using System.Collections;
+﻿using System;
+using System.Collections;
 using System.Collections.Generic;
 using UnityEngine;
 using UnityEngine.UI;
@@ -17,8 +18,12 @@ namespace Monetizr.Challenges
         public Button closeButton;
         public Text buttonText;
 
-        public override void PreparePanel()
+        private Action onComplete;
+
+        public override void PreparePanel(Action onComplete)
         {
+            this.onComplete = onComplete;
+
             var challenges = MonetizrManager.Instance.GetAvailableChallenges();
 
             if (challenges.Count > 0)
@@ -33,7 +38,8 @@ namespace Monetizr.Challenges
                 title.text = $"{brandTitle} video";
                 text.text = $"<color=#F05627>Watch video</color> by {brandTitle} to get 2 Energy Boosts";
 
-                buttonText.text = "Learn More";
+                //buttonText.text = "Learn More";
+                buttonText.text = "Got it!";
 
                 rewardImage.gameObject.SetActive(false);
                 rewardAmount.gameObject.SetActive(false);
@@ -52,19 +58,23 @@ namespace Monetizr.Challenges
         public void OnButtonPress()
         {
             Debug.Log("close!");
+
+            SetActive(false);
+
+            onComplete?.Invoke();
         }
 
-        // Start is called before the first frame update
-        void Start()
-        {
+        //// Start is called before the first frame update
+        //void Start()
+        //{
 
-        }
+        //}
 
-        // Update is called once per frame
-        void Update()
-        {
+        //// Update is called once per frame
+        //void Update()
+        //{
 
-        }
+        //}
     }
 
 }

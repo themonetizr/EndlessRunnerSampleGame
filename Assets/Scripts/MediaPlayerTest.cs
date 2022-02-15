@@ -31,9 +31,9 @@ public class MediaPlayerTest : MonoBehaviour {
        
 	}
 
-	async void LoadingVideoAsset()
+    void LoadingVideoAsset(bool isOK)
     {
-        MonetizrManager.ShowStartupNotification();
+        MonetizrManager.ShowStartupNotification(null);
 
         /*byte[] data = await Monetizr.Challenges.DownloadHelper.DownloadAssetData("https://www.learningcontainer.com/wp-content/uploads/2020/05/sample-mp4-file.mp4", () => { });
 

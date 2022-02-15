@@ -1,4 +1,5 @@
-﻿using System.Collections;
+﻿using System;
+using System.Collections;
 using System.Collections.Generic;
 using UnityEngine;
 using UnityEngine.Assertions;
@@ -21,7 +22,13 @@ namespace Monetizr.Challenges
 
         public UIController()
         {
-            var canvas = GameObject.Instantiate<GameObject>(Resources.Load("MonetizrCanvas") as GameObject);
+            var resCanvas = Resources.Load("MonetizrCanvas");
+
+            Assert.IsNotNull(resCanvas);
+
+            var canvas = GameObject.Instantiate<GameObject>(resCanvas as GameObject);
+
+            GameObject.DontDestroyOnLoad(canvas);
 
             Assert.IsNotNull(canvas);
 
@@ -66,14 +73,14 @@ namespace Monetizr.Challenges
             panels[id].EnableInput(enable);
         }
 
-        public void ShowPanel(PanelId id = PanelId.Unknown, bool rememberPrevious = false)
+        public void ShowPanel(PanelId id = PanelId.Unknown, Action onComplete = null, bool rememberPrevious = false)
         {
             Debug.Log("ShowPanel: " + id);
 
             if (previousPanel != PanelId.Unknown)
                 panels[previousPanel].SetActive(false);
 
-            panels[id].PreparePanel();
+            panels[id].PreparePanel(onComplete);
 
             panels[id].SetActive(true);
 

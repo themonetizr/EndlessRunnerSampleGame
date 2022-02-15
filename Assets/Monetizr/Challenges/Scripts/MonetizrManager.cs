@@ -119,15 +119,15 @@ namespace Monetizr.Challenges
         private List<string> challengesId = new List<string>();
         private Dictionary<String, ChallengeExtention> challenges = new Dictionary<String, ChallengeExtention>();
 
-        public static MonetizrManager Initialize(string apiKey, Action onRequestComplete)
+        public static MonetizrManager Initialize(string apiKey, Action<bool> onRequestComplete)
         {
-            Debug.Log("MonetizrManager Initialize");
-
             if (instance != null)
             {
-                instance.RequestChallenges(onRequestComplete);
+                //instance.RequestChallenges(onRequestComplete);
                 return instance;
             }
+
+            Debug.Log("MonetizrManager Initialize");
 
             var monetizrObject = new GameObject("MonetizrManager");
             var monetizrManager = monetizrObject.AddComponent<MonetizrManager>();
@@ -151,17 +151,19 @@ namespace Monetizr.Challenges
         /// <summary>
         /// Initialize
         /// </summary>
-        private void Initalize(string apiKey, Action onRequestComplete)
+        private void Initalize(string apiKey, Action<bool> onRequestComplete)
         {
             _challengesClient = new ChallengesClient(apiKey)
             {
                 playerInfo = new PlayerInfo("Helsinki", 18, "action", "monetizr_mj")
             };
 
-            RequestChallenges(() =>
+            RequestChallenges(
+                (bool isOk) =>
                 {
                     InitializeUI();
-                    onRequestComplete();
+
+                    onRequestComplete(isOk);
                 });
         }
 
@@ -170,9 +172,14 @@ namespace Monetizr.Challenges
             uiController = new UIController();
         }
 
-        internal static void ShowStartupNotification()
+        internal static void ShowStartupNotification(Action onComplete)
         {
-            instance.uiController.ShowPanel(PanelId.Notification);
+            instance.uiController.ShowPanel(PanelId.Notification, onComplete);
+        }
+
+        internal static void ShowRewardCenter(Action onComplete)
+        {
+            instance.uiController.ShowPanel(PanelId.RewardCenter, onComplete);
         }
 
         /// <summary>
@@ -248,8 +255,9 @@ namespace Monetizr.Challenges
         /// <summary>
         /// Request challenges from the server
         /// </summary>
-        public async void RequestChallenges(Action onRequestComplete)
+        public async void RequestChallenges(Action<bool> onRequestComplete)
         {
+            //TODO: add connection error tracking
             var challenges = await _challengesClient.GetList();
 
             foreach (var ch in challenges)
@@ -305,7 +313,19 @@ namespace Monetizr.Challenges
 
             Debug.Log("RequestChallenges completed with count: " + challenges.Count);
 
-            onRequestComplete?.Invoke();
+            //TODO: Check error state
+            onRequestComplete?.Invoke(true);
+        }
+
+        /// <summary>
+        /// Get Challenge by Id
+        /// TODO: Don't give access to challenge itself, update progress internally
+        /// </summary>
+        /// <returns></returns>
+        [Obsolete("This Method is obsolete and don't recommended for use")]
+        public Challenge GetChallenge(String chId)
+        {
+            return challenges[chId].challenge;
         }
 
         /// <summary>

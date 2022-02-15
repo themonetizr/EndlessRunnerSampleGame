@@ -1,4 +1,5 @@
 ﻿using System.Collections;
+using Monetizr.Challenges;
 using UnityEngine;
 using UnityEngine.AddressableAssets;
 using UnityEngine.ResourceManagement.AsyncOperations;
@@ -49,20 +50,22 @@ public class MissionUI : MonoBehaviour
 
     public void CallOpen()
     {
-        gameObject.SetActive(true);
-        StartCoroutine(Open());
+        //gameObject.SetActive(true);
+        //StartCoroutine(Open());
+
+        MonetizrManager.ShowRewardCenter(null);
     }
 
     public void Claim(MissionBase m)
     {
-        PlayerData.instance.ClaimMission(m);
+        //PlayerData.instance.ClaimMission(m);
 
-        // Rebuild the UI with the new missions
-        StartCoroutine(Open());
+        //// Rebuild the UI with the new missions
+        //StartCoroutine(Open());
     }
 
     public void Close()
     {
-        gameObject.SetActive(false);
+        //gameObject.SetActive(false);
     }
 }
