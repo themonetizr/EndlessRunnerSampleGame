@@ -16,7 +16,9 @@ namespace Monetizr.Challenges
 
     public class UIController
     {
+        private GameObject mainCanvas;
         private PanelId previousPanel;
+
 
         public Dictionary<PanelId, PanelController> panels = null;
 
@@ -26,14 +28,14 @@ namespace Monetizr.Challenges
 
             Assert.IsNotNull(resCanvas);
 
-            var canvas = GameObject.Instantiate<GameObject>(resCanvas as GameObject);
+            mainCanvas = GameObject.Instantiate<GameObject>(resCanvas as GameObject);
 
-            GameObject.DontDestroyOnLoad(canvas);
+            GameObject.DontDestroyOnLoad(mainCanvas);
 
-            Assert.IsNotNull(canvas);
+            Assert.IsNotNull(mainCanvas);
 
-            var notifyPanel = GameObject.Instantiate<GameObject>(Resources.Load("MonetizrNotifyPanel") as GameObject, canvas.transform);
-            var rewardPanel = GameObject.Instantiate<GameObject>(Resources.Load("MonetizrRewardCenterPanel") as GameObject, canvas.transform);
+            var notifyPanel = GameObject.Instantiate<GameObject>(Resources.Load("MonetizrNotifyPanel") as GameObject, mainCanvas.transform);
+            var rewardPanel = GameObject.Instantiate<GameObject>(Resources.Load("MonetizrRewardCenterPanel") as GameObject, mainCanvas.transform);
 
             Assert.IsNotNull(notifyPanel);
             Assert.IsNotNull(rewardPanel);
@@ -41,11 +43,24 @@ namespace Monetizr.Challenges
             previousPanel = PanelId.Unknown;
 
             panels = new Dictionary<PanelId, PanelController>();
-            panels.Add(PanelId.Notification, notifyPanel.GetComponent<PanelController>());
             panels.Add(PanelId.RewardCenter, rewardPanel.GetComponent<PanelController>());
+            panels.Add(PanelId.Notification, notifyPanel.GetComponent<PanelController>());
+            
 
             foreach (var p in panels)
                 p.Value.SetActive(false, true);
+        }
+
+        public void PlayVideo(String path, Action<bool> onComplete)
+        {
+            var prefab = GameObject.Instantiate<GameObject>(Resources.Load("MonetizrVideoPlayer") as GameObject, mainCanvas.transform);
+
+            var player = prefab.GetComponent<MonetizrVideoPlayer>();
+
+            player.Play(path, (bool isSkip) => {
+                    onComplete.Invoke(isSkip);
+                    GameObject.Destroy(prefab);
+            } );
         }
 
         public GameObject GetActiveElement(PanelId id, string name)

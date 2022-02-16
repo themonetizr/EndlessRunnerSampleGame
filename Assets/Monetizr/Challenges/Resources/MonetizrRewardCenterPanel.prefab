@@ -33,10 +33,10 @@ RectTransform:
   m_Father: {fileID: 2012558891284637417}
   m_RootOrder: 1
   m_LocalEulerAnglesHint: {x: 0, y: 0, z: 0}
-  m_AnchorMin: {x: 0.5, y: 0.5}
-  m_AnchorMax: {x: 0.5, y: 0.5}
-  m_AnchoredPosition: {x: -0, y: 0}
-  m_SizeDelta: {x: 1080, y: 1920}
+  m_AnchorMin: {x: 0, y: 0}
+  m_AnchorMax: {x: 1, y: 1}
+  m_AnchoredPosition: {x: 0, y: 0}
+  m_SizeDelta: {x: 0, y: 0}
   m_Pivot: {x: 0.5, y: 0.5}
 --- !u!222 &8215054327765198866
 CanvasRenderer:
@@ -1240,7 +1240,7 @@ RectTransform:
   m_LocalEulerAnglesHint: {x: 0, y: 0, z: 0}
   m_AnchorMin: {x: 0.5, y: 0.5}
   m_AnchorMax: {x: 0.5, y: 0.5}
-  m_AnchoredPosition: {x: 464.2, y: 830.34}
+  m_AnchoredPosition: {x: -475.6, y: 850.57}
   m_SizeDelta: {x: 135, y: 135}
   m_Pivot: {x: 0.5, y: 0.5}
 --- !u!222 &6580885723877760207
@@ -1573,6 +1573,41 @@ PrefabInstance:
         type: 3}
       propertyPath: m_LocalEulerAnglesHint.z
       value: 0
+      objectReference: {fileID: 0}
+    - target: {fileID: 4131049842429822152, guid: 24abbe84da3414b94acb3c2fd8345526,
+        type: 3}
+      propertyPath: m_OnClick.m_PersistentCalls.m_Calls.Array.size
+      value: 1
+      objectReference: {fileID: 0}
+    - target: {fileID: 4131049842429822152, guid: 24abbe84da3414b94acb3c2fd8345526,
+        type: 3}
+      propertyPath: m_OnClick.m_PersistentCalls.m_Calls.Array.data[0].m_Mode
+      value: 1
+      objectReference: {fileID: 0}
+    - target: {fileID: 4131049842429822152, guid: 24abbe84da3414b94acb3c2fd8345526,
+        type: 3}
+      propertyPath: m_OnClick.m_PersistentCalls.m_Calls.Array.data[0].m_Target
+      value: 
+      objectReference: {fileID: 3744564071990885423}
+    - target: {fileID: 4131049842429822152, guid: 24abbe84da3414b94acb3c2fd8345526,
+        type: 3}
+      propertyPath: m_OnClick.m_PersistentCalls.m_Calls.Array.data[0].m_CallState
+      value: 2
+      objectReference: {fileID: 0}
+    - target: {fileID: 4131049842429822152, guid: 24abbe84da3414b94acb3c2fd8345526,
+        type: 3}
+      propertyPath: m_OnClick.m_PersistentCalls.m_Calls.Array.data[0].m_MethodName
+      value: OnVideoPlayPress
+      objectReference: {fileID: 0}
+    - target: {fileID: 4131049842429822152, guid: 24abbe84da3414b94acb3c2fd8345526,
+        type: 3}
+      propertyPath: m_OnClick.m_PersistentCalls.m_Calls.Array.data[0].m_TargetAssemblyTypeName
+      value: Monetizr.Challenges.RewardCenterPanel, Assembly-CSharp
+      objectReference: {fileID: 0}
+    - target: {fileID: 4131049842429822152, guid: 24abbe84da3414b94acb3c2fd8345526,
+        type: 3}
+      propertyPath: m_OnClick.m_PersistentCalls.m_Calls.Array.data[0].m_Arguments.m_ObjectArgumentAssemblyTypeName
+      value: UnityEngine.Object, UnityEngine
       objectReference: {fileID: 0}
     - target: {fileID: 5818141197687585262, guid: 24abbe84da3414b94acb3c2fd8345526,
         type: 3}

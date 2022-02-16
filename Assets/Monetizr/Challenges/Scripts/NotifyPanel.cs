@@ -18,7 +18,7 @@ namespace Monetizr.Challenges
         public Button closeButton;
         public Text buttonText;
 
-        private Action onComplete;
+        //private Action onComplete;
 
         public override void PreparePanel(Action onComplete)
         {
@@ -57,11 +57,7 @@ namespace Monetizr.Challenges
 
         public void OnButtonPress()
         {
-            Debug.Log("close!");
-
             SetActive(false);
-
-            onComplete?.Invoke();
         }
 
         //// Start is called before the first frame update

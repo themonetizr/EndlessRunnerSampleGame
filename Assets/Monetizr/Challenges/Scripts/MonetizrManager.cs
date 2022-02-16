@@ -22,7 +22,8 @@ namespace Monetizr.Challenges
         BrandRewardLogoSprite, //logo
         BrandRewardBannerSprite, //reward_banner
         SurveyURLString, //survey
-        VideoURLString, //video
+        VideoURLString, //video url
+        VideoFilePathString, //video url
         BrandTitleString, //text
       
     }
@@ -40,6 +41,7 @@ namespace Monetizr.Challenges
             { AssetsType.BrandRewardBannerSprite, typeof(Sprite) },
             { AssetsType.SurveyURLString, typeof(String) },
             { AssetsType.VideoURLString, typeof(String) },
+            { AssetsType.VideoFilePathString, typeof(String) },
             { AssetsType.BrandTitleString, typeof(String) },
 
         };
@@ -174,12 +176,17 @@ namespace Monetizr.Challenges
 
         internal static void ShowStartupNotification(Action onComplete)
         {
-            instance.uiController.ShowPanel(PanelId.Notification, onComplete);
+            instance.uiController.ShowPanel(PanelId.Notification, onComplete, true);
         }
 
         internal static void ShowRewardCenter(Action onComplete)
         {
-            instance.uiController.ShowPanel(PanelId.RewardCenter, onComplete);
+            instance.uiController.ShowPanel(PanelId.RewardCenter, onComplete, true);
+        }
+
+        internal static void PlayVideo(Action<bool> onComplete)
+        {
+            instance.uiController.PlayVideo(null, onComplete);
         }
 
         /// <summary>
@@ -246,10 +253,13 @@ namespace Monetizr.Challenges
 
                 File.WriteAllBytes(fpath, data);
 
-                ech.SetAsset<string>(AssetsType.VideoURLString, fpath);
+                
 
                 Debug.Log("saving: " + fpath);
             }
+
+            ech.SetAsset<string>(AssetsType.VideoURLString, asset.url);
+            ech.SetAsset<string>(AssetsType.VideoFilePathString, fpath);
         }
 
         /// <summary>

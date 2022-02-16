@@ -13,8 +13,64 @@ using UnityEngine.Purchasing;
 
 public class StartButton : MonoBehaviour
 {
+    public void SurveyLink()
+    {
+        var webView = gameObject.AddComponent<UniWebView>();
+        webView.Frame = new Rect(0, 0, Screen.width, Screen.height);
+
+        var page = MonetizrManager.Instance.GetAsset<string>(MonetizrManager.Instance.GetAvailableChallenges()[0], AssetsType.SurveyURLString);
+
+        // Load a URL.
+        webView.Load(page);
+
+        //webView.LoadHTMLString("<p>Hello World</p>", "https://domain.com");
+
+        // Show it.
+        webView.Show();
+
+
+    }
+
+    public void PlayVideo()
+    {
+        var videoPath = MonetizrManager.Instance.GetAsset<string>(MonetizrManager.Instance.GetAvailableChallenges()[0], AssetsType.VideoFilePathString);
+
+        /*var webView = gameObject.AddComponent<UniWebView>();
+        webView.Frame = new Rect(0, 0, Screen.width, Screen.height);
+
+        var page = MonetizrManager.Instance.GetAsset<string>(MonetizrManager.Instance.GetAvailableChallenges()[0], AssetsType.VideoFilePathString);
+
+        // Load a URL.
+        //webView.Load(page);
+
+        webView.LoadHTMLString($"<video autoplay>< source src = \"{page}\" type = \"video/mp4\"/></video>",
+                                "https://domain.com");
+
+        // Show it.
+        webView.Show();*/
+
+        var videoPlayer = Camera.main.gameObject.GetComponent<UnityEngine.Video.VideoPlayer>();
+
+        videoPlayer.playOnAwake = false;
+        videoPlayer.renderMode = UnityEngine.Video.VideoRenderMode.CameraNearPlane;
+        //videoPlayer.targetCameraAlpha = 0.5F;
+        videoPlayer.url = videoPath;
+        videoPlayer.frame = 100;
+        videoPlayer.isLooping = true;
+
+
+        //videoPlayer.loopPointReached += EndReached;
+
+        videoPlayer.Play();
+
+
+    }
+
+
     public void StartGame()
     {
+        
+
         MonetizrManager.ShowStartupNotification(() =>
         {
             if (PlayerData.instance.ftueLevel == 0)
