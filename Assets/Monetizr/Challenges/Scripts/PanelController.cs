@@ -11,8 +11,9 @@ namespace Monetizr.Challenges
         private Animator animator;
         private CanvasGroup canvasGroup;
         protected Action onComplete;
+        protected PanelId panelId;
 
-        public abstract void PreparePanel(Action onComplete);
+        public abstract void PreparePanel(PanelId id, Action onComplete);
 
         protected void Awake()
         {

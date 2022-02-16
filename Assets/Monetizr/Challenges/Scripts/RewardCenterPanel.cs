@@ -15,7 +15,7 @@ namespace Monetizr.Challenges
 
         }
 
-        public override void PreparePanel(Action onComplete)
+        public override void PreparePanel(PanelId id, Action onComplete)
         {
 
         }
@@ -30,7 +30,7 @@ namespace Monetizr.Challenges
             MonetizrManager.PlayVideo((bool isSkipped) => {
 
                 if(!isSkipped)
-                    MonetizrManager.ShowStartupNotification(null);
+                    MonetizrManager.ShowCongratsNotification(null);
             });
         }
 

@@ -176,7 +176,12 @@ namespace Monetizr.Challenges
 
         internal static void ShowStartupNotification(Action onComplete)
         {
-            instance.uiController.ShowPanel(PanelId.Notification, onComplete, true);
+            instance.uiController.ShowPanel(PanelId.StartNotification, onComplete, true);
+        }
+
+        internal static void ShowCongratsNotification(Action onComplete)
+        {
+            instance.uiController.ShowPanel(PanelId.CongratsNotification, onComplete, true);
         }
 
         internal static void ShowRewardCenter(Action onComplete)

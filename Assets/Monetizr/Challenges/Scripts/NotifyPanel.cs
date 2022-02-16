@@ -20,10 +20,19 @@ namespace Monetizr.Challenges
 
         //private Action onComplete;
 
-        public override void PreparePanel(Action onComplete)
+        public override void PreparePanel(PanelId id, Action onComplete)
         {
             this.onComplete = onComplete;
+            this.panelId = id;
 
+            switch(id) {
+                case PanelId.CongratsNotification: PrepareCongratsPanel(); break;
+                case PanelId.StartNotification: PrepareNotificationPanel(); break;
+            }
+        }
+
+        private void PrepareNotificationPanel()
+        {
             var challenges = MonetizrManager.Instance.GetAvailableChallenges();
 
             if (challenges.Count > 0)
@@ -43,6 +52,32 @@ namespace Monetizr.Challenges
 
                 rewardImage.gameObject.SetActive(false);
                 rewardAmount.gameObject.SetActive(false);
+
+                closeButton.onClick.AddListener(OnButtonPress);
+            }
+        }
+
+        private void PrepareCongratsPanel()
+        {
+            var challenges = MonetizrManager.Instance.GetAvailableChallenges();
+
+            if (challenges.Count > 0)
+            {
+                var challengeId = challenges[0];
+
+                banner.sprite = MonetizrManager.Instance.GetAsset<Sprite>(challengeId, AssetsType.BrandRewardBannerSprite);
+                logo.sprite = MonetizrManager.Instance.GetAsset<Sprite>(challengeId, AssetsType.BrandLogoSprite);
+
+                string brandTitle = MonetizrManager.Instance.GetAsset<string>(challengeId, AssetsType.BrandTitleString);
+
+                title.text = $"Congrats!";
+                text.text = $"You got <color=#F05627>2 Energy Boosts</color> from {brandTitle}";
+
+                //buttonText.text = "Learn More";
+                buttonText.text = "Awesome!";
+
+                rewardImage.gameObject.SetActive(true);
+                rewardAmount.gameObject.SetActive(true);
 
                 closeButton.onClick.AddListener(OnButtonPress);
             }

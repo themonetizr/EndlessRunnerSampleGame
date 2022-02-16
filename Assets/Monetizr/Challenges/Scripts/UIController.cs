@@ -10,8 +10,9 @@ namespace Monetizr.Challenges
     public enum PanelId
     {
         Unknown = -1,
-        Notification,
+        StartNotification,
         RewardCenter,
+        CongratsNotification,
     }
 
     public class UIController
@@ -44,8 +45,9 @@ namespace Monetizr.Challenges
 
             panels = new Dictionary<PanelId, PanelController>();
             panels.Add(PanelId.RewardCenter, rewardPanel.GetComponent<PanelController>());
-            panels.Add(PanelId.Notification, notifyPanel.GetComponent<PanelController>());
-            
+            panels.Add(PanelId.StartNotification, notifyPanel.GetComponent<PanelController>());
+            panels.Add(PanelId.CongratsNotification, notifyPanel.GetComponent<PanelController>());
+
 
             foreach (var p in panels)
                 p.Value.SetActive(false, true);
@@ -95,7 +97,7 @@ namespace Monetizr.Challenges
             if (previousPanel != PanelId.Unknown)
                 panels[previousPanel].SetActive(false);
 
-            panels[id].PreparePanel(onComplete);
+            panels[id].PreparePanel(id,onComplete);
 
             panels[id].SetActive(true);
 
