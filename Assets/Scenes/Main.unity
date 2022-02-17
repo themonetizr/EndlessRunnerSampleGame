@@ -4388,6 +4388,7 @@ GameObject:
   - component: {fileID: 455205752}
   - component: {fileID: 455205754}
   - component: {fileID: 455205753}
+  - component: {fileID: 455205755}
   m_Layer: 5
   m_Name: GameOver
   m_TagString: Untagged
@@ -4547,6 +4548,18 @@ CanvasRenderer:
   m_PrefabAsset: {fileID: 0}
   m_GameObject: {fileID: 455205747}
   m_CullTransparentMesh: 0
+--- !u!114 &455205755
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 455205747}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: 0b955cb18f522ba48806af297768fcf3, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: 
 --- !u!1 &465382261
 GameObject:
   m_ObjectHideFlags: 0
@@ -9897,6 +9910,7 @@ GameObject:
   - component: {fileID: 869760746}
   - component: {fileID: 869760745}
   - component: {fileID: 869760749}
+  - component: {fileID: 869760750}
   m_Layer: 5
   m_Name: Loadout
   m_TagString: Untagged
@@ -10034,6 +10048,18 @@ MonoBehaviour:
   UIGroundFilter: {fileID: 517316206}
   menuTheme: {fileID: 8300000, guid: 1588137430bfbab4b9a00ba3b220b82b, type: 3}
   consumableIcon: {fileID: 11439736, guid: 0c5f0793b82536342bd64bc3e3fdee8a, type: 3}
+--- !u!114 &869760750
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 869760744}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: 0b955cb18f522ba48806af297768fcf3, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: 
 --- !u!1 &878427076
 GameObject:
   m_ObjectHideFlags: 0
@@ -15512,6 +15538,7 @@ GameObject:
   - component: {fileID: 1245236423}
   - component: {fileID: 1245236422}
   - component: {fileID: 1245236425}
+  - component: {fileID: 1245236426}
   m_Layer: 0
   m_Name: Game
   m_TagString: Untagged
@@ -15646,6 +15673,18 @@ MonoBehaviour:
   adsPlacementId: reviveVideo
   adsNetwork: 78
   adsRewarded: 1
+--- !u!114 &1245236426
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 1245236420}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: 0b955cb18f522ba48806af297768fcf3, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: 
 --- !u!1 &1245708846
 GameObject:
   m_ObjectHideFlags: 0
@@ -23960,6 +23999,7 @@ GameObject:
   - component: {fileID: 1815696060}
   - component: {fileID: 1815696064}
   - component: {fileID: 1815696059}
+  - component: {fileID: 1815696065}
   m_Layer: 5
   m_Name: Leaderboard
   m_TagString: Untagged
@@ -24104,6 +24144,18 @@ MonoBehaviour:
   playerEntry: {fileID: 926798345}
   forcePlayerDisplay: 0
   displayPlayer: 1
+--- !u!114 &1815696065
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 1815696057}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: 0b955cb18f522ba48806af297768fcf3, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: 
 --- !u!1 &1822183923
 GameObject:
   m_ObjectHideFlags: 0

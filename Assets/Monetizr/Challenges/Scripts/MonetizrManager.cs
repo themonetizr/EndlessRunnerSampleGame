@@ -189,6 +189,11 @@ namespace Monetizr.Challenges
             instance.uiController.ShowPanel(PanelId.RewardCenter, onComplete, true);
         }
 
+        internal static void ShowSurvey(Action onComplete)
+        {
+            instance.uiController.ShowPanelFromPrefab("MonetizrSurveyPanel", PanelId.Survey, onComplete);
+        }
+
         internal static void PlayVideo(Action<bool> onComplete)
         {
             instance.uiController.PlayVideo(null, onComplete);

@@ -13,6 +13,7 @@ namespace Monetizr.Challenges
         StartNotification,
         RewardCenter,
         CongratsNotification,
+        Survey,
     }
 
     public class UIController
@@ -60,7 +61,7 @@ namespace Monetizr.Challenges
             var player = prefab.GetComponent<MonetizrVideoPlayer>();
 
             player.Play(path, (bool isSkip) => {
-                    onComplete.Invoke(isSkip);
+                    onComplete?.Invoke(isSkip);
                     GameObject.Destroy(prefab);
             } );
         }
@@ -103,6 +104,32 @@ namespace Monetizr.Challenges
 
             if (rememberPrevious)
                 previousPanel = id;
+        }
+
+        public void ShowPanelFromPrefab(String prefab, PanelId id = PanelId.Unknown, Action onComplete = null /*, bool rememberPrevious = false*/)
+        {
+            Debug.Log("ShowPanel: " + id);
+
+            if (previousPanel != PanelId.Unknown)
+                panels[previousPanel].SetActive(false);
+
+            var panel = GameObject.Instantiate<GameObject>(Resources.Load(prefab) as GameObject, mainCanvas.transform);
+
+            Action complete = () =>
+                {
+                    onComplete?.Invoke();
+                    GameObject.Destroy(panel);
+                };
+
+
+            var ctrlPanel = panel.GetComponent<PanelController>();
+
+            ctrlPanel.PreparePanel(id, complete);
+
+            ctrlPanel.SetActive(true);
+
+            //if (rememberPrevious)
+            //   previousPanel = id;
         }
 
         public void HidePanel(PanelId id = PanelId.Unknown)

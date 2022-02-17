@@ -21,7 +21,7 @@ public class CanvasReferenceScaler : MonoBehaviour
         }
         else
         {
-            //gameObject.GetComponent<CanvasScaler>().matchWidthOrHeight = 0;
+            gameObject.GetComponent<CanvasScaler>().matchWidthOrHeight = 1;
         }
     }
 

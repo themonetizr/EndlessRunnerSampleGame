@@ -13,23 +13,56 @@ using UnityEngine.Purchasing;
 
 public class StartButton : MonoBehaviour
 {
+    private UniWebView webView = null;
+    private string webUrl;
+
     public void SurveyLink()
     {
-        var webView = gameObject.AddComponent<UniWebView>();
-        webView.Frame = new Rect(0, 0, Screen.width, Screen.height);
+        //webView = gameObject.AddComponent<UniWebView>();
 
-        var page = MonetizrManager.Instance.GetAsset<string>(MonetizrManager.Instance.GetAvailableChallenges()[0], AssetsType.SurveyURLString);
+        //var w = Screen.width;
+        //var h = Screen.width * 1.5f;
+        //var x = 0;
+        //var y = (Screen.height - h) / 2;
 
-        // Load a URL.
-        webView.Load(page);
+        //webView.Frame = new Rect(x, y, w, h);
 
-        //webView.LoadHTMLString("<p>Hello World</p>", "https://domain.com");
+        //var page = MonetizrManager.Instance.GetAsset<string>(MonetizrManager.Instance.GetAvailableChallenges()[0], AssetsType.SurveyURLString);
 
-        // Show it.
-        webView.Show();
+        //webUrl = page;
+        //webView.Load(page);
 
+        ////webView.LoadHTMLString("<p>Hello World</p>", "https://domain.com");
+
+
+        //webView.Show();
+
+        MonetizrManager.ShowSurvey(null);
 
     }
+
+    //private void Update()
+    //{
+    //    if(webView != null)
+    //    {
+    //        var currentUrl = webView.Url;
+
+    //        if (!webUrl.Equals(currentUrl))
+    //        {
+    //            webUrl = currentUrl;
+    //            Debug.Log("Update: " + webView.Url);
+
+    //            if (webUrl.Contains("https://www.pollfish.com/lp/withdraw-consent") ||
+    //                webUrl.Contains("app.themonetizr.com") ||
+    //                webUrl.Contains("uniwebview"))
+    //            {
+    //                Destroy(webView);
+    //                webView = null;
+    //            }
+
+    //        }
+    //   }
+    //}
 
     public void PlayVideo()
     {
