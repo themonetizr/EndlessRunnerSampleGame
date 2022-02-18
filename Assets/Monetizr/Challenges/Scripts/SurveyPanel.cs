@@ -15,7 +15,7 @@ namespace Monetizr.Challenges
 
         //private Action onComplete;
 
-        public override void PreparePanel(PanelId id, Action onComplete)
+        internal override void PreparePanel(PanelId id, Action onComplete, List<MissionUIDescription> missionsDescriptions)
         {
             this.onComplete = onComplete;
             this.panelId = id;
@@ -26,6 +26,16 @@ namespace Monetizr.Challenges
             var h = Screen.width * 1.5f;
             var x = 0;
             var y = (Screen.height - h) / 2;
+
+            float aspect = (float)Screen.height / (float)Screen.width;
+
+
+            if (aspect < 1.777)
+            {
+                h = Screen.height * 0.8f;
+                y = (Screen.height - h) / 2;
+
+            }
 
             webView.Frame = new Rect(x, y, w, h);
 
@@ -53,12 +63,12 @@ namespace Monetizr.Challenges
 
         void OnPageStarted(UniWebView webView, string url)
         {
-            //Debug.Log($"OnPageStarted: { url} ");
+            Debug.Log($"OnPageStarted: { url} ");
         }
 
         void OnPageFinished(UniWebView webView, int statusCode, string url)
         {
-            //Debug.Log($"OnPageFinished: {url} code: {statusCode}");
+            Debug.Log($"OnPageFinished: {url} code: {statusCode}");
 
             if (statusCode >= 300)
                 OnButtonPress();
@@ -67,7 +77,7 @@ namespace Monetizr.Challenges
         void OnPageErrorReceived(UniWebView webView, int errorCode, string url)
         {
 
-            //Debug.Log($"OnPageErrorReceived: {url} code: {errorCode}");
+            Debug.Log($"OnPageErrorReceived: {url} code: {errorCode}");
 
             OnButtonPress();
         }

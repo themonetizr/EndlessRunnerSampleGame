@@ -8,6 +8,7 @@ using System.Runtime.CompilerServices;
 using System.Threading.Tasks;
 using UnityEngine.UI;
 using System.IO;
+using UnityEngine.Assertions;
 
 namespace Monetizr.Challenges
 {
@@ -183,6 +184,13 @@ namespace Monetizr.Challenges
         {
             instance.uiController.ShowPanel(PanelId.CongratsNotification, onComplete, true);
         }
+
+        internal static void AddUserDefinedMission(string missionTitle, string missionDescription, Sprite missionIcon, Sprite rewardIcon, int reward, float progress, Action onClaimButtonPress)
+        {
+            MissionUIDescription m = new MissionUIDescription(missionTitle, missionDescription, missionIcon, rewardIcon, reward, progress, onClaimButtonPress);
+            instance.uiController.AddMission(m);
+        }
+
 
         internal static void ShowRewardCenter(Action onComplete)
         {
@@ -389,7 +397,7 @@ namespace Monetizr.Challenges
             }
         }
 
-       
+        
     }
 
 }

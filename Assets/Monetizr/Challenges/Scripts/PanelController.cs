@@ -13,7 +13,7 @@ namespace Monetizr.Challenges
         protected Action onComplete;
         protected PanelId panelId;
 
-        public abstract void PreparePanel(PanelId id, Action onComplete);
+        internal abstract void PreparePanel(PanelId id, Action onComplete, List<MissionUIDescription> missionsDescriptions);
 
         protected void Awake()
         {

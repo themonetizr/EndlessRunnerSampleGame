@@ -16,8 +16,51 @@ namespace Monetizr.Challenges
         Survey,
     }
 
+    public class MissionUIDescription
+    {
+        public Sprite brandBanner;
+        public string missionTitle;
+        public string missionDescription;
+        public Sprite missionIcon;
+
+        public Sprite rewardIcon;
+        public int reward;
+        public float progress;
+        public Action onClaimButtonPress;
+
+        public MissionUIDescription(string missionTitle,
+                                    string missionDescription,
+                                    Sprite missionIcon,
+                                    Sprite rewardIcon,
+                                    int reward,
+                                    float progress,
+                                    Action onClaimButtonPress)
+        {
+            /*if (string.IsNullOrEmpty(missionTitle))
+            {
+                throw new ArgumentException($"'{nameof(missionTitle)}' cannot be null or empty", nameof(missionTitle));
+            }
+
+            if (string.IsNullOrEmpty(missionDescription))
+            {
+                throw new ArgumentException($"'{nameof(missionDescription)}' cannot be null or empty", nameof(missionDescription));
+            }*/
+
+            this.brandBanner = null;
+            this.missionTitle = missionTitle;
+            this.missionDescription = missionDescription;
+            this.missionIcon = missionIcon;// ?? throw new ArgumentNullException(nameof(missionIcon));
+            this.rewardIcon = rewardIcon;// ?? throw new ArgumentNullException(nameof(rewardIcon));
+            this.reward = reward;
+            this.progress = progress;
+            this.onClaimButtonPress = onClaimButtonPress;
+        }
+    }
+
     public class UIController
     {
+        private List<MissionUIDescription> missionsDescriptions = new List<MissionUIDescription>();
+
         private GameObject mainCanvas;
         private PanelId previousPanel;
 
@@ -53,6 +96,20 @@ namespace Monetizr.Challenges
             foreach (var p in panels)
                 p.Value.SetActive(false, true);
         }
+
+        internal void CleanMissionsList()
+        {
+            //if (missionsDescriptions == null)
+            //    missionsDescriptions = new List<MissionUIDescription>();
+
+            missionsDescriptions.Clear();
+        }
+
+        public void AddMission(MissionUIDescription m)
+        {
+            missionsDescriptions.Add(m);
+        }
+
 
         public void PlayVideo(String path, Action<bool> onComplete)
         {
@@ -98,7 +155,12 @@ namespace Monetizr.Challenges
             if (previousPanel != PanelId.Unknown)
                 panels[previousPanel].SetActive(false);
 
-            panels[id].PreparePanel(id,onComplete);
+            if(id == PanelId.RewardCenter)
+            {
+                //CleanMissionsList();
+            }
+
+            panels[id].PreparePanel(id, onComplete, missionsDescriptions);
 
             panels[id].SetActive(true);
 
@@ -124,7 +186,7 @@ namespace Monetizr.Challenges
 
             var ctrlPanel = panel.GetComponent<PanelController>();
 
-            ctrlPanel.PreparePanel(id, complete);
+            ctrlPanel.PreparePanel(id, complete, null);
 
             ctrlPanel.SetActive(true);
 

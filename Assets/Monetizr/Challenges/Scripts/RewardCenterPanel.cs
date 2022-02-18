@@ -8,6 +8,9 @@ namespace Monetizr.Challenges
 
     public class RewardCenterPanel : PanelController
     {
+        public Transform contentRoot;
+        public MonetizrRewardedItem itemUI;
+    
         private new void Awake()
         {
             base.Awake();
@@ -15,9 +18,20 @@ namespace Monetizr.Challenges
 
         }
 
-        public override void PreparePanel(PanelId id, Action onComplete)
+        internal override void PreparePanel(PanelId id, Action onComplete, List<MissionUIDescription> missionsDescriptions)
         {
+            Debug.Log("PreparePanel");
+            foreach(var m in missionsDescriptions)
+            {
+                var go = GameObject.Instantiate<GameObject>(itemUI.gameObject,contentRoot);
 
+                var item = go.GetComponent<MonetizrRewardedItem>();
+
+
+                Debug.Log(m.missionTitle);
+
+                item.UpdateWithDescription(m);
+            }
         }
 
         public void OnButtonPress()

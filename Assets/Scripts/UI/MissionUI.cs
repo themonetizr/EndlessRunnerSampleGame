@@ -1,4 +1,5 @@
-﻿using System.Collections;
+﻿using System;
+using System.Collections;
 using Monetizr.Challenges;
 using UnityEngine;
 using UnityEngine.AddressableAssets;
@@ -9,6 +10,9 @@ public class MissionUI : MonoBehaviour
     public RectTransform missionPlace;
     public AssetReference missionEntryPrefab;
     public AssetReference addMissionButtonPrefab;
+
+    public Sprite defaultMissionIcon;
+    public Sprite defaultRewardIcon;
 
     public IEnumerator Open()
     {
@@ -52,6 +56,18 @@ public class MissionUI : MonoBehaviour
     {
         //gameObject.SetActive(true);
         //StartCoroutine(Open());
+
+        for (int i = 0; i < PlayerData.instance.missions.Count; ++i)
+        {
+            var m = PlayerData.instance.missions[i];
+
+            Action onClaimButtonPress = () => { };
+
+            var missionIcon = defaultMissionIcon;
+            var rewardIcon = defaultRewardIcon;
+
+            MonetizrManager.AddUserDefinedMission(m.GetMissionType().ToString(), m.GetMissionDesc(), missionIcon, rewardIcon, m.reward, m.progress, onClaimButtonPress);
+        }
 
         MonetizrManager.ShowRewardCenter(null);
     }
