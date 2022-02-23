@@ -4,6 +4,7 @@ using System.Collections;
 using System.Collections.Generic;
 using UnityEngine.AddressableAssets;
 using UnityEngine.ResourceManagement.AsyncOperations;
+using Monetizr.Challenges;
 
 #if UNITY_ANALYTICS
 using UnityEngine.Analytics;
@@ -73,6 +74,8 @@ public class LoadoutState : AState
 
     public override void Enter(AState from)
     {
+        MonetizrManager.ShowTinyMenuTeaser(()=> { missionPopup.CallOpen(); });
+
         tutorialBlocker.SetActive(!PlayerData.instance.tutorialDone);
         tutorialPrompt.SetActive(false);
 

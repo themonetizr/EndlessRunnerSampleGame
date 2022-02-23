@@ -8,10 +8,19 @@ namespace Monetizr.Challenges
 {
     public abstract class PanelController : MonoBehaviour
     {
+        enum State
+        {
+           Unknown,
+           Hidden,
+           Animating,
+           Showing
+        };
+
         private Animator animator;
         private CanvasGroup canvasGroup;
         protected Action onComplete;
         protected PanelId panelId;
+        private State state;
 
         internal abstract void PreparePanel(PanelId id, Action onComplete, List<MissionUIDescription> missionsDescriptions);
 
@@ -24,6 +33,8 @@ namespace Monetizr.Challenges
 
             Assert.IsNotNull(animator);
             Assert.IsNotNull(canvasGroup);
+
+            state = State.Unknown;
         }
 
         internal void EnableInput(bool enable)
@@ -33,20 +44,27 @@ namespace Monetizr.Challenges
 
         internal void SetActive(bool active, bool immediately = false)
         {
-            if (active)
+            if (active) //showing
             {
-                EnableInput(true);
+                if (state != State.Animating && state != State.Showing)
+                {
+                    EnableInput(true);
 
-                gameObject.SetActive(true);
-                animator.Play("PanelAnimator_Show");
+                    gameObject.SetActive(true);
+                    animator.Play("PanelAnimator_Show");
+
+                    state = State.Animating;
+                }
             }
-            else
-            {
+            else if(state != State.Hidden) //hiding
+            {                
                 EnableInput(false);
 
-                if (!immediately)
+                if (!immediately && state != State.Animating)
                 {
                     animator.Play("PanelAnimator_Hide");
+
+                    state = State.Animating;
                 }
                 else
                 {
@@ -74,11 +92,13 @@ namespace Monetizr.Challenges
 
         internal void OnAnimationShow()
         {
-
+            state = State.Showing;
         }
 
         private void OnAnimationHide()
         {
+            state = State.Hidden;
+
             gameObject.SetActive(false);
 
             onComplete?.Invoke();

@@ -113,6 +113,16 @@ namespace Monetizr.Challenges
     /// </summary>
     public class MonetizrManager : MonoBehaviour
     {
+        enum ErrorType
+        {
+            NotinitializedSDK,
+        };
+
+        private static readonly Dictionary<ErrorType, string> errorMessages = new Dictionary<ErrorType, string>()
+        {
+            { ErrorType.NotinitializedSDK, "You're trying to use Monetizer SDK before it's been initialized. Call MonetizerManager.Initalize first." }
+        };
+
         private ChallengesClient _challengesClient;
         private static MonetizrManager instance = null;
 
@@ -177,32 +187,50 @@ namespace Monetizr.Challenges
 
         internal static void ShowStartupNotification(Action onComplete)
         {
+            Assert.IsNotNull(instance, errorMessages[ErrorType.NotinitializedSDK]);
+
             instance.uiController.ShowPanel(PanelId.StartNotification, onComplete, true);
         }
 
         internal static void ShowCongratsNotification(Action onComplete)
         {
+            Assert.IsNotNull(instance, errorMessages[ErrorType.NotinitializedSDK]);
+
             instance.uiController.ShowPanel(PanelId.CongratsNotification, onComplete, true);
         }
 
         internal static void AddUserDefinedMission(string missionTitle, string missionDescription, Sprite missionIcon, Sprite rewardIcon, int reward, float progress, Action onClaimButtonPress)
         {
+            Assert.IsNotNull(instance, errorMessages[ErrorType.NotinitializedSDK]);
+
             MissionUIDescription m = new MissionUIDescription(missionTitle, missionDescription, missionIcon, rewardIcon, reward, progress, onClaimButtonPress);
             instance.uiController.AddMission(m);
         }
 
-
         internal static void ShowRewardCenter(Action onComplete)
         {
+            Assert.IsNotNull(instance, errorMessages[ErrorType.NotinitializedSDK]);
+
             instance.uiController.ShowPanel(PanelId.RewardCenter, onComplete, true);
         }
 
         internal static void ShowSurvey(Action onComplete)
         {
+            Assert.IsNotNull(instance, errorMessages[ErrorType.NotinitializedSDK]);
+
             instance.uiController.ShowPanelFromPrefab("MonetizrSurveyPanel", PanelId.Survey, onComplete);
         }
 
-        internal static void PlayVideo(Action<bool> onComplete)
+        public static void ShowTinyMenuTeaser(Action onTap)
+        {
+            Assert.IsNotNull(instance, errorMessages[ErrorType.NotinitializedSDK]);
+
+            instance.uiController.ShowTinyMenuTeaser(onTap);
+        }
+
+
+        //TODO: shouldn't have possibility to show video directly by game
+        internal static void _PlayVideo(Action<bool> onComplete)
         {
             instance.uiController.PlayVideo(null, onComplete);
         }

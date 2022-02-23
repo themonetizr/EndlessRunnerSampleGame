@@ -41,7 +41,7 @@ namespace Monetizr.Challenges
 
         public void OnVideoPlayPress()
         {
-            MonetizrManager.PlayVideo((bool isSkipped) => {
+            MonetizrManager._PlayVideo((bool isSkipped) => {
 
                 if(!isSkipped)
                     MonetizrManager.ShowCongratsNotification(null);

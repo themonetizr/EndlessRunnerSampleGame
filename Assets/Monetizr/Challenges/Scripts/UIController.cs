@@ -14,6 +14,7 @@ namespace Monetizr.Challenges
         RewardCenter,
         CongratsNotification,
         Survey,
+        TinyMenuTeaser
     }
 
     public class MissionUIDescription
@@ -162,6 +163,9 @@ namespace Monetizr.Challenges
 
             panels[id].PreparePanel(id, onComplete, missionsDescriptions);
 
+            //moving to the top
+            panels[id].gameObject.transform.SetSiblingIndex(panels[id].gameObject.transform.parent.childCount-1);
+
             panels[id].SetActive(true);
 
             if (rememberPrevious)
@@ -194,6 +198,34 @@ namespace Monetizr.Challenges
             //   previousPanel = id;
         }
 
+        public void ShowTinyMenuTeaser(Action onTap)
+        {
+             MonetizrMenuTeaser teaser;
+
+            if (!panels.ContainsKey(PanelId.TinyMenuTeaser))
+            {
+                var obj = GameObject.Instantiate<GameObject>(Resources.Load("MonetizrMenuTeaser") as GameObject, mainCanvas.transform);
+                teaser = obj.GetComponent<MonetizrMenuTeaser>();
+                panels.Add(PanelId.TinyMenuTeaser, teaser);
+                teaser.button.onClick.AddListener(() => { onTap?.Invoke(); });
+            }
+            else
+            {
+                teaser = panels[PanelId.TinyMenuTeaser] as MonetizrMenuTeaser;
+            }
+                                    
+            teaser.SetActive(true);
+        }
+
+        public void HideTinyMenuTeaser(Action onTap)
+        {
+            if (panels.ContainsKey(PanelId.TinyMenuTeaser))
+            {
+                panels[PanelId.TinyMenuTeaser].SetActive(false);
+            }
+        }
+
+
         public void HidePanel(PanelId id = PanelId.Unknown)
         {
             if (id == PanelId.Unknown && previousPanel != PanelId.Unknown)
@@ -203,6 +235,7 @@ namespace Monetizr.Challenges
 
         }
 
+      
     }
 
 
