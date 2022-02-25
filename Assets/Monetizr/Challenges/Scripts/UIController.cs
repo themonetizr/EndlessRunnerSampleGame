@@ -19,6 +19,8 @@ namespace Monetizr.Challenges
 
     public class MissionUIDescription
     {
+        public bool isSponsored;
+
         public Sprite brandBanner;
         public string missionTitle;
         public string missionDescription;
@@ -28,6 +30,10 @@ namespace Monetizr.Challenges
         public int reward;
         public float progress;
         public Action onClaimButtonPress;
+
+        public MissionUIDescription()
+        {
+        }
 
         public MissionUIDescription(string missionTitle,
                                     string missionDescription,
@@ -46,6 +52,8 @@ namespace Monetizr.Challenges
             {
                 throw new ArgumentException($"'{nameof(missionDescription)}' cannot be null or empty", nameof(missionDescription));
             }*/
+
+            this.isSponsored = false;
 
             this.brandBanner = null;
             this.missionTitle = missionTitle;
@@ -161,7 +169,14 @@ namespace Monetizr.Challenges
                 //CleanMissionsList();
             }
 
-            panels[id].PreparePanel(id, onComplete, missionsDescriptions);
+            Action _onComplete = () => {
+                onComplete?.Invoke();
+                missionsDescriptions.Clear();
+
+                Debug.Log("missionsDescriptions clear");
+            };
+
+            panels[id].PreparePanel(id, _onComplete, missionsDescriptions);
 
             //moving to the top
             panels[id].gameObject.transform.SetSiblingIndex(panels[id].gameObject.transform.parent.childCount-1);

@@ -114,6 +114,8 @@ public class LoadoutState : AState
 
     public override void Exit(AState to)
     {
+        MonetizrManager.HideTinyMenuTeaser();
+
         missionPopup.gameObject.SetActive(false);
         inventoryCanvas.gameObject.SetActive(false);
 

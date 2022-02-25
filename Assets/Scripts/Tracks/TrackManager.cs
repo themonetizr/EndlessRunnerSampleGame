@@ -562,7 +562,13 @@ public class TrackManager : MonoBehaviour
 
     private IEnumerator SpawnFromAssetReference(AssetReference reference, TrackSegment segment, int posIndex)
     {
-        AsyncOperationHandle op = reference.LoadAssetAsync<GameObject>();
+        AsyncOperationHandle op;
+
+        if (!reference.OperationHandle.IsValid())
+            op = reference.LoadAssetAsync<GameObject>();
+        else
+            op = reference.OperationHandle;
+
         yield return op; 
         GameObject obj = op.Result as GameObject;
         if (obj != null)

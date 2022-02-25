@@ -5,7 +5,6 @@ using System.Net.Http.Headers;
 using System.Text;
 using System.Threading.Tasks;
 using UnityEngine;
-using Monetizr.Challenges.Analytics;
 
 namespace Monetizr.Challenges
 {
@@ -42,9 +41,9 @@ namespace Monetizr.Challenges
                 RequestUri = new Uri(k_BaseUri + "api/challenges"),
                 Headers =
                 {
-                    {"location", playerInfo.location},
-                    {"age", playerInfo.age.ToString()},
-                    {"game-type", playerInfo.gameType},
+                    //{"location", playerInfo.location},
+                    //{"age", playerInfo.age.ToString()},
+                    //{"game-type", playerInfo.gameType},
                     {"player-id", playerInfo.playerId},
                 }
             };
@@ -69,77 +68,6 @@ namespace Monetizr.Challenges
         }
 
         /// <summary>
-        /// Returns a single challenge that matches the ID.
-        /// </summary>
-        public async Task<Challenge> GetSingle(string id)
-        {
-            HttpRequestMessage requestMessage = new HttpRequestMessage
-            {
-                Method = HttpMethod.Get,
-                RequestUri = new Uri(k_BaseUri + "api/challenges/" + id),
-                Headers =
-                {
-                    {"location", playerInfo.location},
-                    {"age", playerInfo.age.ToString()},
-                    {"game-type", playerInfo.gameType},
-                    {"player-id", playerInfo.playerId},
-                }
-            };
-
-            HttpResponseMessage response = await Client.SendAsync(requestMessage);
-
-            return !response.IsSuccessStatusCode ? null : JsonUtility.FromJson<Challenge>(await response.Content.ReadAsStringAsync());
-        }
-
-        [Serializable]
-        private class Status
-        {
-            public int progress;
-        }
-
-        /// <summary>
-        /// Updates challenge progress to a given value (in range 0 - 100)
-        /// </summary>
-        public async Task UpdateStatus(Challenge challenge, int progress, Action onSuccess = null, Action onFailure = null)
-        {
-            var status = new Status
-            {
-                progress = Mathf.Clamp(progress, 0, 100)
-            };
-
-            HttpRequestMessage requestMessage = new HttpRequestMessage
-            {
-                Method = HttpMethod.Post,
-                RequestUri = new Uri(k_BaseUri + "api/challenges/" + challenge.id + "/status"),
-                Headers =
-                {
-                    {"location", playerInfo.location},
-                    {"age", playerInfo.age.ToString()},
-                    {"game-type", playerInfo.gameType},
-                    {"player-id", playerInfo.playerId},
-                },
-                Content = new StringContent(
-                    JsonUtility.ToJson(status),
-                    Encoding.UTF8,
-                    "application/json"
-                )
-            };
-
-            HttpResponseMessage response = await Client.SendAsync(requestMessage);
-
-            if (response.IsSuccessStatusCode)
-            {
-                ChallengeAnalytics.MarkChallengeStatusUpdate(challenge);
-                challenge.progress = progress;
-                onSuccess?.Invoke();
-            }
-            else
-            {
-                onFailure.Invoke();
-            }
-        }
-
-        /// <summary>
         /// Marks the challenge as claimed by the player.
         /// </summary>
         public async Task Claim(Challenge challenge, Action onSuccess = null, Action onFailure = null)
@@ -150,9 +78,9 @@ namespace Monetizr.Challenges
                 RequestUri = new Uri(k_BaseUri + "api/challenges/" + challenge.id + "/claim"),
                 Headers =
                 {
-                    {"location", playerInfo.location},
-                    {"age", playerInfo.age.ToString()},
-                    {"game-type", playerInfo.gameType},
+                    //{"location", playerInfo.location},
+                    //{"age", playerInfo.age.ToString()},
+                    //{"game-type", playerInfo.gameType},
                     {"player-id", playerInfo.playerId},
                     {"duration", ChallengeAnalytics.GetElapsedTime(challenge).ToString()}
                 }

@@ -66,6 +66,11 @@ namespace Monetizr.Challenges
         {
             
         }
+
+        internal override void FinalizePanel(PanelId id)
+        {
+            
+        }
     }
 
 }

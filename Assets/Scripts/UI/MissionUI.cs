@@ -61,7 +61,7 @@ public class MissionUI : MonoBehaviour
         {
             var m = PlayerData.instance.missions[i];
 
-            Action onClaimButtonPress = () => { };
+            Action onClaimButtonPress = () => { PlayerData.instance.ClaimMission(m); };
 
             var missionIcon = defaultMissionIcon;
             var rewardIcon = defaultRewardIcon;

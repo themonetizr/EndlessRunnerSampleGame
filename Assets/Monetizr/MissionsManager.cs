@@ -183,7 +183,7 @@ public class MissionsManager : MonoBehaviour
             missionCompleteUI.transform.Find("CompleteWindow/Image").GetComponent<Image>().sprite =
                     MonetizrManager.Instance.GetAsset<Sprite>(m.monetizrID, AssetsType.BrandBannerSprite);
 
-            MonetizrManager.Instance.UpdateReward(m.monetizrID, 100);
+            MonetizrManager.Instance.ClaimReward(m.monetizrID);
         }
     }
 

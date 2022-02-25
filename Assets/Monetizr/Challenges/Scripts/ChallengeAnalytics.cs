@@ -4,21 +4,29 @@ using UnityEngine;
 
 namespace Monetizr.Challenges
 {
-    namespace Analytics
-    {
-
-        public static class ChallengeAnalytics
+    public static class ChallengeAnalytics
         {
             private static Dictionary<string, ChallengeTimes> challengesWithTimes = new Dictionary<string, ChallengeTimes>();
 
             private const int SECONDS_IN_DAY = 24 * 60 * 60;
 
-            /// <summary>
-            /// Updates <see cref="challengesWithTimes"/> with <paramref name="challenges"/>. 
-            /// If a challenge has already been registered in a previous Update, its times will remain unchanged.
-            /// If a challenge no longer exists in <paramref name="challenges"/> it will be removed.
-            /// </summary>
-            public static void Update(List<Challenge> challenges)
+
+            public static void StartShowAdAsset()
+            {
+
+            }
+
+            public static void EndShowAdAsset()
+            {
+
+            }
+
+        /// <summary>
+        /// Updates <see cref="challengesWithTimes"/> with <paramref name="challenges"/>. 
+        /// If a challenge has already been registered in a previous Update, its times will remain unchanged.
+        /// If a challenge no longer exists in <paramref name="challenges"/> it will be removed.
+        /// </summary>
+        public static void Update(List<Challenge> challenges)
             {
                 Dictionary<string, ChallengeTimes> updatedChallengesWithTimes = new Dictionary<string, ChallengeTimes>();
 
@@ -99,6 +107,6 @@ namespace Monetizr.Challenges
             }
         }
 
-    }
+    
 
 }

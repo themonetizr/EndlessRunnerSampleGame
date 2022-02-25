@@ -20,7 +20,7 @@ public class TestGame : MonoBehaviour
     {
         challengesClient = new ChallengesClient(apiKey)
         {
-            playerInfo = new PlayerInfo("Country", 18, "action", "user")
+            playerInfo = new PlayerInfo("user")
         };
     }
 
@@ -39,10 +39,10 @@ public class TestGame : MonoBehaviour
         StartCoroutine(AssetsHelper.Download2DAsset(challenges[0].assets.FirstOrDefault(asset => asset.type == "icon"), (asset, sprite) => { image.sprite = sprite; }, () => Debug.Log("Asset download failed")));
     }
 
-    public async void UpdateStatus(int index)
+    /*public async void UpdateStatus(int index)
     {
         await challengesClient.UpdateStatus(challenges[index], 50, delegate { Debug.Log("Challenge progress updated!"); });
-    }
+    }*/
 
     public async void ClaimChallenge(int index)
     {

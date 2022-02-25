@@ -168,7 +168,7 @@ namespace Monetizr.Challenges
         {
             _challengesClient = new ChallengesClient(apiKey)
             {
-                playerInfo = new PlayerInfo("Helsinki", 18, "action", "monetizr_mj")
+                playerInfo = new PlayerInfo("monetizr_mj")
             };
 
             RequestChallenges(
@@ -226,6 +226,13 @@ namespace Monetizr.Challenges
             Assert.IsNotNull(instance, errorMessages[ErrorType.NotinitializedSDK]);
 
             instance.uiController.ShowTinyMenuTeaser(onTap);
+        }
+
+        public static void HideTinyMenuTeaser()
+        {
+            Assert.IsNotNull(instance, errorMessages[ErrorType.NotinitializedSDK]);
+
+            instance.uiController.HidePanel(PanelId.TinyMenuTeaser);
         }
 
 
@@ -404,20 +411,22 @@ namespace Monetizr.Challenges
         /// <summary>
         /// Single update for reward and claim
         /// </summary>
-        public async void UpdateReward(String challengeId, int progress)
+        public async void ClaimReward(String challengeId)
         {
             var challenge = challenges[challengeId].challenge;
 
             try
             {
-                if (progress < 100)
+                /*if (progress < 100)
                 {
                     await _challengesClient.UpdateStatus(challenge, progress);
                 }
                 else
                 {
                     await _challengesClient.Claim(challenge);
-                }
+                }*/
+
+                await _challengesClient.Claim(challenge);
             }
             catch (Exception e)
             {

@@ -5,7 +5,7 @@ using System.IO;
 
 using Monetizr.Challenges;
 
-class CallBackTest : IMediaPlayerCallback {
+/*class CallBackTest : IMediaPlayerCallback {
 	public void onVideoFinish( string data ) {
 		Debug.Log("Video played, data: " + data);
 		MediaPlayerTest.console.Print("Video played, data: " + data);
@@ -14,11 +14,11 @@ class CallBackTest : IMediaPlayerCallback {
 		Debug.Log("Video closed, data: " + data);
 		MediaPlayerTest.console.Print("Video closed, data: " + data);
 	}
-}
+}*/
 
 public class MediaPlayerTest : MonoBehaviour {
 	
-	CallBackTest m_callback;
+	//CallBackTest m_callback;
     static public ConsoleManager console;
 
 
@@ -56,7 +56,7 @@ public class MediaPlayerTest : MonoBehaviour {
 
 	void PlayVideo(string fpath)
     {
-		m_callback = new CallBackTest();
+		/*m_callback = new CallBackTest();
 		MediaPlayerBehavior player = GetComponent<MediaPlayerBehavior>();
 		
 		if( player != null )
@@ -65,6 +65,6 @@ public class MediaPlayerTest : MonoBehaviour {
 
 			player.Init( "Test title", fpath);
 			player.setCallback( m_callback );
-		}
+		}*/
     }
 }

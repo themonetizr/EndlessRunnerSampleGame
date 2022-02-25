@@ -95,6 +95,11 @@ namespace Monetizr.Challenges
             SetActive(false);
         }
 
+        internal override void FinalizePanel(PanelId id)
+        {
+            
+        }
+
         //// Start is called before the first frame update
         //void Start()
         //{

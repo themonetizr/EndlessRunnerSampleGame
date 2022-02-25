@@ -23,6 +23,7 @@ namespace Monetizr.Challenges
         private State state;
 
         internal abstract void PreparePanel(PanelId id, Action onComplete, List<MissionUIDescription> missionsDescriptions);
+        internal abstract void FinalizePanel(PanelId id);
 
         protected void Awake()
         {
@@ -99,8 +100,10 @@ namespace Monetizr.Challenges
         {
             state = State.Hidden;
 
-            gameObject.SetActive(false);
+            FinalizePanel(panelId);
 
+            gameObject.SetActive(false);
+            
             onComplete?.Invoke();
         }
     }

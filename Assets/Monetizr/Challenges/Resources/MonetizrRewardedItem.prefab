@@ -103,6 +103,7 @@ MonoBehaviour:
   progressBar: {fileID: 3162284098934431367}
   rewardLine: {fileID: 8790682957129974402}
   rewardPercent: {fileID: 5211356600487141493}
+  buttonText: {fileID: 4131049841483911870}
 --- !u!1 &7192897177507515557
 GameObject:
   m_ObjectHideFlags: 0
@@ -314,6 +315,18 @@ GameObject:
     type: 3}
   m_PrefabInstance: {fileID: 6995090663582269067}
   m_PrefabAsset: {fileID: 0}
+--- !u!114 &4131049841483911870 stripped
+MonoBehaviour:
+  m_CorrespondingSourceObject: {fileID: 6361301574503754805, guid: d05ee7748b364f24492b427758ffeecc,
+    type: 3}
+  m_PrefabInstance: {fileID: 6995090663582269067}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 0}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: 5f7201a12d95ffc409449d95f23cf332, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: 
 --- !u!114 &4131049841505687031 stripped
 MonoBehaviour:
   m_CorrespondingSourceObject: {fileID: 6361301574447901564, guid: d05ee7748b364f24492b427758ffeecc,
