@@ -42,18 +42,18 @@ namespace Monetizr.Challenges
 
         private const int SECONDS_IN_DAY = 24 * 60 * 60;
 
-        private VisibleAdAsset visibleAdAsset;
+        private VisibleAdAsset visibleAdAsset = null;
 
         public MonetizrAnalytics()
         {
-            Debug.Log("MonetizrAnalytics Initialize!");
-
             Mixpanel.Init();
         }
 
         public void BeginShowAdAsset(AdType type)
         {
             Debug.Log("MonetizrAnalytics BeginShowAdAsset!");
+
+            Assert.IsNull(visibleAdAsset, MonetizrErrors.msg[ErrorType.AdAssetStillShowing]);
 
             var ch = MonetizrManager.Instance.GetAvailableChallenges();
 
@@ -69,13 +69,15 @@ namespace Monetizr.Challenges
         {
             Debug.Log("MonetizrAnalytics EndShowAdAsset!");
 
+            //Mixpanel.Track("Sent Message");
+
             Assert.IsNotNull(visibleAdAsset);
             Assert.AreEqual(type, visibleAdAsset.adType, MonetizrErrors.msg[ErrorType.SimultaneusAdAssets]);
 
             var challenge = MonetizrManager.Instance.GetChallenge(visibleAdAsset.challengeId);
             
             var props = new Value();
-            props["application_id"] = Application.identifier;
+            props["application_id"] = Application.identifier.ToLower();
             props["player_id"] = SystemInfo.deviceUniqueIdentifier;
             props["application_name"] = Application.productName;
             props["application_version"] = Application.version;
@@ -87,7 +89,9 @@ namespace Monetizr.Challenges
 
             Mixpanel.Track("[UNITY_SDK] ad_asset", props);
 
-            Mixpanel.Flush();
+            
+
+            visibleAdAsset = null;
 
             //quest?
 
@@ -98,6 +102,11 @@ namespace Monetizr.Challenges
             //"brand_id":"d250d29e-8488-4a2f-b0b3-a1e2953ac2c4",
             //"application_id":"d10d793a-e937-4622-a79f-68cbc01a97ad",
 
+        }
+
+        public void Flush()
+        {
+            Mixpanel.Flush();
         }
 
         /// <summary>

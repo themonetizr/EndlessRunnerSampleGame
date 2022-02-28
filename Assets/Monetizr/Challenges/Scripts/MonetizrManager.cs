@@ -16,7 +16,7 @@ namespace Monetizr.Challenges
     {
         NotinitializedSDK,
         SimultaneusAdAssets,
-
+        AdAssetStillShowing,
     };
 
     public static class MonetizrErrors
@@ -24,7 +24,8 @@ namespace Monetizr.Challenges
         public static readonly Dictionary<ErrorType, string> msg = new Dictionary<ErrorType, string>()
         {
             { ErrorType.NotinitializedSDK, "You're trying to use Monetizer SDK before it's been initialized. Call MonetizerManager.Initalize first." },
-            { ErrorType.SimultaneusAdAssets, "Simultaneous display of multiple ads is not supported!" }
+            { ErrorType.SimultaneusAdAssets, "Simultaneous display of multiple ads is not supported!" },
+            { ErrorType.AdAssetStillShowing, "Some ad asset are still showing." }
 
         };
     }
@@ -43,7 +44,7 @@ namespace Monetizr.Challenges
         VideoURLString, //video url
         VideoFilePathString, //video url
         BrandTitleString, //text
-      
+
     }
 
     /// <summary>
@@ -165,7 +166,7 @@ namespace Monetizr.Challenges
         public static MonetizrManager Instance
         {
             get
-            {
+            {   
                 return instance;
             }
         }
@@ -176,6 +177,11 @@ namespace Monetizr.Challenges
             {
                 return instance._challengesClient.analytics;
             }
+        }
+
+        void OnApplicationQuit()
+        {
+            Analytics.Flush();
         }
 
         /// <summary>
@@ -296,7 +302,7 @@ namespace Monetizr.Challenges
 
             Sprite s = Sprite.Create(tex, new Rect(0.0f, 0.0f, tex.width, tex.height), new Vector2(0.5f, 0.5f), 100.0f);
 
-            if(texture != AssetsType.Unknown)
+            if (texture != AssetsType.Unknown)
                 ech.SetAsset<Texture2D>(texture, tex);
 
             if (sprite != AssetsType.Unknown)
@@ -323,7 +329,7 @@ namespace Monetizr.Challenges
 
                 File.WriteAllBytes(fpath, data);
 
-                
+
 
                 Debug.Log("saving: " + fpath);
             }
@@ -349,7 +355,7 @@ namespace Monetizr.Challenges
 
                 foreach (var asset in ch.assets)
                 {
-                    switch(asset.type)
+                    switch (asset.type)
                     {
                         case "icon":
                             await AssignAssetTextures(ech, asset, AssetsType.Unknown, AssetsType.BrandLogoSprite);
@@ -380,13 +386,13 @@ namespace Monetizr.Challenges
 
                             break;
 
-                        
+
                     }
-                    
+
                 }
 
                 this.challenges.Add(ch.id, ech);
-                
+
 
                 challengesId.Add(ch.id);
             }
@@ -451,7 +457,7 @@ namespace Monetizr.Challenges
             }
         }
 
-        
+
     }
 
 }
