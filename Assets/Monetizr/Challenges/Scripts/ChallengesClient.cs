@@ -15,8 +15,12 @@ namespace Monetizr.Challenges
         private const string k_BaseUri = "https://api3.themonetizr.com/";
         private static readonly HttpClient Client = new HttpClient();
 
+        private ChallengeAnalytics analytics = null;
+
         public ChallengesClient(string apiKey, int timeout = 30)
         {
+            analytics = new ChallengeAnalytics();
+
             Client.Timeout = TimeSpan.FromSeconds(timeout);
             Client.DefaultRequestHeaders.Authorization = new AuthenticationHeaderValue("Bearer", apiKey);
             Client.DefaultRequestHeaders
@@ -56,7 +60,7 @@ namespace Monetizr.Challenges
             {
                 var challenges = JsonUtility.FromJson<Challenges>("{\"challenges\":" + challengesString + "}");
 
-                ChallengeAnalytics.Update(new List<Challenge>(challenges.challenges));
+                analytics.Update(new List<Challenge>(challenges.challenges));
 
                 return new List<Challenge>(challenges.challenges);
             }
@@ -82,7 +86,7 @@ namespace Monetizr.Challenges
                     //{"age", playerInfo.age.ToString()},
                     //{"game-type", playerInfo.gameType},
                     {"player-id", playerInfo.playerId},
-                    {"duration", ChallengeAnalytics.GetElapsedTime(challenge).ToString()}
+                    {"duration", analytics.GetElapsedTime(challenge).ToString()}
                 }
             };
 

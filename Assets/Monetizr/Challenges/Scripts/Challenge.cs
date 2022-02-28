@@ -2,7 +2,7 @@
 
 namespace Monetizr.Challenges
 {
-    [System.Serializable]
+    //[System.Serializable]
     public class Challenge
     {
         public string id;
@@ -12,7 +12,7 @@ namespace Monetizr.Challenges
         public int reward;
         public List<Asset> assets = new List<Asset>();
 
-        [System.Serializable]
+        //[System.Serializable]
         public class Asset
         {
             public string id;
