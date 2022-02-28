@@ -15,11 +15,11 @@ namespace Monetizr.Challenges
         private const string k_BaseUri = "https://api3.themonetizr.com/";
         private static readonly HttpClient Client = new HttpClient();
 
-        private ChallengeAnalytics analytics = null;
+        public MonetizrAnalytics analytics { get; private set; }        
 
         public ChallengesClient(string apiKey, int timeout = 30)
         {
-            analytics = new ChallengeAnalytics();
+            analytics = new MonetizrAnalytics();
 
             Client.Timeout = TimeSpan.FromSeconds(timeout);
             Client.DefaultRequestHeaders.Authorization = new AuthenticationHeaderValue("Bearer", apiKey);
@@ -56,11 +56,13 @@ namespace Monetizr.Challenges
 
             var challengesString = await response.Content.ReadAsStringAsync();
 
+            Debug.Log(challengesString);
+
             if (response.IsSuccessStatusCode)
             {
                 var challenges = JsonUtility.FromJson<Challenges>("{\"challenges\":" + challengesString + "}");
 
-                analytics.Update(new List<Challenge>(challenges.challenges));
+                //analytics.Update(new List<Challenge>(challenges.challenges));
 
                 return new List<Challenge>(challenges.challenges);
             }

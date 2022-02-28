@@ -12,9 +12,9 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: 5e37f1d599a72b64eba3799d826c755b, type: 3}
   m_Name: Mixpanel
   m_EditorClassIdentifier: 
-  ShowDebug: 0
-  ManualInitialization: 0
+  ShowDebug: 1
+  ManualInitialization: 1
   APIHostAddress: https://api.mixpanel.com/
-  RuntimeToken: 
+  RuntimeToken: d4de97058730720b3b8080881c6ba2e0
   DebugToken: 
   FlushInterval: 60

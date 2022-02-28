@@ -64,12 +64,12 @@ namespace Monetizr.Challenges
 
         internal override void PreparePanel(PanelId id, Action onComplete, List<MissionUIDescription> missionsDescriptions)
         {
-            
+            MonetizrManager.Analytics.BeginShowAdAsset(AdType.TinyTeaser);
         }
 
         internal override void FinalizePanel(PanelId id)
         {
-            
+            MonetizrManager.Analytics.EndShowAdAsset(AdType.TinyTeaser);
         }
     }
 

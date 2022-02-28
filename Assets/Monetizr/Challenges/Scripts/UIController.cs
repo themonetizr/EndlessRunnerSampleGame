@@ -228,7 +228,9 @@ namespace Monetizr.Challenges
             {
                 teaser = panels[PanelId.TinyMenuTeaser] as MonetizrMenuTeaser;
             }
-                                    
+
+            teaser.PreparePanel(PanelId.TinyMenuTeaser, null, null);
+
             teaser.SetActive(true);
         }
 

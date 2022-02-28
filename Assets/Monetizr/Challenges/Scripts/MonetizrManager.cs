@@ -12,6 +12,23 @@ using UnityEngine.Assertions;
 
 namespace Monetizr.Challenges
 {
+    public enum ErrorType
+    {
+        NotinitializedSDK,
+        SimultaneusAdAssets,
+
+    };
+
+    public static class MonetizrErrors
+    {
+        public static readonly Dictionary<ErrorType, string> msg = new Dictionary<ErrorType, string>()
+        {
+            { ErrorType.NotinitializedSDK, "You're trying to use Monetizer SDK before it's been initialized. Call MonetizerManager.Initalize first." },
+            { ErrorType.SimultaneusAdAssets, "Simultaneous display of multiple ads is not supported!" }
+
+        };
+    }
+
     /// <summary>
     /// Predefined asset types for easier access
     /// </summary>
@@ -31,6 +48,7 @@ namespace Monetizr.Challenges
 
     /// <summary>
     /// ChallengeExtention for easier access to Challenge assets
+    /// TODO: merge with Challenge
     /// </summary>
     public class ChallengeExtention
     {
@@ -113,17 +131,8 @@ namespace Monetizr.Challenges
     /// </summary>
     public class MonetizrManager : MonoBehaviour
     {
-        enum ErrorType
-        {
-            NotinitializedSDK,
-        };
+        public ChallengesClient _challengesClient { get; private set; }
 
-        private static readonly Dictionary<ErrorType, string> errorMessages = new Dictionary<ErrorType, string>()
-        {
-            { ErrorType.NotinitializedSDK, "You're trying to use Monetizer SDK before it's been initialized. Call MonetizerManager.Initalize first." }
-        };
-
-        private ChallengesClient _challengesClient;
         private static MonetizrManager instance = null;
 
         private UIController uiController = null;
@@ -161,6 +170,14 @@ namespace Monetizr.Challenges
             }
         }
 
+        public static MonetizrAnalytics Analytics
+        {
+            get
+            {
+                return instance._challengesClient.analytics;
+            }
+        }
+
         /// <summary>
         /// Initialize
         /// </summary>
@@ -187,21 +204,21 @@ namespace Monetizr.Challenges
 
         internal static void ShowStartupNotification(Action onComplete)
         {
-            Assert.IsNotNull(instance, errorMessages[ErrorType.NotinitializedSDK]);
+            Assert.IsNotNull(instance, MonetizrErrors.msg[ErrorType.NotinitializedSDK]);
 
             instance.uiController.ShowPanel(PanelId.StartNotification, onComplete, true);
         }
 
         internal static void ShowCongratsNotification(Action onComplete)
         {
-            Assert.IsNotNull(instance, errorMessages[ErrorType.NotinitializedSDK]);
+            Assert.IsNotNull(instance, MonetizrErrors.msg[ErrorType.NotinitializedSDK]);
 
             instance.uiController.ShowPanel(PanelId.CongratsNotification, onComplete, true);
         }
 
         internal static void AddUserDefinedMission(string missionTitle, string missionDescription, Sprite missionIcon, Sprite rewardIcon, int reward, float progress, Action onClaimButtonPress)
         {
-            Assert.IsNotNull(instance, errorMessages[ErrorType.NotinitializedSDK]);
+            Assert.IsNotNull(instance, MonetizrErrors.msg[ErrorType.NotinitializedSDK]);
 
             MissionUIDescription m = new MissionUIDescription(missionTitle, missionDescription, missionIcon, rewardIcon, reward, progress, onClaimButtonPress);
             instance.uiController.AddMission(m);
@@ -209,28 +226,28 @@ namespace Monetizr.Challenges
 
         internal static void ShowRewardCenter(Action onComplete)
         {
-            Assert.IsNotNull(instance, errorMessages[ErrorType.NotinitializedSDK]);
+            Assert.IsNotNull(instance, MonetizrErrors.msg[ErrorType.NotinitializedSDK]);
 
             instance.uiController.ShowPanel(PanelId.RewardCenter, onComplete, true);
         }
 
         internal static void ShowSurvey(Action onComplete)
         {
-            Assert.IsNotNull(instance, errorMessages[ErrorType.NotinitializedSDK]);
+            Assert.IsNotNull(instance, MonetizrErrors.msg[ErrorType.NotinitializedSDK]);
 
             instance.uiController.ShowPanelFromPrefab("MonetizrSurveyPanel", PanelId.Survey, onComplete);
         }
 
         public static void ShowTinyMenuTeaser(Action onTap)
         {
-            Assert.IsNotNull(instance, errorMessages[ErrorType.NotinitializedSDK]);
+            Assert.IsNotNull(instance, MonetizrErrors.msg[ErrorType.NotinitializedSDK]);
 
             instance.uiController.ShowTinyMenuTeaser(onTap);
         }
 
         public static void HideTinyMenuTeaser()
         {
-            Assert.IsNotNull(instance, errorMessages[ErrorType.NotinitializedSDK]);
+            Assert.IsNotNull(instance, MonetizrErrors.msg[ErrorType.NotinitializedSDK]);
 
             instance.uiController.HidePanel(PanelId.TinyMenuTeaser);
         }
