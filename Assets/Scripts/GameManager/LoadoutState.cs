@@ -145,7 +145,7 @@ public class LoadoutState : AState
 
     public void Refresh()
     {
-		PopulatePowerup();
+        PopulatePowerup();
 
         StartCoroutine(PopulateCharacters());
         StartCoroutine(PopulateTheme());
@@ -182,6 +182,8 @@ public class LoadoutState : AState
 
 	public void GoToStore()
 	{
+        MonetizrManager.HideTinyMenuTeaser();
+
         UnityEngine.SceneManagement.SceneManager.LoadScene(k_ShopSceneName, UnityEngine.SceneManagement.LoadSceneMode.Additive);
 	}
 

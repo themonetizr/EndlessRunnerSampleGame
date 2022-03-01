@@ -2,6 +2,7 @@
 using UnityEngine;
 using UnityEngine.UI;
 using UnityEngine.SceneManagement;
+using Monetizr.Challenges;
 #if UNITY_ADS
 using UnityEngine.Advertisements;
 #endif
@@ -100,6 +101,8 @@ public class ShopUI : MonoBehaviour
 	    LoadoutState loadoutState = GameManager.instance.topState as LoadoutState;
 	    if(loadoutState != null)
         {
+            MonetizrManager.ShowTinyMenuTeaser(null);
+
             loadoutState.Refresh();
         }
 	}

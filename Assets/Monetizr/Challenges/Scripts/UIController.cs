@@ -88,22 +88,22 @@ namespace Monetizr.Challenges
 
             Assert.IsNotNull(mainCanvas);
 
-            var notifyPanel = GameObject.Instantiate<GameObject>(Resources.Load("MonetizrNotifyPanel") as GameObject, mainCanvas.transform);
+            /*var notifyPanel = GameObject.Instantiate<GameObject>(Resources.Load("MonetizrNotifyPanel") as GameObject, mainCanvas.transform);
             var rewardPanel = GameObject.Instantiate<GameObject>(Resources.Load("MonetizrRewardCenterPanel") as GameObject, mainCanvas.transform);
 
             Assert.IsNotNull(notifyPanel);
-            Assert.IsNotNull(rewardPanel);
+            Assert.IsNotNull(rewardPanel);*/
 
             previousPanel = PanelId.Unknown;
 
             panels = new Dictionary<PanelId, PanelController>();
-            panels.Add(PanelId.RewardCenter, rewardPanel.GetComponent<PanelController>());
+            /*panels.Add(PanelId.RewardCenter, rewardPanel.GetComponent<PanelController>());
             panels.Add(PanelId.StartNotification, notifyPanel.GetComponent<PanelController>());
             panels.Add(PanelId.CongratsNotification, notifyPanel.GetComponent<PanelController>());
+            */
 
-
-            foreach (var p in panels)
-                p.Value.SetActive(false, true);
+            //foreach (var p in panels)
+            //    p.Value.SetActive(false, true);
         }
 
         internal void CleanMissionsList()
@@ -122,11 +122,16 @@ namespace Monetizr.Challenges
 
         public void PlayVideo(String path, Action<bool> onComplete)
         {
+            MonetizrManager.HideRewardCenter();
+
             var prefab = GameObject.Instantiate<GameObject>(Resources.Load("MonetizrVideoPlayer") as GameObject, mainCanvas.transform);
 
             var player = prefab.GetComponent<MonetizrVideoPlayer>();
 
             player.Play(path, (bool isSkip) => {
+
+                    MonetizrManager.ShowRewardCenter(null);
+
                     onComplete?.Invoke(isSkip);
                     GameObject.Destroy(prefab);
             } );
@@ -187,11 +192,11 @@ namespace Monetizr.Challenges
                 previousPanel = id;
         }
 
-        public void ShowPanelFromPrefab(String prefab, PanelId id = PanelId.Unknown, Action onComplete = null /*, bool rememberPrevious = false*/)
+        public void ShowPanelFromPrefab(String prefab, PanelId id = PanelId.Unknown, Action onComplete = null, bool rememberPrevious = false)
         {
             Debug.Log("ShowPanel: " + id);
 
-            if (previousPanel != PanelId.Unknown)
+            if (panels.ContainsKey(previousPanel) && previousPanel != PanelId.Unknown)
                 panels[previousPanel].SetActive(false);
 
             var panel = GameObject.Instantiate<GameObject>(Resources.Load(prefab) as GameObject, mainCanvas.transform);
@@ -200,17 +205,21 @@ namespace Monetizr.Challenges
                 {
                     onComplete?.Invoke();
                     GameObject.Destroy(panel);
+
+                    panels.Remove(id);
                 };
 
 
             var ctrlPanel = panel.GetComponent<PanelController>();
 
-            ctrlPanel.PreparePanel(id, complete, null);
+            ctrlPanel.PreparePanel(id, complete, missionsDescriptions);
 
             ctrlPanel.SetActive(true);
 
-            //if (rememberPrevious)
-            //   previousPanel = id;
+            if (rememberPrevious)
+               previousPanel = id;
+
+            panels.Add(id, ctrlPanel);
         }
 
         public void ShowTinyMenuTeaser(Action onTap)
@@ -231,10 +240,12 @@ namespace Monetizr.Challenges
 
             teaser.PreparePanel(PanelId.TinyMenuTeaser, null, null);
 
+            //previousPanel = PanelId.TinyMenuTeaser;
+
             teaser.SetActive(true);
         }
 
-        public void HideTinyMenuTeaser(Action onTap)
+        public void HideTinyMenuTeaser()
         {
             if (panels.ContainsKey(PanelId.TinyMenuTeaser))
             {

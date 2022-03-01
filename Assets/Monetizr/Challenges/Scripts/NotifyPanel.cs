@@ -31,6 +31,22 @@ namespace Monetizr.Challenges
             }
         }
 
+        internal override void FinalizePanel(PanelId id)
+        {
+            switch (id)
+            {
+                case PanelId.CongratsNotification:
+                    MonetizrManager.Analytics.EndShowAdAsset(AdType.RewardBanner);
+                    break;
+
+                case PanelId.StartNotification:
+                    MonetizrManager.Analytics.EndShowAdAsset(AdType.IntroBanner);
+                    break;
+            }
+
+            
+        }
+
         private void PrepareNotificationPanel()
         {
             var challenges = MonetizrManager.Instance.GetAvailableChallenges();
@@ -54,6 +70,9 @@ namespace Monetizr.Challenges
                 rewardAmount.gameObject.SetActive(false);
 
                 closeButton.onClick.AddListener(OnButtonPress);
+
+                MonetizrManager.Analytics.TrackEvent("Notification shown");
+                MonetizrManager.Analytics.BeginShowAdAsset(AdType.IntroBanner);
             }
         }
 
@@ -80,8 +99,13 @@ namespace Monetizr.Challenges
                 rewardAmount.gameObject.SetActive(true);
 
                 closeButton.onClick.AddListener(OnButtonPress);
+
+                MonetizrManager.Analytics.TrackEvent("Reward notification shown");
+                MonetizrManager.Analytics.BeginShowAdAsset(AdType.RewardBanner);
             }
         }
+
+       
 
         private new void Awake()
         {
@@ -95,10 +119,7 @@ namespace Monetizr.Challenges
             SetActive(false);
         }
 
-        internal override void FinalizePanel(PanelId id)
-        {
-            
-        }
+        
 
         //// Start is called before the first frame update
         //void Start()

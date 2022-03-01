@@ -17,6 +17,8 @@ namespace Monetizr.Challenges
 
         internal override void PreparePanel(PanelId id, Action onComplete, List<MissionUIDescription> missionsDescriptions)
         {
+            MonetizrManager.Analytics.TrackEvent("Survey started");
+
             this.onComplete = onComplete;
             this.panelId = id;
 
@@ -71,13 +73,18 @@ namespace Monetizr.Challenges
             Debug.Log($"OnPageFinished: {url} code: {statusCode}");
 
             if (statusCode >= 300)
+            {
+                MonetizrManager.Analytics.TrackEvent("Survey error");
+
                 OnButtonPress();
+            }
         }
 
         void OnPageErrorReceived(UniWebView webView, int errorCode, string url)
         {
-
             Debug.Log($"OnPageErrorReceived: {url} code: {errorCode}");
+
+            MonetizrManager.Analytics.TrackEvent("Survey error");
 
             OnButtonPress();
         }
@@ -97,6 +104,8 @@ namespace Monetizr.Challenges
                         webUrl.Contains("app.themonetizr.com") ||
                         webUrl.Contains("uniwebview"))
                     {
+                        MonetizrManager.Analytics.TrackEvent("Survey completed");
+
                         OnButtonPress();
 
                         //Destroy(webView);
@@ -116,6 +125,8 @@ namespace Monetizr.Challenges
 
         public void OnButtonPress()
         {
+            MonetizrManager.Analytics.TrackEvent("Survey skipped");
+
             Destroy(webView);
             webView = null;
 

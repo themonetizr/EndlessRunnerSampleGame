@@ -37,14 +37,13 @@ namespace Monetizr.Challenges
             videoPlayer.loopPointReached += EndReached;
 
             videoPlayer.Play();
+
+            MonetizrManager.Analytics.BeginShowAdAsset(AdType.Video);
         }
 
         void EndReached(VideoPlayer vp)
         {
-            //vp.playbackSpeed = vp.playbackSpeed / 10.0F;
-            //gameObject.SetActive(false);
-
-            
+            MonetizrManager.Analytics.EndShowAdAsset(AdType.Video);
 
             onComplete.Invoke(isSkipped);
 

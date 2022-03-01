@@ -14,13 +14,22 @@ namespace Monetizr.Challenges
         private new void Awake()
         {
             base.Awake();
-
-
+            
         }
 
         internal override void PreparePanel(PanelId id, Action onComplete, List<MissionUIDescription> missionsDescriptions)
         {
+            MonetizrManager.Analytics.TrackEvent("Reward center opened");
+
+            MonetizrManager.HideTinyMenuTeaser();
+
             this.onComplete = onComplete;
+
+            foreach (var c in contentRoot.GetComponentsInChildren<Transform>())
+            {
+                if (c != contentRoot)
+                    Destroy(c.gameObject);
+            }
 
             foreach (var ch in MonetizrManager.Instance.GetAvailableChallenges())
             {
@@ -28,7 +37,7 @@ namespace Monetizr.Challenges
 
                 MissionUIDescription m = new MissionUIDescription()
                 {
-                    brandBanner = MonetizrManager.Instance.GetAsset<Sprite>(ch, AssetsType.BrandRewardBannerSprite),
+                    brandBanner = MonetizrManager.Instance.GetAsset<Sprite>(ch, AssetsType.BrandBannerSprite),
                     missionTitle = $"{brandName} video",
                     missionDescription = $"Watch video by {brandName} and get 2 Energy Boosters",
                     missionIcon = MonetizrManager.Instance.GetAsset<Sprite>(ch, AssetsType.BrandRewardLogoSprite),
@@ -48,6 +57,11 @@ namespace Monetizr.Challenges
                 Debug.Log(m.missionTitle);
 
                 item.UpdateWithDescription(m);
+
+                MonetizrManager.Analytics.BeginShowAdAsset(AdType.IntroBanner);
+
+                //only one challenge per time
+                break;
             }
 
             Debug.Log("PreparePanel");
@@ -71,20 +85,23 @@ namespace Monetizr.Challenges
 
         public void OnVideoPlayPress()
         {
+            MonetizrManager.Analytics.TrackEvent("Claim button press");
+
             MonetizrManager._PlayVideo((bool isSkipped) => {
 
-                if(!isSkipped)
+                if (!isSkipped)
+                {
+                    
                     MonetizrManager.ShowCongratsNotification(null);
+                }
             });
         }
 
         internal override void FinalizePanel(PanelId id)
         {
-            foreach(var c in contentRoot.GetComponentsInChildren<Transform>())
-            {
-                if(c != contentRoot)
-                    Destroy(c.gameObject);
-            }
+            MonetizrManager.Analytics.EndShowAdAsset(AdType.IntroBanner);
+
+            MonetizrManager.ShowTinyMenuTeaser(null);
         }
 
         // Start is called before the first frame update

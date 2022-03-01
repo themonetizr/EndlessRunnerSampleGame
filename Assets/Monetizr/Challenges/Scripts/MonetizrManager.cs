@@ -212,14 +212,14 @@ namespace Monetizr.Challenges
         {
             Assert.IsNotNull(instance, MonetizrErrors.msg[ErrorType.NotinitializedSDK]);
 
-            instance.uiController.ShowPanel(PanelId.StartNotification, onComplete, true);
+            instance.uiController.ShowPanelFromPrefab("MonetizrNotifyPanel",PanelId.StartNotification, onComplete, true);
         }
 
         internal static void ShowCongratsNotification(Action onComplete)
         {
             Assert.IsNotNull(instance, MonetizrErrors.msg[ErrorType.NotinitializedSDK]);
 
-            instance.uiController.ShowPanel(PanelId.CongratsNotification, onComplete, true);
+            instance.uiController.ShowPanelFromPrefab("MonetizrNotifyPanel", PanelId.CongratsNotification, onComplete, true);
         }
 
         internal static void AddUserDefinedMission(string missionTitle, string missionDescription, Sprite missionIcon, Sprite rewardIcon, int reward, float progress, Action onClaimButtonPress)
@@ -234,7 +234,12 @@ namespace Monetizr.Challenges
         {
             Assert.IsNotNull(instance, MonetizrErrors.msg[ErrorType.NotinitializedSDK]);
 
-            instance.uiController.ShowPanel(PanelId.RewardCenter, onComplete, true);
+            instance.uiController.ShowPanelFromPrefab("MonetizrRewardCenterPanel", PanelId.RewardCenter, onComplete, true);
+        }
+
+        internal static void HideRewardCenter()
+        {
+            instance.uiController.HidePanel(PanelId.RewardCenter);
         }
 
         internal static void ShowSurvey(Action onComplete)
