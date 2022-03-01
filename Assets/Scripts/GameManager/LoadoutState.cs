@@ -74,7 +74,8 @@ public class LoadoutState : AState
 
     public override void Enter(AState from)
     {
-        MonetizrManager.ShowTinyMenuTeaser(()=> { missionPopup.CallOpen(); });
+        if(PlayerData.instance.tutorialDone)
+            MonetizrManager.ShowTinyMenuTeaser(()=> { missionPopup.CallOpen(); });
 
         tutorialBlocker.SetActive(!PlayerData.instance.tutorialDone);
         tutorialPrompt.SetActive(false);
@@ -114,7 +115,8 @@ public class LoadoutState : AState
 
     public override void Exit(AState to)
     {
-        MonetizrManager.HideTinyMenuTeaser();
+        if (PlayerData.instance.tutorialDone)
+            MonetizrManager.HideTinyMenuTeaser();
 
         missionPopup.gameObject.SetActive(false);
         inventoryCanvas.gameObject.SetActive(false);
