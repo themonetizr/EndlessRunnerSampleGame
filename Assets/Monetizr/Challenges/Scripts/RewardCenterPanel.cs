@@ -10,6 +10,7 @@ namespace Monetizr.Challenges
     {
         public Transform contentRoot;
         public MonetizrRewardedItem itemUI;
+        private bool hasSponsoredChallenges;
     
         private new void Awake()
         {
@@ -19,18 +20,42 @@ namespace Monetizr.Challenges
 
         internal override void PreparePanel(PanelId id, Action onComplete, List<MissionUIDescription> missionsDescriptions)
         {
+            hasSponsoredChallenges = false;
+
             MonetizrManager.Analytics.TrackEvent("Reward center opened");
 
             MonetizrManager.HideTinyMenuTeaser();
 
             this.onComplete = onComplete;
 
-            foreach (var c in contentRoot.GetComponentsInChildren<Transform>())
-            {
-                if (c != contentRoot)
-                    Destroy(c.gameObject);
-            }
+            CleanListView();
 
+            if (MonetizrManager.Instance.HasChallenges())
+            {
+                hasSponsoredChallenges = true;
+                AddSponsoredChallenges();
+            }
+                        
+            AddUserdefineChallenges(missionsDescriptions);
+        }
+
+        private void AddUserdefineChallenges(List<MissionUIDescription> missionsDescriptions)
+        {
+            foreach (var m in missionsDescriptions)
+            {
+                var go = GameObject.Instantiate<GameObject>(itemUI.gameObject, contentRoot);
+
+                var item = go.GetComponent<MonetizrRewardedItem>();
+
+
+                Debug.Log(m.missionTitle);
+
+                item.UpdateWithDescription(m);
+            }
+        }
+
+        private void AddSponsoredChallenges()
+        {
             foreach (var ch in MonetizrManager.Instance.GetAvailableChallenges())
             {
                 string brandName = MonetizrManager.Instance.GetAsset<string>(ch, AssetsType.BrandTitleString);
@@ -48,7 +73,7 @@ namespace Monetizr.Challenges
                     onClaimButtonPress = () => { OnVideoPlayPress(); },
                     isSponsored = true,
                 };
-                                          
+
                 var go = GameObject.Instantiate<GameObject>(itemUI.gameObject, contentRoot);
 
                 var item = go.GetComponent<MonetizrRewardedItem>();
@@ -63,18 +88,14 @@ namespace Monetizr.Challenges
                 //only one challenge per time
                 break;
             }
+        }
 
-            Debug.Log("PreparePanel");
-            foreach(var m in missionsDescriptions)
+        private void CleanListView()
+        {
+            foreach (var c in contentRoot.GetComponentsInChildren<Transform>())
             {
-                var go = GameObject.Instantiate<GameObject>(itemUI.gameObject,contentRoot);
-
-                var item = go.GetComponent<MonetizrRewardedItem>();
-
-
-                Debug.Log(m.missionTitle);
-
-                item.UpdateWithDescription(m);
+                if (c != contentRoot)
+                    Destroy(c.gameObject);
             }
         }
 
@@ -90,8 +111,14 @@ namespace Monetizr.Challenges
             MonetizrManager._PlayVideo((bool isSkipped) => {
 
                 if (!isSkipped)
-                {
-                    
+                {   
+                    if (MonetizrManager.Instance.HasChallenges())
+                    {
+                        var ch = MonetizrManager.Instance.GetAvailableChallenges()[0];
+
+                        MonetizrManager.Instance.ClaimReward(ch);
+                    }
+
                     MonetizrManager.ShowCongratsNotification(null);
                 }
             });
@@ -99,7 +126,10 @@ namespace Monetizr.Challenges
 
         internal override void FinalizePanel(PanelId id)
         {
-            MonetizrManager.Analytics.EndShowAdAsset(AdType.IntroBanner);
+            if (hasSponsoredChallenges)
+            {
+                MonetizrManager.Analytics.EndShowAdAsset(AdType.IntroBanner);
+            }
 
             MonetizrManager.ShowTinyMenuTeaser(null);
         }

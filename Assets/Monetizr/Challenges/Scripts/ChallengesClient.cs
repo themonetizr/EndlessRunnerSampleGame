@@ -10,7 +10,7 @@ namespace Monetizr.Challenges
 {
     public class ChallengesClient
     {
-        public PlayerInfo playerInfo { get; set; }
+        //public PlayerInfo playerInfo { get; set; }
 
         private const string k_BaseUri = "https://api3.themonetizr.com/";
         private static readonly HttpClient Client = new HttpClient();
@@ -48,7 +48,7 @@ namespace Monetizr.Challenges
                     //{"location", playerInfo.location},
                     //{"age", playerInfo.age.ToString()},
                     //{"game-type", playerInfo.gameType},
-                    {"player-id", playerInfo.playerId},
+                    {"player-id", analytics.GetUserId()},
                 }
             };
 
@@ -87,8 +87,8 @@ namespace Monetizr.Challenges
                     //{"location", playerInfo.location},
                     //{"age", playerInfo.age.ToString()},
                     //{"game-type", playerInfo.gameType},
-                    {"player-id", playerInfo.playerId},
-                    {"duration", analytics.GetElapsedTime(challenge).ToString()}
+                    {"player-id", analytics.GetUserId()},
+                    //{"duration", analytics.GetElapsedTime(challenge).ToString()}
                 }
             };
 

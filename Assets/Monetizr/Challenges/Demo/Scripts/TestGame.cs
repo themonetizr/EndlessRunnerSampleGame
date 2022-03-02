@@ -18,10 +18,7 @@ public class TestGame : MonoBehaviour
 
     private void Awake()
     {
-        challengesClient = new ChallengesClient(apiKey)
-        {
-            playerInfo = new PlayerInfo("user")
-        };
+        challengesClient = new ChallengesClient(apiKey);
     }
 
     public async void GetList()

@@ -46,6 +46,8 @@ namespace Monetizr.Challenges
 
         public MonetizrAnalytics()
         {
+            Debug.Log($"MonetizrAnalytics initialized with user id: {GetUserId()}");
+
             Mixpanel.Init();
         }
 
@@ -78,7 +80,8 @@ namespace Monetizr.Challenges
         }
 
         public void EndShowAdAsset(AdType type)
-        {            
+        {     
+            
             Debug.Log($"MonetizrAnalytics EndShowAdAsset: {type}");
 
             //Mixpanel.Track("Sent Message");
@@ -90,7 +93,7 @@ namespace Monetizr.Challenges
             
             var props = new Value();
             props["application_id"] = Application.identifier;
-            props["player_id"] = SystemInfo.deviceUniqueIdentifier;
+            props["player_id"] = GetUserId();
             props["application_name"] = Application.productName;
             props["application_version"] = Application.version;
             props["impressions"] = "1";
@@ -104,18 +107,31 @@ namespace Monetizr.Challenges
             visibleAdAsset.Remove(type);
         }
 
+        public string GetUserId()
+        {
+            return SystemInfo.deviceUniqueIdentifier;
+        }
+
         public void TrackEvent(string name)
         {
-            var ch = MonetizrManager.Instance.GetAvailableChallenges();
-            var challenge = MonetizrManager.Instance.GetChallenge(ch[0]);
+            string campaign_id = "none";
+            string brand_id = "none";
+
+            if (MonetizrManager.Instance.HasChallenges())
+            {
+                var ch = MonetizrManager.Instance.GetAvailableChallenges();
+
+                brand_id = MonetizrManager.Instance.GetChallenge(ch[0]).brand_id;
+                campaign_id = ch[0];
+            }
 
             var props = new Value();
             props["application_id"] = Application.identifier;
             props["player_id"] = SystemInfo.deviceUniqueIdentifier;
             props["application_name"] = Application.productName;
             props["application_version"] = Application.version;
-            props["campaign_id"] = ch[0];
-            props["brand_id"] = challenge.brand_id;
+            props["campaign_id"] = campaign_id;
+            props["brand_id"] = brand_id;
 
             Mixpanel.Track($"[UNITY_SDK] {name}", props);
         }

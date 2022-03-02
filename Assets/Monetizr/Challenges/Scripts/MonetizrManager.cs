@@ -189,10 +189,7 @@ namespace Monetizr.Challenges
         /// </summary>
         private void Initalize(string apiKey, Action<bool> onRequestComplete)
         {
-            _challengesClient = new ChallengesClient(apiKey)
-            {
-                playerInfo = new PlayerInfo("monetizr_mj")
-            };
+            _challengesClient = new ChallengesClient(apiKey);
 
             RequestChallenges(
                 (bool isOk) =>
@@ -211,6 +208,12 @@ namespace Monetizr.Challenges
         internal static void ShowStartupNotification(Action onComplete)
         {
             Assert.IsNotNull(instance, MonetizrErrors.msg[ErrorType.NotinitializedSDK]);
+
+            if(!instance.HasChallenges())
+            {
+                onComplete?.Invoke();
+                return;
+            }
 
             instance.uiController.ShowPanelFromPrefab("MonetizrNotifyPanel",PanelId.StartNotification, onComplete, true);
         }
@@ -253,12 +256,18 @@ namespace Monetizr.Challenges
         {
             Assert.IsNotNull(instance, MonetizrErrors.msg[ErrorType.NotinitializedSDK]);
 
+            if (!instance.HasChallenges())
+                return;
+
             instance.uiController.ShowTinyMenuTeaser(onTap);
         }
 
         public static void HideTinyMenuTeaser()
         {
             Assert.IsNotNull(instance, MonetizrErrors.msg[ErrorType.NotinitializedSDK]);
+
+            if (!instance.HasChallenges())
+                return;
 
             instance.uiController.HidePanel(PanelId.TinyMenuTeaser);
         }
@@ -426,6 +435,11 @@ namespace Monetizr.Challenges
         public List<string> GetAvailableChallenges()
         {
             return challengesId;
+        }
+
+        public bool HasChallenges()
+        {
+            return challengesId.Count > 0;
         }
 
         /// <summary>
