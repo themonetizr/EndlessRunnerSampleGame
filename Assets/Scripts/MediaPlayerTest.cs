@@ -25,7 +25,7 @@ public class MediaPlayerTest : MonoBehaviour {
     // Use this for initialization
     void Start () {
 
-        MonetizrManager.Initialize("PUHzF8UQLXJUuaW0vX0D0lTAFlWU2G0J2NaN2SHk6AA", LoadingVideoAsset);
+        MonetizrManager.Initialize("PUHzF8UQLXJUuaW0vX0D0lTAFlWU2G0J2NaN2SHk6AA", LoadingVideoAsset, null);
 
 		console = ConsoleManager.Initialize(true);
        

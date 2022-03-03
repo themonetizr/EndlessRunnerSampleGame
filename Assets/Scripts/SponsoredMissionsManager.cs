@@ -10,22 +10,10 @@ public class SponsoredMissionsManager : MonoBehaviour
     public GameObject loadingUI = null;
     public Animator menuActors = null;
     public Animator menuEnv = null;
+    public MusicPlayer musicPlayer = null;
 
     [SerializeField] private string apiKey;
-
-    /*private List<Challenge> challenges = new List<Challenge>();
-
-    private ChallengesClient _challengesClient;
-
-    private string city = "Riga";
-
-    private int age = 29;
-
-    private string gameType = "action";
-
-    private string playerid = "monetizr_
-    mj";*/
-
+      
     private bool turnedOn = true;
 
     private static Dictionary<string, SponsoredPickupCoinMission> missions = new Dictionary<string, SponsoredPickupCoinMission>();
@@ -39,78 +27,22 @@ public class SponsoredMissionsManager : MonoBehaviour
             return;
 
         loadingUI?.SetActive(true);
-       
-      
-        /*_challengesClient = new ChallengesClient(apiKey)
-        {
-            playerInfo = new PlayerInfo(city, age, gameType, playerid)
-        };*/
+ 
 
         MonetizrManager.Initialize(apiKey, (bool isOK) =>
             {
                 loadingUI?.SetActive(false);
                 menuActors?.Play("Take 001");
                 menuEnv?.Play("Take 001");
-            });
-
-    }
-
-    public void AddSponsoredMissions()
-    {
-        try
-        {
-            //challenges = await _challengesClient.GetList();
-
-            //for (int i = 0; i < challenges.Count; i++)
-            //{
-            //    SponsoredPickupCoinMission newMission = new SponsoredPickupCoinMission();
-            //    newMission.Created(challenges[i]);
-            //    missions.Add(i.ToString(), newMission);
-            //    PlayerData.instance.AddMission(newMission, i);
-            //}
-
-            var challangesList = MonetizrManager.Instance.GetAvailableChallenges();
-
-            for(int i = 0; i < challangesList.Count; i++)
+            },
+            (bool soundOn) => 
             {
-                SponsoredPickupCoinMission newMission = new SponsoredPickupCoinMission();
+                musicPlayer.SwitchMusic(soundOn);
+            } );
 
-                newMission.Created(MonetizrManager.Instance.GetChallenge(challangesList[i]));
-
-                missions.Add(i.ToString(), newMission);
-                PlayerData.instance.AddMission(newMission, i);
-            }
-
-        }
-        catch (Exception e)
-        {
-            Debug.Log($"Monetizr An error occured in adding: {e.Message}");
-        }
     }
 
-    public void UpdateMission(Challenge challenge, int progress)
-    {
-        /*try
-        {
-            await _challengesClient.UpdateStatus(challenge, progress);
-        }
-        catch (Exception e)
-        {
-            Debug.Log($" Monetizr An error occured: {e.Message}");
-        }*/
-    }
-
-    public void ClaimReward(Challenge challenge)
-    {
-        //try
-        //{
-        //    await _challengesClient.Claim(challenge);
-        //}
-        //catch (Exception e)
-        //{
-        //    Debug.Log($"An error occured: {e.Message}");
-        //}
-    }
+   
 
     public void changeAPIKey(string apiKeyValue)
     {
@@ -126,17 +58,7 @@ public class SponsoredMissionsManager : MonoBehaviour
         //    AddSponsoredMissions();
         //}
     }
-
-    private void RemoveMissions()
-    {
-
-        foreach (var mission in missions)
-        {
-            PlayerData.instance.RemoveMission(mission.Value);
-        }
-
-        missions = new Dictionary<string, SponsoredPickupCoinMission>();
-    }
+       
 
     public void changeOnOff(bool toggleOn)
     {
@@ -145,12 +67,12 @@ public class SponsoredMissionsManager : MonoBehaviour
         if (toggleOn)
         {
             // Turned on
-            AddSponsoredMissions();
+            //AddSponsoredMissions();
         }
         else
         {
             // Turned off
-            RemoveMissions();
+            //RemoveMissions();
         }
     }
 }

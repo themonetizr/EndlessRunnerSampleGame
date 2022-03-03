@@ -3116,6 +3116,7 @@ MonoBehaviour:
   loadingUI: {fileID: 1684111408}
   menuActors: {fileID: 1843154681}
   menuEnv: {fileID: 877515967}
+  musicPlayer: {fileID: 1931665100}
   apiKey: PUHzF8UQLXJUuaW0vX0D0lTAFlWU2G0J2NaN2SHk6AA
 --- !u!4 &1409410823
 Transform:
@@ -3972,6 +3973,18 @@ PrefabInstance:
       objectReference: {fileID: 0}
     m_RemovedComponents: []
   m_SourcePrefab: {fileID: 100100000, guid: 46384fcfaae550648892113bcd7e8d4a, type: 3}
+--- !u!114 &1931665100 stripped
+MonoBehaviour:
+  m_CorrespondingSourceObject: {fileID: 114322282601092784, guid: fc9855a6b2a67364ebc0db28e7bbc98b,
+    type: 3}
+  m_PrefabInstance: {fileID: 1469358732}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 0}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: 35e3b2f55914ad449803d16ec91e4021, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: 
 --- !u!4 &1976540320 stripped
 Transform:
   m_CorrespondingSourceObject: {fileID: 400000, guid: 278d5c6b4a4b61548afccfdb78e4b8a8,

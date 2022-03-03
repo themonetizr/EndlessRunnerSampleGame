@@ -41,7 +41,7 @@ namespace Monetizr.Challenges
 
             webView.Frame = new Rect(x, y, w, h);
 
-            var page = MonetizrManager.Instance.GetAsset<string>(MonetizrManager.Instance.GetAvailableChallenges()[0], AssetsType.SurveyURLString);
+            var page = MonetizrManager.Instance.GetAsset<string>(MonetizrManager.Instance.GetActiveChallenge(), AssetsType.SurveyURLString);
 
             webUrl = page;
 

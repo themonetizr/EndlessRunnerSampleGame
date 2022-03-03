@@ -1,4 +1,6 @@
-﻿using UnityEngine;
+﻿using Monetizr.Challenges;
+using System.Collections.Generic;
+using UnityEngine;
 using UnityEngine.Audio;
 using UnityEngine.UI;
 
@@ -25,17 +27,23 @@ public class SettingPopup : MonoBehaviour
     protected const string k_MasterVolumeFloatName = "MasterVolume";
     protected const string k_MusicVolumeFloatName = "MusicVolume";
     protected const string k_MasterSFXVolumeFloatName = "MasterSFXVolume";
-    
+
+    public Dropdown monetizrCampaigns;
+
     public void Open()
     {
         gameObject.SetActive(true);
         UpdateUI();
+
+        MonetizrManager.HideTinyMenuTeaser();
     }
 
     public void Close()
     {
 		PlayerData.instance.Save ();
         gameObject.SetActive(false);
+
+        MonetizrManager.ShowTinyMenuTeaser(null);
     }
 
     void UpdateUI()
@@ -47,6 +55,8 @@ public class SettingPopup : MonoBehaviour
         masterSlider.value = 1.0f - (m_MasterVolume / k_MinVolume);
         musicSlider.value = 1.0f - (m_MusicVolume / k_MinVolume);
         masterSFXSlider.value = 1.0f - (m_MasterSFXVolume / k_MinVolume);
+
+        MonetzirUpdateList();
     }
 
     public void DeleteData()
@@ -76,6 +86,36 @@ public class SettingPopup : MonoBehaviour
 		PlayerData.instance.masterSFXVolume = m_MasterSFXVolume;
     }
 
+    public void MonetzirUpdateList()
+    {
+        List<string> dropOptions = new List<string> ();
+
+        monetizrCampaigns.ClearOptions();
+
+        int selection = 0;
+
+        for(int i = 0; i < MonetizrManager.Instance.GetAvailableChallenges().Count; i++)
+        {
+            if (MonetizrManager.Instance.GetAvailableChallenges()[i] ==
+                MonetizrManager.Instance.GetActiveChallenge())
+                selection = i;
+
+            dropOptions.Add(MonetizrManager.Instance.GetAvailableChallenges()[i]);            
+        }
+
+        monetizrCampaigns.AddOptions(dropOptions);
+
+        monetizrCampaigns.value = selection;
+
+    }
+
+    public void MonetizrDropdownValueChanged(int change)
+    {
+        Debug.Log("MonetizrDropdownValueChanged: " + monetizrCampaigns.value);
+                
+        MonetizrManager.Instance.SetActiveChallengeId(MonetizrManager.Instance.GetAvailableChallenges()[monetizrCampaigns.value]);
+    }
+
     // Invoked when the value of the text field changes.
     public void ValueChangeCheck()
     {
@@ -84,6 +124,6 @@ public class SettingPopup : MonoBehaviour
 
     public void MonetizrToggleChange()
     {
-        SponsoredMissionsManager.instance.changeOnOff(monetizrToggle.isOn);
+        MonetizrManager.Instance.Enable(monetizrToggle.isOn);
     }
 }

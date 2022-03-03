@@ -21,7 +21,7 @@ namespace Monetizr.Challenges
         public void Play(string path, Action<bool> onComplete)
         {
             this.onComplete = onComplete;
-            var videoPath = MonetizrManager.Instance.GetAsset<string>(MonetizrManager.Instance.GetAvailableChallenges()[0], AssetsType.VideoFilePathString);
+            var videoPath = MonetizrManager.Instance.GetAsset<string>(MonetizrManager.Instance.GetActiveChallenge(), AssetsType.VideoFilePathString);
 
           
             var videoPlayer = GetComponent<VideoPlayer>();
@@ -32,11 +32,14 @@ namespace Monetizr.Challenges
             videoPlayer.url = videoPath;
             videoPlayer.frame = 100;
             videoPlayer.isLooping = false;
-
-
+                       
             videoPlayer.loopPointReached += EndReached;
 
             videoPlayer.Play();
+
+            Debug.Log($"{videoPlayer.width} {videoPlayer.height}");
+
+            MonetizrManager.Instance.SoundSwitch(false);
 
             MonetizrManager.Analytics.BeginShowAdAsset(AdType.Video);
         }
@@ -44,6 +47,8 @@ namespace Monetizr.Challenges
         void EndReached(VideoPlayer vp)
         {
             MonetizrManager.Analytics.EndShowAdAsset(AdType.Video);
+
+            MonetizrManager.Instance.SoundSwitch(true);
 
             onComplete.Invoke(isSkipped);
 

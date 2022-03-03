@@ -53,7 +53,15 @@ namespace Monetizr.Challenges
 
         public void BeginShowAdAsset(AdType type)
         {
-            Assert.IsFalse(visibleAdAsset.ContainsKey(type), MonetizrErrors.msg[ErrorType.AdAssetStillShowing]);
+            Debug.Log($"MonetizrAnalytics BeginShowAdAsset: {type}");
+
+
+            if(visibleAdAsset.ContainsKey(type))
+            {
+                Debug.Log(MonetizrErrors.msg[ErrorType.AdAssetStillShowing]);
+            }
+
+            //Assert.IsFalse(visibleAdAsset.ContainsKey(type), MonetizrErrors.msg[ErrorType.AdAssetStillShowing]);
 
            /* if (visibleAdAsset.ContainsKey(type))
             {
@@ -63,13 +71,13 @@ namespace Monetizr.Challenges
             //    EndShowAdAsset(visibleAdAsset.adType);
             }*/
 
-            Debug.Log($"MonetizrAnalytics BeginShowAdAsset: {type}");
+            
          
-            var ch = MonetizrManager.Instance.GetAvailableChallenges();
+            var ch = MonetizrManager.Instance.GetActiveChallenge();
 
             var adAsset = new VisibleAdAsset() {
                 adType = type,
-                challengeId = ch[0],
+                challengeId = ch,
                 activateTime = DateTime.Now
             };
 
@@ -98,6 +106,7 @@ namespace Monetizr.Challenges
             props["application_version"] = Application.version;
             props["impressions"] = "1";
             props["campaign_id"] = visibleAdAsset[type].challengeId;
+            props["camp_id"] = visibleAdAsset[type].challengeId;
             props["brand_id"] = challenge.brand_id;
             props["type"] = adTypeNames[type];
             //props["duration"] = (DateTime.Now - visibleAdAsset[type].activateTime).TotalSeconds;
@@ -117,12 +126,12 @@ namespace Monetizr.Challenges
             string campaign_id = "none";
             string brand_id = "none";
 
-            if (MonetizrManager.Instance.HasChallenges())
+            if (MonetizrManager.Instance.HasChallengesAndActive())
             {
-                var ch = MonetizrManager.Instance.GetAvailableChallenges();
+                var ch = MonetizrManager.Instance.GetActiveChallenge();
 
-                brand_id = MonetizrManager.Instance.GetChallenge(ch[0]).brand_id;
-                campaign_id = ch[0];
+                brand_id = MonetizrManager.Instance.GetChallenge(ch).brand_id;
+                campaign_id = ch;
             }
 
             var props = new Value();
@@ -131,6 +140,7 @@ namespace Monetizr.Challenges
             props["application_name"] = Application.productName;
             props["application_version"] = Application.version;
             props["campaign_id"] = campaign_id;
+            props["camp_id"] = campaign_id;
             props["brand_id"] = brand_id;
 
             Mixpanel.Track($"[UNITY_SDK] {name}", props);

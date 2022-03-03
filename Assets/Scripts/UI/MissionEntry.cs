@@ -57,7 +57,7 @@ public class MissionEntry : MonoBehaviour
 			SponsoredPickupCoinMission sponsoredMission = (SponsoredPickupCoinMission) m;
 			claimButton.onClick.AddListener(delegate
 			{
-				SponsoredMissionsManager.instance.ClaimReward(sponsoredMission.challenge);
+				//SponsoredMissionsManager.instance.ClaimReward(sponsoredMission.challenge);
 			});
         }
         else

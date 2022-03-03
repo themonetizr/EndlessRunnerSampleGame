@@ -65,6 +65,6 @@ public class SponsoredPickupCoinMission : MissionBase
 
         _lastUpdate = Time.time;
 
-        SponsoredMissionsManager.instance.UpdateMission(challenge, Mathf.RoundToInt(progress));
+        //SponsoredMissionsManager.instance.UpdateMission(challenge, Mathf.RoundToInt(progress));
     }
 }

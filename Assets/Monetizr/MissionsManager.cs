@@ -111,14 +111,13 @@ public class MissionsManager : MonoBehaviour
         //missions.ml.Add(new Mission("Play 30 sec", 30, 0, 30, false));
         //missions.ml.Add(new Mission("Play 200 sec", 200, 0, 200, false));
 
-        if(MonetizrManager.Instance.GetAvailableChallenges().Count > 0)
+        if(MonetizrManager.Instance.HasChallengesAndActive())
         {
-            foreach(var challengeID in MonetizrManager.Instance.GetAvailableChallenges())
-            {
-                var title = MonetizrManager.Instance.GetAsset<string>(challengeID, AssetsType.BrandTitleString);
+            var challengeID = MonetizrManager.Instance.GetActiveChallenge();
+            
+            var title = MonetizrManager.Instance.GetAsset<string>(challengeID, AssetsType.BrandTitleString);
 
-                missions.ml.Add(new Mission(title, 2, 2, false, challengeID));
-            }
+            missions.ml.Add(new Mission(title, 2, 2, false, challengeID));
         }
 
 

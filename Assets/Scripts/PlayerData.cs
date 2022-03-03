@@ -242,7 +242,7 @@ public class PlayerData
                 NewSave();
             }
 
-            SponsoredMissionsManager.instance.AddSponsoredMissions();
+            //SponsoredMissionsManager.instance.AddSponsoredMissions();
         }
 
         m_Instance.CheckMissionsCount();

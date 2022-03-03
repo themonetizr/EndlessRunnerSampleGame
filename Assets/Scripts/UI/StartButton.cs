@@ -66,7 +66,7 @@ public class StartButton : MonoBehaviour
 
     public void PlayVideo()
     {
-        var videoPath = MonetizrManager.Instance.GetAsset<string>(MonetizrManager.Instance.GetAvailableChallenges()[0], AssetsType.VideoFilePathString);
+        var videoPath = MonetizrManager.Instance.GetAsset<string>(MonetizrManager.Instance.GetActiveChallenge(), AssetsType.VideoFilePathString);
 
         /*var webView = gameObject.AddComponent<UniWebView>();
         webView.Frame = new Rect(0, 0, Screen.width, Screen.height);

@@ -69,9 +69,12 @@ namespace Monetizr.Challenges
         public Challenge challenge { get; private set; }
         private Dictionary<AssetsType, object> assets = new Dictionary<AssetsType, object>();
 
+        public bool isChallengeLoaded;
+
         public ChallengeExtention(Challenge challenge)
         {
             this.challenge = challenge;
+            this.isChallengeLoaded = true;
         }
 
         public void SetAsset<T>(AssetsType t, object asset)
@@ -138,11 +141,17 @@ namespace Monetizr.Challenges
 
         private UIController uiController = null;
 
+        private string activeChallengeId;
+
+        private Action<bool> soundSwitch;
+
+        private bool isActive = false;
+
         //Storing ids in separate list to get faster access (the same as Keys in challenges dictionary below)
         private List<string> challengesId = new List<string>();
         private Dictionary<String, ChallengeExtention> challenges = new Dictionary<String, ChallengeExtention>();
 
-        public static MonetizrManager Initialize(string apiKey, Action<bool> onRequestComplete)
+        public static MonetizrManager Initialize(string apiKey, Action<bool> onRequestComplete, Action<bool> soundSwitch)
         {
             if (instance != null)
             {
@@ -158,7 +167,7 @@ namespace Monetizr.Challenges
             DontDestroyOnLoad(monetizrObject);
             instance = monetizrManager;
 
-            monetizrManager.Initalize(apiKey, onRequestComplete);
+            monetizrManager.Initalize(apiKey, onRequestComplete, soundSwitch);
 
             return instance;
         }
@@ -187,17 +196,27 @@ namespace Monetizr.Challenges
         /// <summary>
         /// Initialize
         /// </summary>
-        private void Initalize(string apiKey, Action<bool> onRequestComplete)
+        private void Initalize(string apiKey, Action<bool> onRequestComplete, Action<bool> soundSwitch)
         {
+            this.soundSwitch = soundSwitch;
+
             _challengesClient = new ChallengesClient(apiKey);
 
             RequestChallenges(
                 (bool isOk) =>
                 {
+                    if (isOk)
+                        isActive = true;
+
                     InitializeUI();
 
                     onRequestComplete(isOk);
                 });
+        }
+
+        public void SoundSwitch(bool on)
+        {
+            soundSwitch?.Invoke(on);
         }
 
         private void InitializeUI()
@@ -209,7 +228,7 @@ namespace Monetizr.Challenges
         {
             Assert.IsNotNull(instance, MonetizrErrors.msg[ErrorType.NotinitializedSDK]);
 
-            if(!instance.HasChallenges())
+            if(!instance.HasChallengesAndActive())
             {
                 onComplete?.Invoke();
                 return;
@@ -256,7 +275,7 @@ namespace Monetizr.Challenges
         {
             Assert.IsNotNull(instance, MonetizrErrors.msg[ErrorType.NotinitializedSDK]);
 
-            if (!instance.HasChallenges())
+            if (!instance.HasChallengesAndActive())
                 return;
 
             instance.uiController.ShowTinyMenuTeaser(onTap);
@@ -266,7 +285,7 @@ namespace Monetizr.Challenges
         {
             Assert.IsNotNull(instance, MonetizrErrors.msg[ErrorType.NotinitializedSDK]);
 
-            if (!instance.HasChallenges())
+            if (!instance.HasChallengesAndActive())
                 return;
 
             instance.uiController.HidePanel(PanelId.TinyMenuTeaser);
@@ -300,6 +319,12 @@ namespace Monetizr.Challenges
             {
                 data = await DownloadHelper.DownloadAssetData(asset.url);
 
+                if (data == null)
+                {
+                    ech.isChallengeLoaded = false;
+                    return;
+                }
+
                 File.WriteAllBytes(fpath, data);
 
                 Debug.Log("saving: " + fpath);
@@ -307,6 +332,12 @@ namespace Monetizr.Challenges
             else
             {
                 data = File.ReadAllBytes(fpath);
+
+                if (data == null)
+                {
+                    ech.isChallengeLoaded = false;
+                    return;
+                }
 
                 Debug.Log("reading: " + fpath);
             }
@@ -340,6 +371,12 @@ namespace Monetizr.Challenges
             if (!File.Exists(fpath))
             {
                 data = await DownloadHelper.DownloadAssetData(asset.url);
+
+                if (data == null)
+                {
+                    ech.isChallengeLoaded = false;
+                    return;
+                }
 
                 File.WriteAllBytes(fpath, data);
 
@@ -405,13 +442,17 @@ namespace Monetizr.Challenges
 
                 }
 
-                this.challenges.Add(ch.id, ech);
-
-
-                challengesId.Add(ch.id);
+                if (ech.isChallengeLoaded)
+                {
+                    this.challenges.Add(ch.id, ech);
+                    challengesId.Add(ch.id);
+                }
             }
 
-            Debug.Log("RequestChallenges completed with count: " + challenges.Count);
+            if (challengesId.Count > 0)
+                activeChallengeId = challengesId[0];
+
+            Debug.Log($"RequestChallenges completed with count: {challenges.Count} active: {activeChallengeId}");
 
             //TODO: Check error state
             onRequestComplete?.Invoke(true);
@@ -437,9 +478,24 @@ namespace Monetizr.Challenges
             return challengesId;
         }
 
-        public bool HasChallenges()
+        public bool HasChallengesAndActive()
         {
-            return challengesId.Count > 0;
+            return isActive && challengesId.Count > 0;
+        }
+
+        public string GetActiveChallenge()
+        {
+            return activeChallengeId;
+        }
+
+        public void SetActiveChallengeId(string id)
+        {
+            activeChallengeId = id;
+        }
+
+        public void Enable(bool enable)
+        {
+            isActive = enable;
         }
 
         /// <summary>

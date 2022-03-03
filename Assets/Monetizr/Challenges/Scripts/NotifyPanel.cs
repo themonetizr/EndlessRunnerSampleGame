@@ -49,11 +49,9 @@ namespace Monetizr.Challenges
 
         private void PrepareNotificationPanel()
         {
-            var challenges = MonetizrManager.Instance.GetAvailableChallenges();
-
-            if (challenges.Count > 0)
+            if (MonetizrManager.Instance.HasChallengesAndActive())
             {
-                var challengeId = challenges[0];
+                var challengeId = MonetizrManager.Instance.GetActiveChallenge();
 
                 banner.sprite = MonetizrManager.Instance.GetAsset<Sprite>(challengeId, AssetsType.BrandBannerSprite);
                 logo.sprite = MonetizrManager.Instance.GetAsset<Sprite>(challengeId, AssetsType.BrandLogoSprite);
@@ -78,11 +76,9 @@ namespace Monetizr.Challenges
 
         private void PrepareCongratsPanel()
         {
-            var challenges = MonetizrManager.Instance.GetAvailableChallenges();
-
-            if (challenges.Count > 0)
+            if (MonetizrManager.Instance.HasChallengesAndActive())
             {
-                var challengeId = challenges[0];
+                var challengeId = MonetizrManager.Instance.GetActiveChallenge();
 
                 banner.sprite = MonetizrManager.Instance.GetAsset<Sprite>(challengeId, AssetsType.BrandRewardBannerSprite);
                 logo.sprite = MonetizrManager.Instance.GetAsset<Sprite>(challengeId, AssetsType.BrandLogoSprite);

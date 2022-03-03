@@ -30,7 +30,7 @@ namespace Monetizr.Challenges
 
             CleanListView();
 
-            if (MonetizrManager.Instance.HasChallenges())
+            if (MonetizrManager.Instance.HasChallengesAndActive())
             {
                 hasSponsoredChallenges = true;
                 AddSponsoredChallenges();
@@ -56,38 +56,36 @@ namespace Monetizr.Challenges
 
         private void AddSponsoredChallenges()
         {
-            foreach (var ch in MonetizrManager.Instance.GetAvailableChallenges())
+            var ch = MonetizrManager.Instance.GetActiveChallenge();
+            
+            string brandName = MonetizrManager.Instance.GetAsset<string>(ch, AssetsType.BrandTitleString);
+
+            MissionUIDescription m = new MissionUIDescription()
             {
-                string brandName = MonetizrManager.Instance.GetAsset<string>(ch, AssetsType.BrandTitleString);
+                brandBanner = MonetizrManager.Instance.GetAsset<Sprite>(ch, AssetsType.BrandBannerSprite),
+                missionTitle = $"{brandName} video",
+                missionDescription = $"Watch video by {brandName} and get 2 Energy Boosters",
+                missionIcon = MonetizrManager.Instance.GetAsset<Sprite>(ch, AssetsType.BrandRewardLogoSprite),
 
-                MissionUIDescription m = new MissionUIDescription()
-                {
-                    brandBanner = MonetizrManager.Instance.GetAsset<Sprite>(ch, AssetsType.BrandBannerSprite),
-                    missionTitle = $"{brandName} video",
-                    missionDescription = $"Watch video by {brandName} and get 2 Energy Boosters",
-                    missionIcon = MonetizrManager.Instance.GetAsset<Sprite>(ch, AssetsType.BrandRewardLogoSprite),
+                rewardIcon = null,
+                reward = 2,
+                progress = 1,
+                onClaimButtonPress = () => { OnVideoPlayPress(); },
+                isSponsored = true,
+            };
 
-                    rewardIcon = null,
-                    reward = 2,
-                    progress = 1,
-                    onClaimButtonPress = () => { OnVideoPlayPress(); },
-                    isSponsored = true,
-                };
+            var go = GameObject.Instantiate<GameObject>(itemUI.gameObject, contentRoot);
 
-                var go = GameObject.Instantiate<GameObject>(itemUI.gameObject, contentRoot);
-
-                var item = go.GetComponent<MonetizrRewardedItem>();
+            var item = go.GetComponent<MonetizrRewardedItem>();
 
 
-                Debug.Log(m.missionTitle);
+            Debug.Log(m.missionTitle);
 
-                item.UpdateWithDescription(m);
+            item.UpdateWithDescription(m);
 
-                MonetizrManager.Analytics.BeginShowAdAsset(AdType.IntroBanner);
+            MonetizrManager.Analytics.BeginShowAdAsset(AdType.IntroBanner);
 
-                //only one challenge per time
-                break;
-            }
+
         }
 
         private void CleanListView()
@@ -112,11 +110,11 @@ namespace Monetizr.Challenges
 
                 if (!isSkipped)
                 {   
-                    if (MonetizrManager.Instance.HasChallenges())
+                    if (MonetizrManager.Instance.HasChallengesAndActive())
                     {
-                        var ch = MonetizrManager.Instance.GetAvailableChallenges()[0];
+                        var ch = MonetizrManager.Instance.GetActiveChallenge();
 
-                        MonetizrManager.Instance.ClaimReward(ch);
+                        //MonetizrManager.Instance.ClaimReward(ch);
                     }
 
                     MonetizrManager.ShowCongratsNotification(null);
