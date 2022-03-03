@@ -65,6 +65,10 @@ namespace Monetizr.Challenges
         internal override void PreparePanel(PanelId id, Action onComplete, List<MissionUIDescription> missionsDescriptions)
         {
             MonetizrManager.Analytics.BeginShowAdAsset(AdType.TinyTeaser);
+
+            var challengeId = MonetizrManager.Instance.GetActiveChallenge();
+
+            teaserImage.texture = MonetizrManager.Instance.GetAsset<Texture2D>(challengeId, AssetsType.TinyTeaserTexture);
         }
 
         internal override void FinalizePanel(PanelId id)

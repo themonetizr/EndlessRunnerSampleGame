@@ -44,6 +44,7 @@ namespace Monetizr.Challenges
         VideoURLString, //video url
         VideoFilePathString, //video url
         BrandTitleString, //text
+        TinyTeaserTexture, //text
 
     }
 
@@ -63,6 +64,7 @@ namespace Monetizr.Challenges
             { AssetsType.VideoURLString, typeof(String) },
             { AssetsType.VideoFilePathString, typeof(String) },
             { AssetsType.BrandTitleString, typeof(String) },
+            { AssetsType.TinyTeaserTexture, typeof(Texture2D) },
 
         };
 
@@ -345,13 +347,15 @@ namespace Monetizr.Challenges
             Texture2D tex = new Texture2D(0, 0);
             tex.LoadImage(data);
 
-            Sprite s = Sprite.Create(tex, new Rect(0.0f, 0.0f, tex.width, tex.height), new Vector2(0.5f, 0.5f), 100.0f);
-
             if (texture != AssetsType.Unknown)
                 ech.SetAsset<Texture2D>(texture, tex);
 
             if (sprite != AssetsType.Unknown)
+            {
+                Sprite s = Sprite.Create(tex, new Rect(0.0f, 0.0f, tex.width, tex.height), new Vector2(0.5f, 0.5f), 100.0f);
+
                 ech.SetAsset<Sprite>(sprite, s);
+            }
         }
 
         private async Task PreloadAssetToCache(ChallengeExtention ech, Challenge.Asset asset)
@@ -424,6 +428,12 @@ namespace Monetizr.Challenges
                             await AssignAssetTextures(ech, asset, AssetsType.Unknown, AssetsType.BrandRewardBannerSprite);
 
                             break;
+
+                        case "tiny_teaser":
+                            await AssignAssetTextures(ech, asset, AssetsType.TinyTeaserTexture, AssetsType.Unknown);
+
+                            break;
+
                         case "survey":
                             ech.SetAsset<string>(AssetsType.SurveyURLString, asset.url);
 
