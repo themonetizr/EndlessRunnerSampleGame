@@ -100,7 +100,8 @@ namespace Monetizr.Challenges
             var challenge = MonetizrManager.Instance.GetChallenge(visibleAdAsset[type].challengeId);
             
             var props = new Value();
-            props["application_id"] = Application.identifier;
+            props["application_id"] = challenge.application_id;
+            props["bundle_id"] = Application.identifier;
             props["player_id"] = GetUserId();
             props["application_name"] = Application.productName;
             props["application_version"] = Application.version;
@@ -125,17 +126,19 @@ namespace Monetizr.Challenges
         {
             string campaign_id = "none";
             string brand_id = "none";
+            string app_id = "none";
 
             if (MonetizrManager.Instance.HasChallengesAndActive())
             {
                 var ch = MonetizrManager.Instance.GetActiveChallenge();
-
                 brand_id = MonetizrManager.Instance.GetChallenge(ch).brand_id;
+                app_id = MonetizrManager.Instance.GetChallenge(ch).application_id;
                 campaign_id = ch;
             }
 
             var props = new Value();
-            props["application_id"] = Application.identifier;
+            props["application_id"] = app_id;
+            props["bundle_id"] = Application.identifier;
             props["player_id"] = SystemInfo.deviceUniqueIdentifier;
             props["application_name"] = Application.productName;
             props["application_version"] = Application.version;
