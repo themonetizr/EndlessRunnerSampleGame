@@ -20,6 +20,8 @@ namespace Monetizr.Challenges
         public Text rewardPercent;
         public Text buttonText;
 
+        public Sprite defaultBoosterIcon;
+
         internal void UpdateWithDescription(MissionUIDescription md)
         {
             banner.gameObject.SetActive(md.brandBanner != null);
@@ -50,7 +52,7 @@ namespace Monetizr.Challenges
 
             boosterNumber.text = md.reward.ToString();
 
-            boosterIcon.sprite = md.rewardIcon;
+            boosterIcon.sprite = md.rewardIcon == null ? defaultBoosterIcon : md.rewardIcon;
 
             rewardLine.fillAmount = md.progress;
 
