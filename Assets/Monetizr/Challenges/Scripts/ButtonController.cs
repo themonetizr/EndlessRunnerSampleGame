@@ -3,39 +3,35 @@ using System.Collections.Generic;
 using UnityEngine;
 using UnityEngine.UI;
 
-public enum ButtonType
+namespace Monetizr.Challenges
 {
-    MainMenu_StartButton,
-    RewardScreen_ClaimX2Button,
-    RewardScreen_NoThanksButton,
-    RewardScreen_GalleryButton,
-    GamePlay_Restart,
-    RewardScreen_TryAgain,
-    GamePlay_GoToLevelsSelector,
-    LevelsSelector_Level,
-    PauseMenu_Close,
-    PauseMenu_GoToLevelsSelector,
-    Gallery_PlayButton,
-    GamePlay_Hint,
-}
-
-[RequireComponent(typeof(Button))]
-public class ButtonController : MonoBehaviour
-{
-    public ButtonType buttonType;
-    Button button;
-    public int id = 0;
-
-    void Start()
+    public enum ButtonType
     {
-        button = GetComponent<Button>();
-        button.onClick.AddListener(OnButtonClicked);
+
     }
 
-    void OnButtonClicked()
+    [RequireComponent(typeof(Button))]
+    public class ButtonController : MonoBehaviour
     {
-        Debug.Log($"Clicked: {buttonType} id: {id}");
+        public RewardCenterPanel clickReceiver;
+        public MissionUIDescription missionDescription;
+        public ButtonType buttonType;
+        Button button;
+        public int id = 0;
 
-        //GameState.GetInstance().ButtonPress(buttonType,id);       
+        void Start()
+        {
+            button = GetComponent<Button>();
+            button.onClick.AddListener(OnButtonClicked);
+        }
+
+        void OnButtonClicked()
+        {
+            Debug.Log($"Clicked: {buttonType} id: {id}");
+
+            clickReceiver.ButtonPressed(this, missionDescription);
+            //GameState.GetInstance().ButtonPress(buttonType,id);       
+        }
     }
+
 }

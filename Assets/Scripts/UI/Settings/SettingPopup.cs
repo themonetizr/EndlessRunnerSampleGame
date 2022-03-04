@@ -96,11 +96,12 @@ public class SettingPopup : MonoBehaviour
 
         for(int i = 0; i < MonetizrManager.Instance.GetAvailableChallenges().Count; i++)
         {
-            if (MonetizrManager.Instance.GetAvailableChallenges()[i] ==
-                MonetizrManager.Instance.GetActiveChallenge())
+            string id = MonetizrManager.Instance.GetAvailableChallenges()[i];
+
+            if (id == MonetizrManager.Instance.GetActiveChallenge())
                 selection = i;
 
-            dropOptions.Add(MonetizrManager.Instance.GetAvailableChallenges()[i]);            
+            dropOptions.Add(MonetizrManager.Instance.GetAsset<string>(id, AssetsType.BrandTitleString));            
         }
 
         monetizrCampaigns.AddOptions(dropOptions);

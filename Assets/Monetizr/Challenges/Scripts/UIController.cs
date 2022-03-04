@@ -43,7 +43,7 @@ namespace Monetizr.Challenges
                                     float progress,
                                     Action onClaimButtonPress)
         {
-            /*if (string.IsNullOrEmpty(missionTitle))
+            if (string.IsNullOrEmpty(missionTitle))
             {
                 throw new ArgumentException($"'{nameof(missionTitle)}' cannot be null or empty", nameof(missionTitle));
             }
@@ -51,7 +51,7 @@ namespace Monetizr.Challenges
             if (string.IsNullOrEmpty(missionDescription))
             {
                 throw new ArgumentException($"'{nameof(missionDescription)}' cannot be null or empty", nameof(missionDescription));
-            }*/
+            }
 
             this.isSponsored = false;
 
@@ -68,7 +68,7 @@ namespace Monetizr.Challenges
 
     public class UIController
     {
-        private List<MissionUIDescription> missionsDescriptions = new List<MissionUIDescription>();
+        public List<MissionUIDescription> missionsDescriptions = new List<MissionUIDescription>();
 
         private GameObject mainCanvas;
         private PanelId previousPanel;
@@ -168,12 +168,7 @@ namespace Monetizr.Challenges
 
             if (previousPanel != PanelId.Unknown)
                 panels[previousPanel].SetActive(false);
-
-            if(id == PanelId.RewardCenter)
-            {
-                //CleanMissionsList();
-            }
-
+                        
             Action _onComplete = () => {
                 onComplete?.Invoke();
                 missionsDescriptions.Clear();
@@ -212,6 +207,8 @@ namespace Monetizr.Challenges
 
             var ctrlPanel = panel.GetComponent<PanelController>();
 
+            ctrlPanel.uiController = this;
+
             ctrlPanel.PreparePanel(id, complete, missionsDescriptions);
 
             ctrlPanel.SetActive(true);
@@ -238,6 +235,9 @@ namespace Monetizr.Challenges
                 teaser = panels[PanelId.TinyMenuTeaser] as MonetizrMenuTeaser;
             }
 
+            if (teaser.IsVisible())
+                return;
+
             teaser.PreparePanel(PanelId.TinyMenuTeaser, null, null);
 
             //previousPanel = PanelId.TinyMenuTeaser;
@@ -245,20 +245,12 @@ namespace Monetizr.Challenges
             teaser.SetActive(true);
         }
 
-        public void HideTinyMenuTeaser()
-        {
-            if (panels.ContainsKey(PanelId.TinyMenuTeaser))
-            {
-                panels[PanelId.TinyMenuTeaser].SetActive(false);
-            }
-        }
-
-
         public void HidePanel(PanelId id = PanelId.Unknown)
         {
             if (id == PanelId.Unknown && previousPanel != PanelId.Unknown)
-                panels[previousPanel].SetActive(false);
-            else
+                id = previousPanel;
+
+            if(panels.ContainsKey(id))
                 panels[id].SetActive(false);
 
         }

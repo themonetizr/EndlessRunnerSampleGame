@@ -13,7 +13,7 @@ namespace Monetizr.Challenges
            Unknown,
            Hidden,
            Animating,
-           Showing
+           Visible
         };
 
         private Animator animator;
@@ -21,6 +21,7 @@ namespace Monetizr.Challenges
         protected Action onComplete;
         protected PanelId panelId;
         private State state;
+        public UIController uiController;
 
         internal abstract void PreparePanel(PanelId id, Action onComplete, List<MissionUIDescription> missionsDescriptions);
         internal abstract void FinalizePanel(PanelId id);
@@ -47,7 +48,7 @@ namespace Monetizr.Challenges
         {
             if (active) //showing
             {
-                if (state != State.Animating && state != State.Showing)
+                if (state != State.Animating && state != State.Visible)
                 {
                     EnableInput(true);
 
@@ -91,9 +92,19 @@ namespace Monetizr.Challenges
             return null;
         }
 
+        internal bool IsVisible()
+        {
+            return state == State.Visible;
+        }
+
+        internal bool IsHidden()
+        {
+            return state == State.Hidden;
+        }
+
         internal void OnAnimationShow()
         {
-            state = State.Showing;
+            state = State.Visible;
         }
 
         private void OnAnimationHide()

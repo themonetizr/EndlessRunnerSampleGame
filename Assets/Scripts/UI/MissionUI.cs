@@ -52,11 +52,8 @@ public class MissionUI : MonoBehaviour
         }
     }
 
-    public void CallOpen()
+    public void UpdateMissionsUI()
     {
-        //gameObject.SetActive(true);
-        //StartCoroutine(Open());
-
         for (int i = 0; i < PlayerData.instance.missions.Count; ++i)
         {
             var m = PlayerData.instance.missions[i];
@@ -68,13 +65,23 @@ public class MissionUI : MonoBehaviour
 
             MonetizrManager.AddUserDefinedMission(m.GetMissionType().ToString(), m.GetMissionDesc(), missionIcon, rewardIcon, m.reward, m.progress, onClaimButtonPress);
         }
+    }
+
+    public void CallOpen()
+    {
+        //gameObject.SetActive(true);
+        //StartCoroutine(Open());
+
+        UpdateMissionsUI();
 
         MonetizrManager.ShowRewardCenter(null);
     }
 
     public void Claim(MissionBase m)
     {
-        //PlayerData.instance.ClaimMission(m);
+        PlayerData.instance.ClaimMission(m);
+
+        UpdateMissionsUI();
 
         //// Rebuild the UI with the new missions
         //StartCoroutine(Open());

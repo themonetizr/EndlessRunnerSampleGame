@@ -99,9 +99,12 @@ public class ShopUI : MonoBehaviour
 	{
         SceneManager.UnloadSceneAsync("shop");
 	    LoadoutState loadoutState = GameManager.instance.topState as LoadoutState;
-	    if(loadoutState != null)
+
+        MonetizrManager.ShowTinyMenuTeaser(null);
+
+        if (loadoutState != null)
         {
-            MonetizrManager.ShowTinyMenuTeaser(null);
+            
 
             loadoutState.Refresh();
         }

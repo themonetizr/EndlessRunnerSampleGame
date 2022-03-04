@@ -97,7 +97,7 @@ MonoBehaviour:
   brandIcon: {fileID: 4131049842134540246}
   rewardTitle: {fileID: 4131049842609226358}
   rewardDescription: {fileID: 4131049843295855057}
-  actionButton: {fileID: 4131049842429822152}
+  actionButton: {fileID: 1041766096224618279}
   boosterNumber: {fileID: 4131049841505687031}
   boosterIcon: {fileID: 4131049843184505781}
   progressBar: {fileID: 3162284098934431367}
@@ -310,6 +310,18 @@ PrefabInstance:
       objectReference: {fileID: 0}
     m_RemovedComponents: []
   m_SourcePrefab: {fileID: 100100000, guid: d05ee7748b364f24492b427758ffeecc, type: 3}
+--- !u!114 &1041766096224618279 stripped
+MonoBehaviour:
+  m_CorrespondingSourceObject: {fileID: 8027267604563065260, guid: d05ee7748b364f24492b427758ffeecc,
+    type: 3}
+  m_PrefabInstance: {fileID: 6995090663582269067}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 0}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: 81e2d9817710447468d7fed426eb3008, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: 
 --- !u!1 &3162284098934431367 stripped
 GameObject:
   m_CorrespondingSourceObject: {fileID: 5400164806393241612, guid: d05ee7748b364f24492b427758ffeecc,
@@ -350,18 +362,6 @@ MonoBehaviour:
   m_Enabled: 1
   m_EditorHideFlags: 0
   m_Script: {fileID: 11500000, guid: fe87c0e1cc204ed48ad3b37840f39efc, type: 3}
-  m_Name: 
-  m_EditorClassIdentifier: 
---- !u!114 &4131049842429822152 stripped
-MonoBehaviour:
-  m_CorrespondingSourceObject: {fileID: 6361301575705459267, guid: d05ee7748b364f24492b427758ffeecc,
-    type: 3}
-  m_PrefabInstance: {fileID: 6995090663582269067}
-  m_PrefabAsset: {fileID: 0}
-  m_GameObject: {fileID: 0}
-  m_Enabled: 1
-  m_EditorHideFlags: 0
-  m_Script: {fileID: 11500000, guid: 4e29b1a8efbd4b44bb3f3716e73f07ff, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
 --- !u!114 &4131049842609226358 stripped

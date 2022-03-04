@@ -12,7 +12,7 @@ namespace Monetizr.Challenges
         public Image brandIcon;
         public Text rewardTitle;
         public Text rewardDescription;
-        public Button actionButton;
+        public ButtonController actionButton;
         public Text boosterNumber;
         public Image boosterIcon;
         public GameObject progressBar;
@@ -22,7 +22,7 @@ namespace Monetizr.Challenges
 
         public Sprite defaultBoosterIcon;
 
-        internal void UpdateWithDescription(MissionUIDescription md)
+        internal void UpdateWithDescription(RewardCenterPanel rewardCenterPanel, MissionUIDescription md)
         {
             banner.gameObject.SetActive(md.brandBanner != null);
             banner.sprite = md.brandBanner;
@@ -48,7 +48,9 @@ namespace Monetizr.Challenges
 
             rewardDescription.text = md.missionDescription;
 
-            actionButton.onClick.AddListener( ()=> { md.onClaimButtonPress.Invoke(); });
+            actionButton.clickReceiver = rewardCenterPanel;
+            actionButton.missionDescription = md;
+            //actionButton.onClick.AddListener( ()=> { md.onClaimButtonPress.Invoke(); });
 
             boosterNumber.text = md.reward.ToString();
 

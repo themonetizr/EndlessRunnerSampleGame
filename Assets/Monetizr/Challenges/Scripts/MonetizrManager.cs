@@ -177,7 +177,7 @@ namespace Monetizr.Challenges
         public static MonetizrManager Instance
         {
             get
-            {   
+            {
                 return instance;
             }
         }
@@ -230,13 +230,13 @@ namespace Monetizr.Challenges
         {
             Assert.IsNotNull(instance, MonetizrErrors.msg[ErrorType.NotinitializedSDK]);
 
-            if(!instance.HasChallengesAndActive())
+            if (!instance.HasChallengesAndActive())
             {
                 onComplete?.Invoke();
                 return;
             }
 
-            instance.uiController.ShowPanelFromPrefab("MonetizrNotifyPanel",PanelId.StartNotification, onComplete, true);
+            instance.uiController.ShowPanelFromPrefab("MonetizrNotifyPanel", PanelId.StartNotification, onComplete, true);
         }
 
         internal static void ShowCongratsNotification(Action onComplete)
@@ -252,6 +252,11 @@ namespace Monetizr.Challenges
 
             MissionUIDescription m = new MissionUIDescription(missionTitle, missionDescription, missionIcon, rewardIcon, reward, progress, onClaimButtonPress);
             instance.uiController.AddMission(m);
+        }
+
+        internal static void CleanUserDefinedMissions()
+        {
+            instance.uiController.CleanMissionsList();
         }
 
         internal static void ShowRewardCenter(Action onComplete)
@@ -286,10 +291,7 @@ namespace Monetizr.Challenges
         public static void HideTinyMenuTeaser()
         {
             Assert.IsNotNull(instance, MonetizrErrors.msg[ErrorType.NotinitializedSDK]);
-
-            if (!instance.HasChallengesAndActive())
-                return;
-
+                       
             instance.uiController.HidePanel(PanelId.TinyMenuTeaser);
         }
 

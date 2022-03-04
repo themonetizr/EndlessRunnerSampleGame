@@ -11,23 +11,16 @@ namespace Monetizr.Challenges
         public Transform contentRoot;
         public MonetizrRewardedItem itemUI;
         private bool hasSponsoredChallenges;
-    
+        //public List<MissionUIDescription> missionsDescriptions;
+        
         private new void Awake()
         {
             base.Awake();
             
         }
-
-        internal override void PreparePanel(PanelId id, Action onComplete, List<MissionUIDescription> missionsDescriptions)
+        
+        internal void UpdateUI()
         {
-            hasSponsoredChallenges = false;
-
-            MonetizrManager.Analytics.TrackEvent("Reward center opened");
-
-            MonetizrManager.HideTinyMenuTeaser();
-
-            this.onComplete = onComplete;
-
             CleanListView();
 
             if (MonetizrManager.Instance.HasChallengesAndActive())
@@ -36,7 +29,22 @@ namespace Monetizr.Challenges
                 AddSponsoredChallenges();
             }
                         
-            AddUserdefineChallenges(missionsDescriptions);
+            AddUserdefineChallenges(uiController.missionsDescriptions);
+        }
+
+        internal override void PreparePanel(PanelId id, Action onComplete, List<MissionUIDescription> missionsDescriptions)
+        {
+            hasSponsoredChallenges = false;
+
+            //this.missionsDescriptions = missionsDescriptions;
+
+            MonetizrManager.Analytics.TrackEvent("Reward center opened");
+
+            MonetizrManager.HideTinyMenuTeaser();
+
+            this.onComplete = onComplete;
+
+            UpdateUI();
         }
 
         private void AddUserdefineChallenges(List<MissionUIDescription> missionsDescriptions)
@@ -50,7 +58,7 @@ namespace Monetizr.Challenges
 
                 Debug.Log(m.missionTitle);
 
-                item.UpdateWithDescription(m);
+                item.UpdateWithDescription(this,m);
             }
         }
 
@@ -81,12 +89,13 @@ namespace Monetizr.Challenges
 
             Debug.Log(m.missionTitle);
 
-            item.UpdateWithDescription(m);
+            item.UpdateWithDescription(this,m);
 
             MonetizrManager.Analytics.BeginShowAdAsset(AdType.IntroBanner);
 
-
         }
+
+       
 
         private void CleanListView()
         {
@@ -101,6 +110,16 @@ namespace Monetizr.Challenges
         {
             SetActive(false);
         }
+
+        internal void ButtonPressed(ButtonController buttonController, MissionUIDescription missionDescription)
+        {
+            MonetizrManager.CleanUserDefinedMissions();
+
+            missionDescription.onClaimButtonPress.Invoke();
+
+            UpdateUI();
+        }
+
 
         public void OnVideoPlayPress()
         {
@@ -124,6 +143,8 @@ namespace Monetizr.Challenges
 
         internal override void FinalizePanel(PanelId id)
         {
+            MonetizrManager.CleanUserDefinedMissions();
+
             if (hasSponsoredChallenges)
             {
                 MonetizrManager.Analytics.EndShowAdAsset(AdType.IntroBanner);
