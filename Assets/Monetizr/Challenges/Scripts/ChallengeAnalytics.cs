@@ -4,6 +4,7 @@ using UnityEngine;
 using mixpanel;
 using System;
 using UnityEngine.Assertions;
+using Facebook.Unity;
 
 namespace Monetizr.Challenges
 {
@@ -44,11 +45,31 @@ namespace Monetizr.Challenges
 
         private Dictionary<AdType,VisibleAdAsset> visibleAdAsset = new Dictionary<AdType, VisibleAdAsset>();
 
+        private Amplitude amplitude;
+
         public MonetizrAnalytics()
         {
             Debug.Log($"MonetizrAnalytics initialized with user id: {GetUserId()}");
 
+            amplitude = Amplitude.Instance;
+            amplitude.logging = true;
+            amplitude.init("16e0224a663d67c293ee5b0f0ff926ad");
+
             Mixpanel.Init();
+
+            if (FB.IsInitialized)
+            {
+                FB.ActivateApp();
+            }
+            else
+            {
+                FB.Init(() =>
+                {
+                    FB.ActivateApp();
+
+                    Debug.Log("[FB] Activated!");
+                });
+            }
         }
 
         public void BeginShowAdAsset(AdType type)
@@ -97,6 +118,8 @@ namespace Monetizr.Challenges
             //Assert.IsNotNull(visibleAdAsset);
             //Assert.AreEqual(type, visibleAdAsset.adType, MonetizrErrors.msg[ErrorType.SimultaneusAdAssets]);
 
+            string brandName = MonetizrManager.Instance.GetAsset<string>(visibleAdAsset[type].challengeId, AssetsType.BrandTitleString);
+
             var challenge = MonetizrManager.Instance.GetChallenge(visibleAdAsset[type].challengeId);
             
             var props = new Value();
@@ -109,10 +132,21 @@ namespace Monetizr.Challenges
             props["campaign_id"] = visibleAdAsset[type].challengeId;
             props["camp_id"] = visibleAdAsset[type].challengeId;
             props["brand_id"] = challenge.brand_id;
+            props["brand_name"] = brandName;
             props["type"] = adTypeNames[type];
             //props["duration"] = (DateTime.Now - visibleAdAsset[type].activateTime).TotalSeconds;
 
-            Mixpanel.Track($"[UNITY_SDK] [AD] {adTypeNames[type]}", props);
+            string eventName = $"[UNITY_SDK] [AD] {adTypeNames[type]}";
+
+            Mixpanel.Track(eventName, props);
+
+            Dictionary<string, object> eventProps = new Dictionary<string, object>();
+            eventProps.Add("campaign_id", visibleAdAsset[type].challengeId);
+            eventProps.Add("brand_id", challenge.brand_id);
+            eventProps.Add("brand_name", brandName);
+            eventProps.Add("type", adTypeNames[type]);
+
+            amplitude.logEvent(eventName,eventProps);
 
             visibleAdAsset.Remove(type);
         }
@@ -124,15 +158,19 @@ namespace Monetizr.Challenges
 
         public void TrackEvent(string name)
         {
+            var eventName = $"[UNITY_SDK] {name}";
+
             string campaign_id = "none";
             string brand_id = "none";
             string app_id = "none";
-
+            string brand_name = "none";
+                
             if (MonetizrManager.Instance.HasChallengesAndActive())
             {
                 var ch = MonetizrManager.Instance.GetActiveChallenge();
                 brand_id = MonetizrManager.Instance.GetChallenge(ch).brand_id;
                 app_id = MonetizrManager.Instance.GetChallenge(ch).application_id;
+                brand_name = MonetizrManager.Instance.GetAsset<string>(ch, AssetsType.BrandTitleString);
                 campaign_id = ch;
             }
 
@@ -145,8 +183,16 @@ namespace Monetizr.Challenges
             props["campaign_id"] = campaign_id;
             props["camp_id"] = campaign_id;
             props["brand_id"] = brand_id;
+            props["brand_name"] = brand_name;
 
-            Mixpanel.Track($"[UNITY_SDK] {name}", props);
+            Mixpanel.Track(eventName, props);
+
+            Dictionary<string, object> eventProps = new Dictionary<string, object>();
+            eventProps.Add("campaign_id", campaign_id);
+            eventProps.Add("brand_id", brand_id);
+            eventProps.Add("brand_name", brand_name);
+     
+            amplitude.logEvent(eventName, eventProps);
         }
 
         public void Flush()
