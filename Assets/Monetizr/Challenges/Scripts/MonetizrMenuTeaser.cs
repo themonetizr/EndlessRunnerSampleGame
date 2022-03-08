@@ -62,7 +62,7 @@ namespace Monetizr.Challenges
             return 0.5f * (1f - Mathf.Cos(Mathf.PI * k));
         }
 
-        internal override void PreparePanel(PanelId id, Action onComplete, List<MissionUIDescription> missionsDescriptions)
+        internal override void PreparePanel(PanelId id, Action onComplete)
         {
             MonetizrManager.Analytics.BeginShowAdAsset(AdType.TinyTeaser);
 

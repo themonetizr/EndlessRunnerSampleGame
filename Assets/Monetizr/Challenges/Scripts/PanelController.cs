@@ -23,7 +23,7 @@ namespace Monetizr.Challenges
         private State state;
         public UIController uiController;
 
-        internal abstract void PreparePanel(PanelId id, Action onComplete, List<MissionUIDescription> missionsDescriptions);
+        internal abstract void PreparePanel(PanelId id, Action onComplete);
         internal abstract void FinalizePanel(PanelId id);
 
         protected void Awake()

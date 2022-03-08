@@ -1,4 +1,6 @@
-﻿using System.Collections;
+﻿#define TEST_SLOW_LATENCY
+
+using System.Collections;
 using System.Collections.Generic;
 using UnityEngine;
 using Monetizr.Challenges;
@@ -192,7 +194,7 @@ namespace Monetizr.Challenges
 
         void OnApplicationQuit()
         {
-            Analytics.Flush();
+            Analytics.OnApplicationQuit();
         }
 
         /// <summary>
@@ -204,14 +206,14 @@ namespace Monetizr.Challenges
 
             _challengesClient = new ChallengesClient(apiKey);
 
+            InitializeUI();
+
             RequestChallenges(
                 (bool isOk) =>
                 {
                     if (isOk)
                         isActive = true;
-
-                    InitializeUI();
-
+                    
                     onRequestComplete(isOk);
                 });
         }
@@ -262,18 +264,21 @@ namespace Monetizr.Challenges
         internal static void ShowRewardCenter(Action onComplete)
         {
             Assert.IsNotNull(instance, MonetizrErrors.msg[ErrorType.NotinitializedSDK]);
-
+            
             instance.uiController.ShowPanelFromPrefab("MonetizrRewardCenterPanel", PanelId.RewardCenter, onComplete, true);
         }
 
         internal static void HideRewardCenter()
         {
-            instance.uiController.HidePanel(PanelId.RewardCenter);
+             instance.uiController.HidePanel(PanelId.RewardCenter);
         }
 
         internal static void ShowSurvey(Action onComplete)
         {
             Assert.IsNotNull(instance, MonetizrErrors.msg[ErrorType.NotinitializedSDK]);
+
+            if (!instance.isActive)
+                return;
 
             instance.uiController.ShowPanelFromPrefab("MonetizrSurveyPanel", PanelId.Survey, onComplete);
         }
@@ -291,7 +296,10 @@ namespace Monetizr.Challenges
         public static void HideTinyMenuTeaser()
         {
             Assert.IsNotNull(instance, MonetizrErrors.msg[ErrorType.NotinitializedSDK]);
-                       
+
+            if (!instance.isActive)
+                return;
+
             instance.uiController.HidePanel(PanelId.TinyMenuTeaser);
         }
 
@@ -345,6 +353,10 @@ namespace Monetizr.Challenges
 
                 Debug.Log("reading: " + fpath);
             }
+
+#if TEST_SLOW_LATENCY
+            await Task.Delay(1000);
+#endif
 
             Texture2D tex = new Texture2D(0, 0);
             tex.LoadImage(data);
@@ -402,6 +414,11 @@ namespace Monetizr.Challenges
         {
             //TODO: add connection error tracking
             var challenges = await _challengesClient.GetList();
+
+#if TEST_SLOW_LATENCY
+            await Task.Delay(10000);
+            Debug.Log(">>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>");
+#endif
 
             foreach (var ch in challenges)
             {
@@ -463,6 +480,10 @@ namespace Monetizr.Challenges
 
             if (challengesId.Count > 0)
                 activeChallengeId = challengesId[0];
+
+#if TEST_SLOW_LATENCY
+            Debug.Log(">>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>");
+#endif
 
             Debug.Log($"RequestChallenges completed with count: {challenges.Count} active: {activeChallengeId}");
 
