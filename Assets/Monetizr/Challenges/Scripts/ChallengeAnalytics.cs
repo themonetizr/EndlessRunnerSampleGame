@@ -145,6 +145,7 @@ namespace Monetizr.Challenges
             eventProps.Add("brand_id", challenge.brand_id);
             eventProps.Add("brand_name", brandName);
             eventProps.Add("type", adTypeNames[type]);
+            eventProps.Add("duration", (DateTime.Now - visibleAdAsset[type].activateTime).TotalSeconds);
 
             amplitude.logEvent(eventName,eventProps);
 
