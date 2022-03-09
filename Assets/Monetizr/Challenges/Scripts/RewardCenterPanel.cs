@@ -32,7 +32,7 @@ namespace Monetizr.Challenges
             AddUserdefineChallenges(uiController.missionsDescriptions);
         }
 
-        internal override void PreparePanel(PanelId id, Action onComplete, List<MissionUIDescription> missionsDescriptions)
+        internal override void PreparePanel(PanelId id, Action onComplete)
         {
             hasSponsoredChallenges = false;
 
@@ -64,35 +64,35 @@ namespace Monetizr.Challenges
 
         private void AddSponsoredChallenges()
         {
-            var ch = MonetizrManager.Instance.GetActiveChallenge();
-            
-            string brandName = MonetizrManager.Instance.GetAsset<string>(ch, AssetsType.BrandTitleString);
-
-            MissionUIDescription m = new MissionUIDescription()
+            foreach (var ch in MonetizrManager.Instance.GetAvailableChallenges())
             {
-                brandBanner = MonetizrManager.Instance.GetAsset<Sprite>(ch, AssetsType.BrandBannerSprite),
-                missionTitle = $"{brandName} video",
-                missionDescription = $"Watch video by {brandName} and get 2 Energy Boosters",
-                missionIcon = MonetizrManager.Instance.GetAsset<Sprite>(ch, AssetsType.BrandRewardLogoSprite),
+                string brandName = MonetizrManager.Instance.GetAsset<string>(ch, AssetsType.BrandTitleString);
 
-                rewardIcon = null,
-                reward = 2,
-                progress = 1,
-                onClaimButtonPress = () => { OnVideoPlayPress(); },
-                isSponsored = true,
-            };
+                MissionUIDescription m = new MissionUIDescription()
+                {
+                    brandBanner = MonetizrManager.Instance.GetAsset<Sprite>(ch, AssetsType.BrandBannerSprite),
+                    missionTitle = $"{brandName} video",
+                    missionDescription = $"Watch video by {brandName} and get 2 Energy Boosters",
+                    missionIcon = MonetizrManager.Instance.GetAsset<Sprite>(ch, AssetsType.BrandRewardLogoSprite),
 
-            var go = GameObject.Instantiate<GameObject>(itemUI.gameObject, contentRoot);
+                    rewardIcon = null,
+                    reward = 2,
+                    progress = 1,
+                    onClaimButtonPress = () => { OnVideoPlayPress(); },
+                    isSponsored = true,
+                };
 
-            var item = go.GetComponent<MonetizrRewardedItem>();
+                var go = GameObject.Instantiate<GameObject>(itemUI.gameObject, contentRoot);
+
+                var item = go.GetComponent<MonetizrRewardedItem>();
 
 
-            Debug.Log(m.missionTitle);
+                Debug.Log(m.missionTitle);
 
-            item.UpdateWithDescription(this,m);
+                item.UpdateWithDescription(this, m);
 
-            MonetizrManager.Analytics.BeginShowAdAsset(AdType.IntroBanner);
-
+                MonetizrManager.Analytics.BeginShowAdAsset(AdType.IntroBanner,ch);
+            }
         }
 
        
@@ -119,7 +119,6 @@ namespace Monetizr.Challenges
 
             UpdateUI();
         }
-
 
         public void OnVideoPlayPress()
         {

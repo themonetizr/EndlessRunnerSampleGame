@@ -88,22 +88,9 @@ namespace Monetizr.Challenges
 
             Assert.IsNotNull(mainCanvas);
 
-            /*var notifyPanel = GameObject.Instantiate<GameObject>(Resources.Load("MonetizrNotifyPanel") as GameObject, mainCanvas.transform);
-            var rewardPanel = GameObject.Instantiate<GameObject>(Resources.Load("MonetizrRewardCenterPanel") as GameObject, mainCanvas.transform);
-
-            Assert.IsNotNull(notifyPanel);
-            Assert.IsNotNull(rewardPanel);*/
-
             previousPanel = PanelId.Unknown;
 
             panels = new Dictionary<PanelId, PanelController>();
-            /*panels.Add(PanelId.RewardCenter, rewardPanel.GetComponent<PanelController>());
-            panels.Add(PanelId.StartNotification, notifyPanel.GetComponent<PanelController>());
-            panels.Add(PanelId.CongratsNotification, notifyPanel.GetComponent<PanelController>());
-            */
-
-            //foreach (var p in panels)
-            //    p.Value.SetActive(false, true);
         }
 
         internal void CleanMissionsList()
@@ -171,12 +158,9 @@ namespace Monetizr.Challenges
                         
             Action _onComplete = () => {
                 onComplete?.Invoke();
-                missionsDescriptions.Clear();
-
-                Debug.Log("missionsDescriptions clear");
             };
 
-            panels[id].PreparePanel(id, _onComplete, missionsDescriptions);
+            panels[id].PreparePanel(id, _onComplete);
 
             //moving to the top
             panels[id].gameObject.transform.SetSiblingIndex(panels[id].gameObject.transform.parent.childCount-1);
@@ -209,7 +193,7 @@ namespace Monetizr.Challenges
 
             ctrlPanel.uiController = this;
 
-            ctrlPanel.PreparePanel(id, complete, missionsDescriptions);
+            ctrlPanel.PreparePanel(id, complete);
 
             ctrlPanel.SetActive(true);
 
@@ -238,7 +222,7 @@ namespace Monetizr.Challenges
             if (teaser.IsVisible())
                 return;
 
-            teaser.PreparePanel(PanelId.TinyMenuTeaser, null, null);
+            teaser.PreparePanel(PanelId.TinyMenuTeaser, null);
 
             //previousPanel = PanelId.TinyMenuTeaser;
 

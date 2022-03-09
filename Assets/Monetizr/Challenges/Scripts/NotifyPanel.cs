@@ -20,7 +20,7 @@ namespace Monetizr.Challenges
 
         //private Action onComplete;
 
-        internal override void PreparePanel(PanelId id, Action onComplete, List<MissionUIDescription> missionsDescriptions)
+        internal override void PreparePanel(PanelId id, Action onComplete)
         {
             this.onComplete = onComplete;
             this.panelId = id;

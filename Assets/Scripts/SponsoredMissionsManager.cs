@@ -31,14 +31,17 @@ public class SponsoredMissionsManager : MonoBehaviour
 
         MonetizrManager.Initialize(apiKey, (bool isOK) =>
             {
-                loadingUI?.SetActive(false);
-                menuActors?.Play("Take 001");
-                menuEnv?.Play("Take 001");
+               
             },
             (bool soundOn) => 
             {
                 musicPlayer.SwitchMusic(soundOn);
             } );
+
+
+        loadingUI?.SetActive(false);
+        menuActors?.Play("Take 001");
+        menuEnv?.Play("Take 001");
 
     }
 
