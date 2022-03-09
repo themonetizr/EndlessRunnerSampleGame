@@ -81,23 +81,15 @@ namespace Monetizr.Challenges
             Debug.Log($"MonetizrAnalytics BeginShowAdAsset: {type} {challengeId}");
 
             //Key value pair for duplicated types with different challenge ids
-            KeyValuePair<AdType, string> key = new KeyValuePair<AdType, string>(type, challengeId);
+            KeyValuePair<AdType, string> adElement = new KeyValuePair<AdType, string>(type, challengeId);
 
-            if (visibleAdAsset.ContainsKey(key))
+            if (visibleAdAsset.ContainsKey(adElement))
             {
                 Debug.Log(MonetizrErrors.msg[ErrorType.AdAssetStillShowing]);
             }
 
             //Assert.IsFalse(visibleAdAsset.ContainsKey(type), MonetizrErrors.msg[ErrorType.AdAssetStillShowing]);
 
-           /* if (visibleAdAsset.ContainsKey(type))
-            {
-                Debug.Log($"MonetizrAnalytics Some asset {type} is still visible!");
-
-                
-            //    EndShowAdAsset(visibleAdAsset.adType);
-            }*/
-            
             var ch = MonetizrManager.Instance.GetActiveChallenge();
 
             var adAsset = new VisibleAdAsset() {
@@ -106,7 +98,7 @@ namespace Monetizr.Challenges
                 activateTime = DateTime.Now
             };
 
-            visibleAdAsset[key] = adAsset;
+            visibleAdAsset[adElement] = adAsset;
 
             Mixpanel.StartTimedEvent($"[UNITY_SDK] [AD] {adTypeNames[type]}");
 
@@ -115,19 +107,50 @@ namespace Monetizr.Challenges
         //if challengeId is define, end only specified ad types, if not - end all
         public void EndShowAdAsset(AdType type, string challengeId = null, bool removeElement = true)
         {     
-            
-            Debug.Log($"MonetizrAnalytics EndShowAdAsset: {type}");
-
-            //Mixpanel.Track("Sent Message");
-
             //Assert.IsNotNull(visibleAdAsset);
             //Assert.AreEqual(type, visibleAdAsset.adType, MonetizrErrors.msg[ErrorType.SimultaneusAdAssets]);
 
-            string brandName = MonetizrManager.Instance.GetAsset<string>(visibleAdAsset[type].challengeId, AssetsType.BrandTitleString);
+            if (challengeId != null)
+            {
+                KeyValuePair<AdType, string> key = new KeyValuePair<AdType, string>(type, challengeId);
 
-            var challenge = MonetizrManager.Instance.GetChallenge(visibleAdAsset[type].challengeId);
-            KeyValuePair<AdType, string> key = new KeyValuePair<AdType, string>(type, challengeId);
-            
+
+                _EndShowAdAsset(key);
+
+                if(removeElement)
+                    visibleAdAsset.Remove(key);
+            }
+            else
+            {
+                List< KeyValuePair<AdType, string>> toRemove = new List<KeyValuePair<AdType, string>>();
+
+                foreach(var adAssetElement in visibleAdAsset)
+                {
+                    if(adAssetElement.Key.Key == type)
+                    {
+                        _EndShowAdAsset(adAssetElement.Key);
+
+                        if (removeElement)
+                            toRemove.Add(adAssetElement.Key);
+                    }
+                }
+
+                foreach (var i in toRemove)
+                    visibleAdAsset.Remove(i);
+
+            }
+
+           
+        }
+
+        private void _EndShowAdAsset(KeyValuePair<AdType, string> adAsset)
+        {
+            Debug.Log($"MonetizrAnalytics EndShowAdAsset: {adAsset.Key} {adAsset.Value}");
+
+            string brandName = MonetizrManager.Instance.GetAsset<string>(visibleAdAsset[adAsset].challengeId, AssetsType.BrandTitleString);
+
+            var challenge = MonetizrManager.Instance.GetChallenge(visibleAdAsset[adAsset].challengeId);
+
             var props = new Value();
             props["application_id"] = challenge.application_id;
             props["bundle_id"] = Application.identifier;
@@ -135,28 +158,28 @@ namespace Monetizr.Challenges
             props["application_name"] = Application.productName;
             props["application_version"] = Application.version;
             props["impressions"] = "1";
-            props["campaign_id"] = visibleAdAsset[key].challengeId;
-            props["camp_id"] = visibleAdAsset[key].challengeId;
+            //props["campaign_id"] = visibleAdAsset[adAsset].challengeId;
+            props["camp_id"] = visibleAdAsset[adAsset].challengeId;
             props["brand_id"] = challenge.brand_id;
             props["brand_name"] = brandName;
-            props["type"] = adTypeNames[type];
+            props["type"] = adTypeNames[adAsset.Key];
             //props["duration"] = (DateTime.Now - visibleAdAsset[type].activateTime).TotalSeconds;
 
-            string eventName = $"[UNITY_SDK] [AD] {adTypeNames[type]}";
+            string eventName = $"[UNITY_SDK] [AD] {adTypeNames[adAsset.Key]}";
 
             Mixpanel.Track(eventName, props);
 
             Dictionary<string, object> eventProps = new Dictionary<string, object>();
-            eventProps.Add("campaign_id", visibleAdAsset[type].challengeId);
+            eventProps.Add("camp_id", visibleAdAsset[adAsset].challengeId);
             eventProps.Add("brand_id", challenge.brand_id);
             eventProps.Add("brand_name", brandName);
-            eventProps.Add("type", adTypeNames[type]);
-            eventProps.Add("duration", (DateTime.Now - visibleAdAsset[type].activateTime).TotalSeconds);
+            eventProps.Add("type", adTypeNames[adAsset.Key]);
+            eventProps.Add("duration", (DateTime.Now - visibleAdAsset[adAsset].activateTime).TotalSeconds);
 
-            amplitude.logEvent(eventName,eventProps);
+            amplitude.logEvent(eventName, eventProps);
 
-            if(removeElement)
-                visibleAdAsset.Remove(key);
+            //if (removeElement)
+            //    visibleAdAsset.Remove(adAsset);
         }
 
         public string GetUserId()
@@ -188,7 +211,7 @@ namespace Monetizr.Challenges
             props["player_id"] = SystemInfo.deviceUniqueIdentifier;
             props["application_name"] = Application.productName;
             props["application_version"] = Application.version;
-            props["campaign_id"] = campaign_id;
+            //props["campaign_id"] = campaign_id;
             props["camp_id"] = campaign_id;
             props["brand_id"] = brand_id;
             props["brand_name"] = brand_name;
@@ -196,7 +219,7 @@ namespace Monetizr.Challenges
             Mixpanel.Track(eventName, props);
 
             Dictionary<string, object> eventProps = new Dictionary<string, object>();
-            eventProps.Add("campaign_id", campaign_id);
+            eventProps.Add("camp_id", campaign_id);
             eventProps.Add("brand_id", brand_id);
             eventProps.Add("brand_name", brand_name);
      
@@ -205,9 +228,9 @@ namespace Monetizr.Challenges
 
         public void OnApplicationQuit()
         {
-            foreach(var ad in visibleAdAsset.Keys)
+            foreach (var ad in visibleAdAsset)
             {
-                EndShowAdAsset(ad.Key,null,false);
+                _EndShowAdAsset(ad.Key);
             }
 
             Mixpanel.Flush();

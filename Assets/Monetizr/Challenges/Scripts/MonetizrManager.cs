@@ -1,4 +1,4 @@
-﻿#define TEST_SLOW_LATENCY
+﻿//#define TEST_SLOW_LATENCY
 
 using System.Collections;
 using System.Collections.Generic;
@@ -19,6 +19,7 @@ namespace Monetizr.Challenges
         NotinitializedSDK,
         SimultaneusAdAssets,
         AdAssetStillShowing,
+        ConnectionError,
     };
 
     public static class MonetizrErrors
@@ -27,7 +28,8 @@ namespace Monetizr.Challenges
         {
             { ErrorType.NotinitializedSDK, "You're trying to use Monetizer SDK before it's been initialized. Call MonetizerManager.Initalize first." },
             { ErrorType.SimultaneusAdAssets, "Simultaneous display of multiple ads is not supported!" },
-            { ErrorType.AdAssetStillShowing, "Some ad asset are still showing." }
+            { ErrorType.AdAssetStillShowing, "Some ad asset are still showing." },
+            { ErrorType.ConnectionError, "Connection error while getting list of campaigns!" }
 
         };
     }
@@ -412,8 +414,17 @@ namespace Monetizr.Challenges
         /// </summary>
         public async void RequestChallenges(Action<bool> onRequestComplete)
         {
-            //TODO: add connection error tracking
-            var challenges = await _challengesClient.GetList();
+            List<Challenge> challenges = new List<Challenge>();
+
+            try {
+
+                challenges = await _challengesClient.GetList();
+            }
+            catch (Exception)
+            {
+               Debug.Log(MonetizrErrors.msg[ErrorType.ConnectionError]);
+               onRequestComplete?.Invoke(false);
+            }
 
 #if TEST_SLOW_LATENCY
             await Task.Delay(10000);
@@ -488,7 +499,7 @@ namespace Monetizr.Challenges
             Debug.Log($"RequestChallenges completed with count: {challenges.Count} active: {activeChallengeId}");
 
             //TODO: Check error state
-            onRequestComplete?.Invoke(true);
+            onRequestComplete?.Invoke(challengesId.Count > 0);
         }
 
         /// <summary>
