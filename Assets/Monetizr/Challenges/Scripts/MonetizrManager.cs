@@ -11,6 +11,7 @@ using System.Threading.Tasks;
 using UnityEngine.UI;
 using System.IO;
 using UnityEngine.Assertions;
+using System.IO.Compression;
 
 namespace Monetizr.Challenges
 {
@@ -45,10 +46,12 @@ namespace Monetizr.Challenges
         BrandRewardLogoSprite, //logo
         BrandRewardBannerSprite, //reward_banner
         SurveyURLString, //survey
-        VideoURLString, //video url
+        //VideoURLString, //video url
         VideoFilePathString, //video url
         BrandTitleString, //text
         TinyTeaserTexture, //text
+        //Html5ZipURLString,
+        Html5ZipFilePathString
 
     }
 
@@ -65,10 +68,12 @@ namespace Monetizr.Challenges
             { AssetsType.BrandRewardLogoSprite, typeof(Sprite) },
             { AssetsType.BrandRewardBannerSprite, typeof(Sprite) },
             { AssetsType.SurveyURLString, typeof(String) },
-            { AssetsType.VideoURLString, typeof(String) },
+            //{ AssetsType.VideoURLString, typeof(String) },
             { AssetsType.VideoFilePathString, typeof(String) },
             { AssetsType.BrandTitleString, typeof(String) },
             { AssetsType.TinyTeaserTexture, typeof(Texture2D) },
+            //{ AssetsType.Html5ZipURLString, typeof(String) },
+            { AssetsType.Html5ZipFilePathString, typeof(String) },
 
         };
 
@@ -374,7 +379,7 @@ namespace Monetizr.Challenges
             }
         }
 
-        private async Task PreloadAssetToCache(ChallengeExtention ech, Challenge.Asset asset)
+        private async Task PreloadAssetToCache(ChallengeExtention ech, Challenge.Asset asset, /*AssetsType urlString,*/ AssetsType fileString, bool required = true)
         {
             string path = Application.persistentDataPath + "/" + ech.challenge.id;
 
@@ -383,31 +388,58 @@ namespace Monetizr.Challenges
 
             string fname = Path.GetFileName(asset.url);
             string fpath = path + "/" + fname;
+            string zipFolder = null;
+            string fileToCheck = fpath;
+
+            if (fname.Contains("zip"))
+            {
+                zipFolder = path + "/" + fname.Replace(".zip", "");
+                fileToCheck = zipFolder + "/index.html";
+            }
 
             Debug.Log(fname);
 
             byte[] data = null;
 
-            if (!File.Exists(fpath))
+            if (!File.Exists(fileToCheck))
             {
                 data = await DownloadHelper.DownloadAssetData(asset.url);
 
                 if (data == null)
                 {
-                    ech.isChallengeLoaded = false;
+                    if(required)
+                        ech.isChallengeLoaded = false;
+
                     return;
                 }
 
                 File.WriteAllBytes(fpath, data);
 
+                if (zipFolder != null)
+                {
+                    Debug.Log("extracting to: " + zipFolder);
 
+                    if (!Directory.Exists(zipFolder))
+                        Directory.CreateDirectory(zipFolder);
 
+                    ZipFile.ExtractToDirectory(fpath, zipFolder, true);
+                    
+                    File.Delete(fpath);
+                }
+                            
+                               
                 Debug.Log("saving: " + fpath);
             }
 
-            ech.SetAsset<string>(AssetsType.VideoURLString, asset.url);
-            ech.SetAsset<string>(AssetsType.VideoFilePathString, fpath);
+            if(zipFolder != null)
+                fpath = fileToCheck;
+
+            Debug.Log("resource: " + fpath);
+
+            //ech.SetAsset<string>(urlString, asset.url);
+            ech.SetAsset<string>(fileString, fpath);
         }
+              
 
         /// <summary>
         /// Request challenges from the server
@@ -469,11 +501,16 @@ namespace Monetizr.Challenges
 
                             break;
                         case "video":
-                            await PreloadAssetToCache(ech, asset);
+                            await PreloadAssetToCache(ech, asset, AssetsType.VideoFilePathString, true);
 
                             break;
                         case "text":
                             ech.SetAsset<string>(AssetsType.BrandTitleString, asset.title);
+
+                            break;
+
+                        case "html":
+                            await PreloadAssetToCache(ech, asset, AssetsType.Html5ZipFilePathString,false);
 
                             break;
 

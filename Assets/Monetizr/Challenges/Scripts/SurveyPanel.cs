@@ -41,12 +41,19 @@ namespace Monetizr.Challenges
 
             webView.Frame = new Rect(x, y, w, h);
 
-            var page = MonetizrManager.Instance.GetAsset<string>(MonetizrManager.Instance.GetActiveChallenge(), AssetsType.SurveyURLString);
+
+            //var page = MonetizrManager.Instance.GetAsset<string>(MonetizrManager.Instance.GetActiveChallenge(), AssetsType.SurveyURLString);
+
+            var page = MonetizrManager.Instance.GetAsset<string>(MonetizrManager.Instance.GetActiveChallenge(), AssetsType.Html5ZipFilePathString);
 
             webUrl = page;
 
             //Debug.Log(page);
 
+            webView.OnMessageReceived += (view, message) => {
+
+                Debug.Log(message.RawMessage);
+            };
 
             webView.OnPageStarted += OnPageStarted;
 
