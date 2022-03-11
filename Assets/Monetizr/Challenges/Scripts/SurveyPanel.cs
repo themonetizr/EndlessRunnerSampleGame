@@ -44,16 +44,17 @@ namespace Monetizr.Challenges
 
             //var page = MonetizrManager.Instance.GetAsset<string>(MonetizrManager.Instance.GetActiveChallenge(), AssetsType.SurveyURLString);
 
-            var page = MonetizrManager.Instance.GetAsset<string>(MonetizrManager.Instance.GetActiveChallenge(), AssetsType.Html5ZipFilePathString);
+            var page = "file://" + MonetizrManager.Instance.GetAsset<string>(MonetizrManager.Instance.GetActiveChallenge(), AssetsType.Html5ZipFilePathString);
+
+
+
+            Debug.Log($"Url to show {page}");
 
             webUrl = page;
 
             //Debug.Log(page);
 
-            webView.OnMessageReceived += (view, message) => {
-
-                Debug.Log(message.RawMessage);
-            };
+            webView.OnMessageReceived += OnMessageReceived;
 
             webView.OnPageStarted += OnPageStarted;
 
@@ -68,6 +69,11 @@ namespace Monetizr.Challenges
 
             // Show it.
             webView.Show();
+        }
+
+        void OnMessageReceived(UniWebView webView, UniWebViewMessage message)
+        {
+            Debug.Log($"OnMessageReceived: {message.RawMessage} {message.Args.ToString()}");
         }
 
         void OnPageStarted(UniWebView webView, string url)
