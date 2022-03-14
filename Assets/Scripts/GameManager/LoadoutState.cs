@@ -74,6 +74,8 @@ public class LoadoutState : AState
 
     public override void Enter(AState from)
     {
+        missionPopup.InitializeSponsoredMissions();
+
         if(PlayerData.instance.tutorialDone)
             MonetizrManager.ShowTinyMenuTeaser(()=> { missionPopup.CallOpen(); });
 

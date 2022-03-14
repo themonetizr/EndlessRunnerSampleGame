@@ -1,10 +1,15 @@
+//#define USING_FACEBOOK
+
 using System.Collections;
 using System.Collections.Generic;
 using UnityEngine;
 using mixpanel;
 using System;
 using UnityEngine.Assertions;
-using Facebook.Unity;
+
+#if USING_FACEBOOK
+    using Facebook.Unity;
+#endif
 
 namespace Monetizr.Challenges
 {
@@ -61,6 +66,7 @@ namespace Monetizr.Challenges
 
             Mixpanel.Init();
 
+#if USING_FACEBOOK
             if (FB.IsInitialized)
             {
                 FB.ActivateApp();
@@ -74,6 +80,7 @@ namespace Monetizr.Challenges
                     Debug.Log("[FB] Activated!");
                 });
             }
+#endif
         }
 
         public void BeginShowAdAsset(AdType type, string challengeId = null)

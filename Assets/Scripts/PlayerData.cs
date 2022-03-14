@@ -154,6 +154,13 @@ public class PlayerData
         return false;
     }
 
+    public void ClaimSponsoredMission(int reward)
+    {
+        premium += reward;
+
+        Save();
+    }
+
     public void ClaimMission(MissionBase mission)
     {        
         premium += mission.reward;

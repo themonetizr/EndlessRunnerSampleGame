@@ -263,6 +263,22 @@ namespace Monetizr.Challenges
             instance.uiController.AddMission(m);
         }
 
+        internal static void AddSponsoredMission(int id, Sprite defaultRewardIcon, int rewardAmount, Action<int> onSponsoredClaim)
+        {
+            Assert.IsNotNull(instance, MonetizrErrors.msg[ErrorType.NotinitializedSDK]);
+
+            MissionUIDescription m = new MissionUIDescription()
+            {
+                sponsoredId = id,
+                rewardIcon = defaultRewardIcon,
+                reward = rewardAmount,
+                isSponsored = true,
+                onUserDefinedClaim = onSponsoredClaim
+            };
+                       
+            instance.uiController.AddMission(m);
+        }
+
         internal static void CleanUserDefinedMissions()
         {
             instance.uiController.CleanMissionsList();
@@ -613,7 +629,7 @@ namespace Monetizr.Challenges
             }
         }
 
-
+       
     }
 
 }

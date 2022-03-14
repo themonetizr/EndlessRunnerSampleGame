@@ -19,6 +19,7 @@ namespace Monetizr.Challenges
 
     public class MissionUIDescription
     {
+        public int sponsoredId;
         public bool isSponsored;
 
         public Sprite brandBanner;
@@ -30,6 +31,7 @@ namespace Monetizr.Challenges
         public int reward;
         public float progress;
         public Action onClaimButtonPress;
+        public Action<int> onUserDefinedClaim;
 
         public MissionUIDescription()
         {
@@ -101,8 +103,33 @@ namespace Monetizr.Challenges
             missionsDescriptions.Clear();
         }
 
+        public int HasDuplicateSponsoredMissionWithId(MissionUIDescription m2)
+        {
+            if (!m2.isSponsored)
+                return -1;
+                    
+            for (int i = 0; i < missionsDescriptions.Count; i++)
+            {
+                var m = missionsDescriptions[i];
+                                
+                if (m.isSponsored && m.sponsoredId == m2.sponsoredId)
+                {
+                    return i;
+                }
+            }
+
+            return -1;
+        }
+
         public void AddMission(MissionUIDescription m)
         {
+            int i = HasDuplicateSponsoredMissionWithId(m);
+
+            if(i >= 0)
+            {
+                missionsDescriptions.RemoveAt(i);
+            }
+
             missionsDescriptions.Add(m);
         }
 

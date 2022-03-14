@@ -14,7 +14,7 @@ public class MissionUI : MonoBehaviour
     public Sprite defaultMissionIcon;
     public Sprite defaultRewardIcon;
 
-    public IEnumerator Open()
+    /*public IEnumerator Open()
     {
         gameObject.SetActive(true);
 
@@ -50,6 +50,16 @@ public class MissionUI : MonoBehaviour
                 obj.transform.SetParent(missionPlace, false);
             }
         }
+    }*/
+
+    public void InitializeSponsoredMissions()
+    {
+        MonetizrManager.AddSponsoredMission(1, defaultRewardIcon, 2, OnSponsoredClaim);
+    }
+
+    public void OnSponsoredClaim(int reward)
+    {
+        PlayerData.instance.ClaimSponsoredMission(reward);
     }
 
     public void UpdateMissionsUI()
@@ -58,7 +68,7 @@ public class MissionUI : MonoBehaviour
         {
             var m = PlayerData.instance.missions[i];
 
-            Action onClaimButtonPress = () => { PlayerData.instance.ClaimMission(m); };
+            Action onClaimButtonPress = () => { Claim(m); };
 
             var missionIcon = defaultMissionIcon;
             var rewardIcon = defaultRewardIcon;
