@@ -144,7 +144,7 @@ namespace Monetizr.Challenges
 
             player.Play(path, (bool isSkip) => {
 
-                    MonetizrManager.ShowRewardCenter(null);
+                    MonetizrManager.ShowRewardCenter();
 
                     onComplete?.Invoke(isSkip);
                     GameObject.Destroy(prefab);

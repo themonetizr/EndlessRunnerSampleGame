@@ -54,7 +54,7 @@ public class MissionUI : MonoBehaviour
 
     public void InitializeSponsoredMissions()
     {
-        MonetizrManager.AddSponsoredMission(1, defaultRewardIcon, 2, OnSponsoredClaim);
+        MonetizrManager.RegisterSponsoredMission(1, defaultRewardIcon, 2, OnSponsoredClaim);
     }
 
     public void OnSponsoredClaim(int reward)
@@ -62,18 +62,16 @@ public class MissionUI : MonoBehaviour
         PlayerData.instance.ClaimSponsoredMission(reward);
     }
 
-    public void UpdateMissionsUI()
+    public void UpdateGameUI()
     {
-        for (int i = 0; i < PlayerData.instance.missions.Count; ++i)
+        foreach (var m in PlayerData.instance.missions)
         {
-            var m = PlayerData.instance.missions[i];
-
             Action onClaimButtonPress = () => { Claim(m); };
 
             var missionIcon = defaultMissionIcon;
             var rewardIcon = defaultRewardIcon;
 
-            MonetizrManager.AddUserDefinedMission(m.GetMissionType().ToString(), m.GetMissionDesc(), missionIcon, rewardIcon, m.reward, m.progress, onClaimButtonPress);
+            MonetizrManager.RegisterUserDefinedMission(m.GetMissionType().ToString(), m.GetMissionDesc(), missionIcon, rewardIcon, m.reward, m.progress, onClaimButtonPress);
         }
     }
 
@@ -82,16 +80,16 @@ public class MissionUI : MonoBehaviour
         //gameObject.SetActive(true);
         //StartCoroutine(Open());
 
-        UpdateMissionsUI();
+        UpdateGameUI();
 
-        MonetizrManager.ShowRewardCenter(null);
+        MonetizrManager.ShowRewardCenter();
     }
 
     public void Claim(MissionBase m)
     {
         PlayerData.instance.ClaimMission(m);
 
-        UpdateMissionsUI();
+        UpdateGameUI();
 
         //// Rebuild the UI with the new missions
         //StartCoroutine(Open());
