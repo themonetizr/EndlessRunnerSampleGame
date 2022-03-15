@@ -407,13 +407,15 @@ namespace Monetizr.Challenges
             string zipFolder = null;
             string fileToCheck = fpath;
 
+            Debug.Log(fname);
+
             if (fname.Contains("zip"))
             {
                 zipFolder = path + "/" + fname.Replace(".zip", "");
                 fileToCheck = zipFolder + "/index.html";
-            }
 
-            Debug.Log(fname);
+                Debug.Log($"archive: {zipFolder} {fileToCheck} {File.Exists(fileToCheck)}");
+            }
 
             byte[] data = null;
 
