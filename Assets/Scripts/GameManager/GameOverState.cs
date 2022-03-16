@@ -1,5 +1,6 @@
 ﻿using UnityEngine;
 using UnityEngine.UI;
+using Monetizr.Challenges;
 #if UNITY_ANALYTICS
 using UnityEngine.Analytics;
 #endif
@@ -31,9 +32,15 @@ public class GameOverState : AState
 		miniLeaderboard.Populate();
 
         if (PlayerData.instance.AnyMissionComplete())
-            StartCoroutine(missionPopup.Open());
+        {
+            //StartCoroutine(missionPopup.Open());
+
+            missionPopup.CallOpen();
+        }
         else
+        {
             missionPopup.gameObject.SetActive(false);
+        }
 
 		CreditCoins();
 
@@ -72,6 +79,8 @@ public class GameOverState : AState
 
 	public void GoToStore()
     {
+        MonetizrManager.HideTinyMenuTeaser();
+
         UnityEngine.SceneManagement.SceneManager.LoadScene("shop", UnityEngine.SceneManagement.LoadSceneMode.Additive);
     }
 
@@ -84,6 +93,8 @@ public class GameOverState : AState
 
     public void RunAgain()
     {
+        MonetizrManager.HideTinyMenuTeaser();
+
         trackManager.isRerun = false;
         manager.SwitchState("Game");
     }

@@ -54,3 +54,6 @@ Plugins.meta
 */Plugins/Editor/JetBrains
 */Plugins/Editor/JetBrains.meta
 adb1.txt
+ios-build
+ios-build_BurstDebugInformation_DoNotShip
+android

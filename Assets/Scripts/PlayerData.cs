@@ -154,6 +154,13 @@ public class PlayerData
         return false;
     }
 
+    public void ClaimSponsoredMission(int reward)
+    {
+        premium += reward;
+
+        Save();
+    }
+
     public void ClaimMission(MissionBase mission)
     {        
         premium += mission.reward;
@@ -218,13 +225,16 @@ public class PlayerData
     {
 		if (m_Instance == null)
 		{
+            
 			m_Instance = new PlayerData();
 
             //if we create the PlayerData, mean it's the very first call, so we use that to init the database
             //this allow to always init the database at the earlier we can, i.e. the start screen if started normally on device
             //or the Loadout screen if testing in editor
-		    CoroutineHandler.StartStaticCoroutine(CharacterDatabase.LoadDatabase());
-		    CoroutineHandler.StartStaticCoroutine(ThemeDatabase.LoadDatabase());
+            CoroutineHandler.StartStaticCoroutine(CharacterDatabase.LoadDatabase());
+
+
+            CoroutineHandler.StartStaticCoroutine(ThemeDatabase.LoadDatabase());
 
             m_Instance.saveFile = Application.persistentDataPath + "/save.bin";
 
@@ -239,7 +249,7 @@ public class PlayerData
                 NewSave();
             }
 
-            SponsoredMissionsManager.instance.AddSponsoredMissions();
+            //SponsoredMissionsManager.instance.AddSponsoredMissions();
         }
 
         m_Instance.CheckMissionsCount();

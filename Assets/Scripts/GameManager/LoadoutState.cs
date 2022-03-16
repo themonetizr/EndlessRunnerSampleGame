@@ -4,6 +4,7 @@ using System.Collections;
 using System.Collections.Generic;
 using UnityEngine.AddressableAssets;
 using UnityEngine.ResourceManagement.AsyncOperations;
+using Monetizr.Challenges;
 
 #if UNITY_ANALYTICS
 using UnityEngine.Analytics;
@@ -73,6 +74,11 @@ public class LoadoutState : AState
 
     public override void Enter(AState from)
     {
+        missionPopup.InitializeSponsoredMissions();
+
+        if(PlayerData.instance.tutorialDone)
+            MonetizrManager.ShowTinyMenuTeaser(()=> { missionPopup.CallOpen(); });
+
         tutorialBlocker.SetActive(!PlayerData.instance.tutorialDone);
         tutorialPrompt.SetActive(false);
 
@@ -111,6 +117,9 @@ public class LoadoutState : AState
 
     public override void Exit(AState to)
     {
+        if (PlayerData.instance.tutorialDone)
+            MonetizrManager.HideTinyMenuTeaser();
+
         missionPopup.gameObject.SetActive(false);
         inventoryCanvas.gameObject.SetActive(false);
 
@@ -140,7 +149,7 @@ public class LoadoutState : AState
 
     public void Refresh()
     {
-		PopulatePowerup();
+        PopulatePowerup();
 
         StartCoroutine(PopulateCharacters());
         StartCoroutine(PopulateTheme());
@@ -177,6 +186,8 @@ public class LoadoutState : AState
 
 	public void GoToStore()
 	{
+        MonetizrManager.HideTinyMenuTeaser();
+
         UnityEngine.SceneManagement.SceneManager.LoadScene(k_ShopSceneName, UnityEngine.SceneManagement.LoadSceneMode.Additive);
 	}
 

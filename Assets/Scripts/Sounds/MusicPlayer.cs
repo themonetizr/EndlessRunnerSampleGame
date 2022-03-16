@@ -1,5 +1,6 @@
 ﻿using UnityEngine;
 using System.Collections;
+using System;
 
 public class MusicPlayer : MonoBehaviour
 {
@@ -39,7 +40,12 @@ public class MusicPlayer : MonoBehaviour
 	{
 		PlayerData.Create ();
 
-		if (PlayerData.instance.masterVolume > float.MinValue) 
+        RestartSettings();
+	}
+
+    void RestartSettings()
+    {
+        if (PlayerData.instance.masterVolume > float.MinValue) 
 		{
 			mixer.SetFloat ("MasterVolume", PlayerData.instance.masterVolume);
 			mixer.SetFloat ("MusicVolume", PlayerData.instance.musicVolume);
@@ -55,7 +61,21 @@ public class MusicPlayer : MonoBehaviour
 		}
 
 		StartCoroutine(RestartAllStems());
-	}
+    }
+
+    internal void SwitchMusic(bool soundOn)
+    {
+       if(soundOn)
+        {
+            RestartSettings();
+        }
+       else
+        {
+            mixer.SetFloat("MasterVolume", -80);
+            mixer.SetFloat("MusicVolume", -80);
+            mixer.SetFloat("MasterSFXVolume", -80);
+        }
+    }
 
     public void SetStem(int index, AudioClip clip)
     {

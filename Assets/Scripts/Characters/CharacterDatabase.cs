@@ -42,4 +42,5 @@ public class CharacterDatabase
             m_Loaded = true;
         }
     }
+
 }

@@ -1,4 +1,6 @@
-﻿using System.Collections;
+﻿using System;
+using System.Collections;
+using Monetizr.Challenges;
 using UnityEngine;
 using UnityEngine.AddressableAssets;
 using UnityEngine.ResourceManagement.AsyncOperations;
@@ -9,7 +11,10 @@ public class MissionUI : MonoBehaviour
     public AssetReference missionEntryPrefab;
     public AssetReference addMissionButtonPrefab;
 
-    public IEnumerator Open()
+    public Sprite defaultMissionIcon;
+    public Sprite defaultRewardIcon;
+
+    /*public IEnumerator Open()
     {
         gameObject.SetActive(true);
 
@@ -45,24 +50,55 @@ public class MissionUI : MonoBehaviour
                 obj.transform.SetParent(missionPlace, false);
             }
         }
+    }*/
+
+    public void InitializeSponsoredMissions()
+    {
+        MonetizrManager.RegisterSponsoredMission(1, defaultRewardIcon, 2, OnSponsoredClaim);
+
+        MonetizrManager.RegisterSponsoredMission(2, defaultRewardIcon, 2, OnSponsoredClaim);
+    }
+
+    public void OnSponsoredClaim(int reward)
+    {
+        PlayerData.instance.ClaimSponsoredMission(reward);
+    }
+
+    public void UpdateGameUI()
+    {
+        foreach (var m in PlayerData.instance.missions)
+        {
+            Action onClaimButtonPress = () => { Claim(m); };
+
+            var missionIcon = defaultMissionIcon;
+            var rewardIcon = defaultRewardIcon;
+
+            MonetizrManager.RegisterUserDefinedMission(m.GetMissionType().ToString(), m.GetMissionDesc(), missionIcon, rewardIcon, m.reward, m.progress, onClaimButtonPress);
+        }
     }
 
     public void CallOpen()
     {
-        gameObject.SetActive(true);
-        StartCoroutine(Open());
+        //gameObject.SetActive(true);
+        //StartCoroutine(Open());
+
+        UpdateGameUI();
+
+        MonetizrManager.ShowRewardCenter();
     }
 
     public void Claim(MissionBase m)
     {
         PlayerData.instance.ClaimMission(m);
 
-        // Rebuild the UI with the new missions
-        StartCoroutine(Open());
+        UpdateGameUI();
+
+        //// Rebuild the UI with the new missions
+        //StartCoroutine(Open());
     }
 
     public void Close()
     {
-        gameObject.SetActive(false);
+        //gameObject.SetActive(false);
     }
 }
