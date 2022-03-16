@@ -21,6 +21,8 @@ namespace Monetizr.Challenges
         
         internal void UpdateUI()
         {
+            Debug.Log("UpdateUI");
+
             CleanListView();
 
             if (MonetizrManager.Instance.HasChallengesAndActive())
@@ -29,7 +31,7 @@ namespace Monetizr.Challenges
                 AddSponsoredChallenges();
             }
                         
-            AddUserdefineChallenges(uiController.missionsDescriptions);
+            AddUserdefineChallenges();
         }
 
         internal override void PreparePanel(PanelId id, Action onComplete)
@@ -47,10 +49,13 @@ namespace Monetizr.Challenges
             UpdateUI();
         }
 
-        private void AddUserdefineChallenges(List<MissionUIDescription> missionsDescriptions)
+        private void AddUserdefineChallenges()
         {
-            foreach (var m in missionsDescriptions)
+            foreach (var m in uiController.missionsDescriptions)
             {
+                if (m.isSponsored)
+                    continue;
+
                 var go = GameObject.Instantiate<GameObject>(itemUI.gameObject, contentRoot);
 
                 var item = go.GetComponent<MonetizrRewardedItem>();
@@ -64,35 +69,52 @@ namespace Monetizr.Challenges
 
         private void AddSponsoredChallenges()
         {
-            foreach (var ch in MonetizrManager.Instance.GetAvailableChallenges())
+            var challenges = MonetizrManager.Instance.GetAvailableChallenges();
+            int curChallenge = 0;
+
+            if (challenges.Count == 0)
+                return;
+
+            foreach (var m in uiController.missionsDescriptions)
             {
-                string brandName = MonetizrManager.Instance.GetAsset<string>(ch, AssetsType.BrandTitleString);
+                if (!m.isSponsored)
+                    continue;
 
-                MissionUIDescription m = new MissionUIDescription()
-                {
-                    brandBanner = MonetizrManager.Instance.GetAsset<Sprite>(ch, AssetsType.BrandBannerSprite),
-                    missionTitle = $"{brandName} video",
-                    missionDescription = $"Watch video by {brandName} and get 2 Energy Boosters",
-                    missionIcon = MonetizrManager.Instance.GetAsset<Sprite>(ch, AssetsType.BrandRewardLogoSprite),
+                var ch = challenges[curChallenge];
 
-                    rewardIcon = null,
-                    reward = 2,
-                    progress = 1,
-                    onClaimButtonPress = () => { OnVideoPlayPress(); },
-                    isSponsored = true,
-                };
+                AddSponsoredChallenge(m,ch);
 
-                var go = GameObject.Instantiate<GameObject>(itemUI.gameObject, contentRoot);
+                curChallenge++;
 
-                var item = go.GetComponent<MonetizrRewardedItem>();
-
-
-                Debug.Log(m.missionTitle);
-
-                item.UpdateWithDescription(this, m);
-
-                MonetizrManager.Analytics.BeginShowAdAsset(AdType.IntroBanner,ch);
+                //if there's no room for sponsored campagn
+                if (challenges.Count == curChallenge)
+                    break;
             }
+        }
+
+        private void AddSponsoredChallenge(MissionUIDescription m, string ch)
+        {
+            string brandName = MonetizrManager.Instance.GetAsset<string>(ch, AssetsType.BrandTitleString);
+
+            m.brandBanner = MonetizrManager.Instance.GetAsset<Sprite>(ch, AssetsType.BrandBannerSprite);
+            m.missionTitle = $"{brandName} video";
+            m.missionDescription = $"Watch video by {brandName} and get 2 Energy Boosters";
+            m.missionIcon = MonetizrManager.Instance.GetAsset<Sprite>(ch, AssetsType.BrandRewardLogoSprite);
+            m.progress = 1;
+
+            //show video, then claim rewards if it's completed
+            m.onClaimButtonPress = () => { OnVideoPlayPress(m); };
+
+            var go = GameObject.Instantiate<GameObject>(itemUI.gameObject, contentRoot);
+
+            var item = go.GetComponent<MonetizrRewardedItem>();
+
+
+            Debug.Log(m.missionTitle);
+
+            item.UpdateWithDescription(this, m);
+
+            MonetizrManager.Analytics.BeginShowAdAsset(AdType.IntroBanner, ch);
         }
 
        
@@ -113,14 +135,18 @@ namespace Monetizr.Challenges
 
         internal void ButtonPressed(ButtonController buttonController, MissionUIDescription missionDescription)
         {
-            MonetizrManager.CleanUserDefinedMissions();
+            if (!missionDescription.isSponsored)
+                MonetizrManager.CleanUserDefinedMissions();
 
+            //play video or claim ready user-defined mission
             missionDescription.onClaimButtonPress.Invoke();
 
-            UpdateUI();
+            if (!missionDescription.isSponsored)
+                UpdateUI();
+            
         }
 
-        public void OnVideoPlayPress()
+        public void OnVideoPlayPress(MissionUIDescription m)
         {
             MonetizrManager.Analytics.TrackEvent("Claim button press");
 
@@ -132,24 +158,33 @@ namespace Monetizr.Challenges
                     {
                         var ch = MonetizrManager.Instance.GetActiveChallenge();
 
-                        //MonetizrManager.Instance.ClaimReward(ch);
+                        MonetizrManager.Instance.ClaimReward(ch);
+
+                        m.onUserDefinedClaim.Invoke(m.reward);
                     }
 
                     MonetizrManager.ShowCongratsNotification(null);
+
+                    
                 }
+
             });
         }
 
         internal override void FinalizePanel(PanelId id)
         {
-            MonetizrManager.CleanUserDefinedMissions();
+            if (!uiController.isVideoPlaying)
+            {
+                MonetizrManager.CleanUserDefinedMissions();
+                MonetizrManager.ShowTinyMenuTeaser(null);
+            }
 
             if (hasSponsoredChallenges)
             {
                 MonetizrManager.Analytics.EndShowAdAsset(AdType.IntroBanner);
             }
 
-            MonetizrManager.ShowTinyMenuTeaser(null);
+            
         }
 
         // Start is called before the first frame update

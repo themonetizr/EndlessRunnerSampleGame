@@ -20244,6 +20244,18 @@ PrefabInstance:
       objectReference: {fileID: 0}
     - target: {fileID: 114000011972273750, guid: a53fe2875371488408daf0df7d69a981,
         type: 3}
+      propertyPath: defaultRewardIcon
+      value: 
+      objectReference: {fileID: 21300060, guid: e1a536f74c7ef384a8d7132148ace0c8,
+        type: 3}
+    - target: {fileID: 114000011972273750, guid: a53fe2875371488408daf0df7d69a981,
+        type: 3}
+      propertyPath: defaultMissionIcon
+      value: 
+      objectReference: {fileID: 21300000, guid: 8bd61ce24e3dd4e4f986c9529edf59a9,
+        type: 3}
+    - target: {fileID: 114000011972273750, guid: a53fe2875371488408daf0df7d69a981,
+        type: 3}
       propertyPath: missionEntryPrefab.m_CachedAsset
       value: 
       objectReference: {fileID: 1000011950310036, guid: 71514012df4dcd146957cb145cec8287,

@@ -3,17 +3,23 @@
     "version": "0.0.1",
     "displayName": "Monetizr Unity SDK",
     "description": "A plugin to simplify the Unity integration of Monetizr Unity SDK.",
-    "unity": "2021.2",
-    "unityRelease": "11f1",
-    "dependencies": {
 
-    },
+    "repository": {
+    "type": "git",
+    "url": "https://github.com/themonetizr/monetizr-challenges-unity-demo.git?path=/Assets/Monetizr"
+  },
+
+    "dependencies": {
+    "com.mixpanel.unity": "3.0.2",
+ },
     "keywords": [
-        "Monetizr"
+        "monetizr"
     ],
+    "category": "Mixpanel",
+    
     "author": {
         "name": "Monetizr",
         "email": "dev@themonetizr.com",
-        "url": "https://github.com/themonetizr/monetizr-challenges-unity-demo.git?path=/Assets/Monetizr"
+        "url": "https://github.com/themonetizr/monetizr-challenges-unity-demo"
     }
 }

@@ -77,6 +77,7 @@ namespace Monetizr.Challenges
 
 
         public Dictionary<PanelId, PanelController> panels = null;
+        public bool isVideoPlaying;
 
         public UIController()
         {
@@ -136,6 +137,8 @@ namespace Monetizr.Challenges
 
         public void PlayVideo(String path, Action<bool> onComplete)
         {
+            isVideoPlaying = true;
+
             MonetizrManager.HideRewardCenter();
 
             var prefab = GameObject.Instantiate<GameObject>(Resources.Load("MonetizrVideoPlayer") as GameObject, mainCanvas.transform);
@@ -148,6 +151,8 @@ namespace Monetizr.Challenges
 
                     onComplete?.Invoke(isSkip);
                     GameObject.Destroy(prefab);
+
+                    isVideoPlaying = false;
             } );
         }
 

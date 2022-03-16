@@ -55,6 +55,8 @@ public class MissionUI : MonoBehaviour
     public void InitializeSponsoredMissions()
     {
         MonetizrManager.RegisterSponsoredMission(1, defaultRewardIcon, 2, OnSponsoredClaim);
+
+        MonetizrManager.RegisterSponsoredMission(2, defaultRewardIcon, 2, OnSponsoredClaim);
     }
 
     public void OnSponsoredClaim(int reward)

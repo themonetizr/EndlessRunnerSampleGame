@@ -1,4 +1,5 @@
 //#define USING_FACEBOOK
+//#define USING_AMPLITUDE
 
 using System.Collections;
 using System.Collections.Generic;
@@ -44,9 +45,9 @@ namespace Monetizr.Challenges
             { AdType.RewardBanner, "Reward banner" },
         };
 
-        private Dictionary<string, ChallengeTimes> challengesWithTimes = new Dictionary<string, ChallengeTimes>();
+//        private Dictionary<string, ChallengeTimes> challengesWithTimes = new Dictionary<string, ChallengeTimes>();
 
-        private const int SECONDS_IN_DAY = 24 * 60 * 60;
+//        private const int SECONDS_IN_DAY = 24 * 60 * 60;
 
 
         //private Dictionary<AdType,VisibleAdAsset> visibleAdAsset = new Dictionary<AdType, VisibleAdAsset>();
@@ -54,15 +55,19 @@ namespace Monetizr.Challenges
         //AdType and ChallengeId
         private Dictionary<KeyValuePair<AdType, string>, VisibleAdAsset> visibleAdAsset = new Dictionary<KeyValuePair<AdType, string>, VisibleAdAsset>();
 
+#if USING_AMPLITUDE
         private Amplitude amplitude;
+#endif
 
         public MonetizrAnalytics()
         {
             Debug.Log($"MonetizrAnalytics initialized with user id: {GetUserId()}");
 
+#if USING_AMPLITUDE
             amplitude = Amplitude.Instance;
             amplitude.logging = true;
             amplitude.init("16e0224a663d67c293ee5b0f0ff926ad");
+#endif
 
             Mixpanel.Init();
 
@@ -117,6 +122,7 @@ namespace Monetizr.Challenges
             //Assert.IsNotNull(visibleAdAsset);
             //Assert.AreEqual(type, visibleAdAsset.adType, MonetizrErrors.msg[ErrorType.SimultaneusAdAssets]);
 
+            //if challenge id isn't null, sent analytics event with this exact id
             if (challengeId != null)
             {
                 KeyValuePair<AdType, string> key = new KeyValuePair<AdType, string>(type, challengeId);
@@ -127,6 +133,7 @@ namespace Monetizr.Challenges
                 if(removeElement)
                     visibleAdAsset.Remove(key);
             }
+            //if challenge id is null, send events for all active ad assets with the same type
             else
             {
                 List< KeyValuePair<AdType, string>> toRemove = new List<KeyValuePair<AdType, string>>();
@@ -176,6 +183,7 @@ namespace Monetizr.Challenges
 
             Mixpanel.Track(eventName, props);
 
+#if USING_AMPLITUDE
             Dictionary<string, object> eventProps = new Dictionary<string, object>();
             eventProps.Add("camp_id", visibleAdAsset[adAsset].challengeId);
             eventProps.Add("brand_id", challenge.brand_id);
@@ -184,6 +192,7 @@ namespace Monetizr.Challenges
             eventProps.Add("duration", (DateTime.Now - visibleAdAsset[adAsset].activateTime).TotalSeconds);
 
             amplitude.logEvent(eventName, eventProps);
+#endif
 
             //if (removeElement)
             //    visibleAdAsset.Remove(adAsset);
@@ -225,12 +234,14 @@ namespace Monetizr.Challenges
 
             Mixpanel.Track(eventName, props);
 
+#if USING_AMPLITUDE
             Dictionary<string, object> eventProps = new Dictionary<string, object>();
             eventProps.Add("camp_id", campaign_id);
             eventProps.Add("brand_id", brand_id);
             eventProps.Add("brand_name", brand_name);
      
             amplitude.logEvent(eventName, eventProps);
+#endif
         }
 
         public void OnApplicationQuit()
@@ -248,85 +259,85 @@ namespace Monetizr.Challenges
         /// If a challenge has already been registered in a previous Update, its times will remain unchanged.
         /// If a challenge no longer exists in <paramref name="challenges"/> it will be removed.
         /// </summary>
-        public void Update(List<Challenge> challenges)
-        {
-            Dictionary<string, ChallengeTimes> updatedChallengesWithTimes = new Dictionary<string, ChallengeTimes>();
+        //public void Update(List<Challenge> challenges)
+        //{
+        //    Dictionary<string, ChallengeTimes> updatedChallengesWithTimes = new Dictionary<string, ChallengeTimes>();
 
-            foreach (Challenge challenge in challenges)
-            {
-                if (challengesWithTimes.ContainsKey(challenge.id))
-                {
-                    updatedChallengesWithTimes.Add(challenge.id, challengesWithTimes[challenge.id]);
-                }
-                else
-                {
-                    int currentTime = Mathf.FloorToInt(Time.realtimeSinceStartup);
-                    updatedChallengesWithTimes.Add(challenge.id, new ChallengeTimes(currentTime, currentTime));
-                }
-            }
+        //    foreach (Challenge challenge in challenges)
+        //    {
+        //        if (challengesWithTimes.ContainsKey(challenge.id))
+        //        {
+        //            updatedChallengesWithTimes.Add(challenge.id, challengesWithTimes[challenge.id]);
+        //        }
+        //        else
+        //        {
+        //            int currentTime = Mathf.FloorToInt(Time.realtimeSinceStartup);
+        //            updatedChallengesWithTimes.Add(challenge.id, new ChallengeTimes(currentTime, currentTime));
+        //        }
+        //    }
 
-            challengesWithTimes = new Dictionary<string, ChallengeTimes>(updatedChallengesWithTimes);
-        }
+        //    challengesWithTimes = new Dictionary<string, ChallengeTimes>(updatedChallengesWithTimes);
+        //}
 
         /// <summary>
         /// Returns time in seconds between now and time when <paramref name="challenge"/> first appeared in <see cref="Update(List{Challenge})"/>
         /// </summary>
-        public int GetElapsedTime(Challenge challenge)
-        {
-            if (!challengesWithTimes.ContainsKey(challenge.id))
-            {
-                Debug.LogError("Challenge: " + challenge.title + " was not added to analytics");
-                return -1;
-            }
+        //public int GetElapsedTime(Challenge challenge)
+        //{
+        //    if (!challengesWithTimes.ContainsKey(challenge.id))
+        //    {
+        //        Debug.LogError("Challenge: " + challenge.title + " was not added to analytics");
+        //        return -1;
+        //    }
 
-            return Mathf.FloorToInt(Time.realtimeSinceStartup) - challengesWithTimes[challenge.id].firstSeenTime;
-        }
+        //    return Mathf.FloorToInt(Time.realtimeSinceStartup) - challengesWithTimes[challenge.id].firstSeenTime;
+        //}
 
         /// <summary>
         /// Returns time in seconds between now and last time <paramref name="challenge"/> status update was marked.
         /// </summary>
-        public int GetTimeSinceLastUpdate(Challenge challenge)
-        {
-            if (!challengesWithTimes.ContainsKey(challenge.id))
-            {
-                Debug.LogError("Challenge: " + challenge.title + " was not added to analytics");
-                return -1;
-            }
+        //public int GetTimeSinceLastUpdate(Challenge challenge)
+        //{
+        //    if (!challengesWithTimes.ContainsKey(challenge.id))
+        //    {
+        //        Debug.LogError("Challenge: " + challenge.title + " was not added to analytics");
+        //        return -1;
+        //    }
 
-            return Mathf.FloorToInt(Time.realtimeSinceStartup) - challengesWithTimes[challenge.id].lastUpdateTime;
-        }
+        //    return Mathf.FloorToInt(Time.realtimeSinceStartup) - challengesWithTimes[challenge.id].lastUpdateTime;
+        //}
 
         /// <summary>
         /// Sets last update time for <paramref name="challenge"/> to current time.
         /// If time since last update exceeds 24h, resets first time seen to 0.
         /// </summary>
-        public void MarkChallengeStatusUpdate(Challenge challenge)
-        {
-            if (!challengesWithTimes.ContainsKey(challenge.id))
-            {
-                Debug.LogError("Challenge: " + challenge.title + " was not added to analytics");
-                return;
-            }
+        //public void MarkChallengeStatusUpdate(Challenge challenge)
+        //{
+        //    if (!challengesWithTimes.ContainsKey(challenge.id))
+        //    {
+        //        Debug.LogError("Challenge: " + challenge.title + " was not added to analytics");
+        //        return;
+        //    }
 
-            if (GetTimeSinceLastUpdate(challenge) > SECONDS_IN_DAY)
-            {
-                challengesWithTimes[challenge.id].firstSeenTime = Mathf.FloorToInt(Time.realtimeSinceStartup);
-            }
+        //    if (GetTimeSinceLastUpdate(challenge) > SECONDS_IN_DAY)
+        //    {
+        //        challengesWithTimes[challenge.id].firstSeenTime = Mathf.FloorToInt(Time.realtimeSinceStartup);
+        //    }
 
-            challengesWithTimes[challenge.id].lastUpdateTime = Mathf.FloorToInt(Time.realtimeSinceStartup);
-        }
+        //    challengesWithTimes[challenge.id].lastUpdateTime = Mathf.FloorToInt(Time.realtimeSinceStartup);
+        //}
 
-        private class ChallengeTimes
-        {
-            public ChallengeTimes(int firstSeenTime, int lastUpdateTime)
-            {
-                this.firstSeenTime = firstSeenTime;
-                this.lastUpdateTime = lastUpdateTime;
-            }
+        //private class ChallengeTimes
+        //{
+        //    public ChallengeTimes(int firstSeenTime, int lastUpdateTime)
+        //    {
+        //        this.firstSeenTime = firstSeenTime;
+        //        this.lastUpdateTime = lastUpdateTime;
+        //    }
 
-            public int firstSeenTime;
-            public int lastUpdateTime;
-        }
+        //    public int firstSeenTime;
+        //    public int lastUpdateTime;
+        //}
     }
 
 
