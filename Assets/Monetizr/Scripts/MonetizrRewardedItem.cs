@@ -22,6 +22,8 @@ namespace Monetizr.Challenges
 
         public Sprite defaultBoosterIcon;
 
+        public Image backgroundImage;
+
         internal void UpdateWithDescription(RewardCenterPanel rewardCenterPanel, MissionUIDescription md)
         {
             banner.gameObject.SetActive(md.brandBanner != null);
@@ -47,6 +49,30 @@ namespace Monetizr.Challenges
             rewardTitle.text = md.missionTitle;
 
             rewardDescription.text = md.missionDescription;
+
+            var ch = MonetizrManager.Instance.GetActiveChallenge();
+
+            if (ch != null)
+            {
+
+                var color = MonetizrManager.Instance.GetAsset<Color>(ch, AssetsType.CampaignHeaderTextColor);
+
+                if (color != default(Color))
+                    rewardTitle.color = color;
+
+                color = MonetizrManager.Instance.GetAsset<Color>(ch, AssetsType.CampaignTextColor);
+
+                if (color != default(Color))
+                    rewardDescription.color = color;
+
+                color = MonetizrManager.Instance.GetAsset<Color>(ch, AssetsType.CampaignBackgroundColor);
+
+                if (color != default(Color))
+                    backgroundImage.color = color;
+
+            }
+
+
 
             actionButton.clickReceiver = rewardCenterPanel;
             actionButton.missionDescription = md;

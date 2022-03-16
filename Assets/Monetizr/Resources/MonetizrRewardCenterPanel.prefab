@@ -67,7 +67,7 @@ MonoBehaviour:
     m_PersistentCalls:
       m_Calls: []
   m_Sprite: {fileID: 0}
-  m_Type: 1
+  m_Type: 2
   m_PreserveAspect: 0
   m_FillCenter: 1
   m_FillMethod: 4
@@ -75,7 +75,7 @@ MonoBehaviour:
   m_FillClockwise: 1
   m_FillOrigin: 0
   m_UseSpriteMesh: 0
-  m_PixelsPerUnitMultiplier: 0.16
+  m_PixelsPerUnitMultiplier: 1
 --- !u!1 &906900534728376936
 GameObject:
   m_ObjectHideFlags: 0
@@ -581,7 +581,7 @@ GameObject:
   m_Icon: {fileID: 0}
   m_NavMeshLayer: 0
   m_StaticEditorFlags: 0
-  m_IsActive: 1
+  m_IsActive: 0
 --- !u!224 &970346580412925077
 RectTransform:
   m_ObjectHideFlags: 0
@@ -1048,8 +1048,11 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: c22e8c52b1d2b43a0abddbff138fae57, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
+  nextPanelId: -1
   contentRoot: {fileID: 5110331719432731126}
   itemUI: {fileID: 1947136864296236919, guid: 24abbe84da3414b94acb3c2fd8345526, type: 3}
+  headerText: {fileID: 4263675590701672023}
+  background: {fileID: 5255507655601702062}
 --- !u!1 &6493706186174401916
 GameObject:
   m_ObjectHideFlags: 0
