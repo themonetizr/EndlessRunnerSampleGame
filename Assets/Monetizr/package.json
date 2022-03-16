@@ -9,9 +9,10 @@
     "url": "https://github.com/themonetizr/monetizr-challenges-unity-demo.git?path=/Assets/Monetizr"
   },
 
-    "dependencies": {
-    "com.mixpanel.unity": "3.0.2",
- },
+  "dependencies": {
+    "com.mixpanel.unity": "3.0.2"
+  },
+
     "keywords": [
         "monetizr"
     ],
