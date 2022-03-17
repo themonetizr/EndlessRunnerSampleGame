@@ -76,10 +76,15 @@ namespace Monetizr.Challenges
         private void AddSponsoredChallenges()
         {
             var challenges = MonetizrManager.Instance.GetAvailableChallenges();
+            var activeChallenge = MonetizrManager.Instance.GetActiveChallenge();
             int curChallenge = 0;
 
             if (challenges.Count == 0)
                 return;
+
+            //put active challenge to the first place
+            challenges.Remove(activeChallenge);
+            challenges.Insert(0, activeChallenge);
 
             foreach (var m in uiController.missionsDescriptions)
             {
@@ -88,7 +93,7 @@ namespace Monetizr.Challenges
 
                 var ch = challenges[curChallenge];
 
-                if(ch == MonetizrManager.Instance.GetActiveChallenge())
+                if(ch == activeChallenge)
                 {
                     var color = MonetizrManager.Instance.GetAsset<Color>(ch, AssetsType.HeaderTextColor);
 
