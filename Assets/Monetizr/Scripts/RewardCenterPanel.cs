@@ -2,6 +2,7 @@
 using System.Collections;
 using System.Collections.Generic;
 using UnityEngine;
+using UnityEngine.UI;
 
 namespace Monetizr.Challenges
 {
@@ -11,6 +12,9 @@ namespace Monetizr.Challenges
         public Transform contentRoot;
         public MonetizrRewardedItem itemUI;
         private bool hasSponsoredChallenges;
+        public Text headerText;
+        public Image background;
+
         //public List<MissionUIDescription> missionsDescriptions;
         
         private new void Awake()
@@ -39,6 +43,8 @@ namespace Monetizr.Challenges
             hasSponsoredChallenges = false;
 
             //this.missionsDescriptions = missionsDescriptions;
+
+             
 
             MonetizrManager.Analytics.TrackEvent("Reward center opened");
 
@@ -70,10 +76,15 @@ namespace Monetizr.Challenges
         private void AddSponsoredChallenges()
         {
             var challenges = MonetizrManager.Instance.GetAvailableChallenges();
+            var activeChallenge = MonetizrManager.Instance.GetActiveChallenge();
             int curChallenge = 0;
 
             if (challenges.Count == 0)
                 return;
+
+            //put active challenge to the first place
+            challenges.Remove(activeChallenge);
+            challenges.Insert(0, activeChallenge);
 
             foreach (var m in uiController.missionsDescriptions)
             {
@@ -81,6 +92,22 @@ namespace Monetizr.Challenges
                     continue;
 
                 var ch = challenges[curChallenge];
+
+                if(ch == activeChallenge)
+                {
+                    var color = MonetizrManager.Instance.GetAsset<Color>(ch, AssetsType.HeaderTextColor);
+
+                    if(color != default(Color))
+                        headerText.color = color;
+
+
+                    var bgSprite = MonetizrManager.Instance.GetAsset<Sprite>(ch, AssetsType.TiledBackgroundSprite);
+
+                    if (bgSprite != default(Sprite))
+                        background.sprite = bgSprite;
+                }
+
+                
 
                 AddSponsoredChallenge(m,ch);
 

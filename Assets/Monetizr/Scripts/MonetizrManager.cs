@@ -51,7 +51,12 @@ namespace Monetizr.Challenges
         BrandTitleString, //text
         TinyTeaserTexture, //text
         //Html5ZipURLString,
-        Html5ZipFilePathString
+        Html5ZipFilePathString,
+        TiledBackgroundSprite,
+        CampaignHeaderTextColor,
+        CampaignTextColor,
+        HeaderTextColor,
+        CampaignBackgroundColor
 
     }
 
@@ -74,6 +79,11 @@ namespace Monetizr.Challenges
             { AssetsType.TinyTeaserTexture, typeof(Texture2D) },
             //{ AssetsType.Html5ZipURLString, typeof(String) },
             { AssetsType.Html5ZipFilePathString, typeof(String) },
+            { AssetsType.HeaderTextColor, typeof(Color) },
+            { AssetsType.CampaignTextColor, typeof(Color) },
+            { AssetsType.CampaignHeaderTextColor, typeof(Color) },
+            { AssetsType.TiledBackgroundSprite, typeof(Sprite) },
+            { AssetsType.CampaignBackgroundColor, typeof(Color) },
 
         };
 
@@ -99,7 +109,8 @@ namespace Monetizr.Challenges
                 throw new ArgumentException($"AssetsType {t} and {typeof(T)} do not match!");
 
             if (!assets.ContainsKey(t))
-                throw new ArgumentException($"Requested asset {t} doesn't exist in challenge!");
+                //throw new ArgumentException($"Requested asset {t} doesn't exist in challenge!");
+                return default(T);
 
             return (T)Convert.ChangeType(assets[t], typeof(T));
         }
@@ -152,7 +163,7 @@ namespace Monetizr.Challenges
 
         private UIController uiController = null;
 
-        private string activeChallengeId;
+        private string activeChallengeId = null;
 
         private Action<bool> soundSwitch;
 
@@ -263,14 +274,14 @@ namespace Monetizr.Challenges
             instance.uiController.AddMission(m);
         }
 
-        internal static void RegisterSponsoredMission(int id, Sprite defaultRewardIcon, int rewardAmount, Action<int> onSponsoredClaim)
+        internal static void RegisterSponsoredMission(int id, Sprite rewardIcon, int rewardAmount, Action<int> onSponsoredClaim)
         {
             Assert.IsNotNull(instance, MonetizrErrors.msg[ErrorType.NotinitializedSDK]);
 
             MissionUIDescription m = new MissionUIDescription()
             {
                 sponsoredId = id,
-                rewardIcon = defaultRewardIcon,
+                rewardIcon = rewardIcon,
                 reward = rewardAmount,
                 isSponsored = true,
                 onUserDefinedClaim = onSponsoredClaim
@@ -336,7 +347,7 @@ namespace Monetizr.Challenges
         /// <summary>
         /// Helper function to download and assign graphics assets
         /// </summary>
-        private async Task AssignAssetTextures(ChallengeExtention ech, Challenge.Asset asset, AssetsType texture, AssetsType sprite)
+        private async Task AssignAssetTextures(ChallengeExtention ech, Challenge.Asset asset, AssetsType texture, AssetsType sprite, bool isOptional = false)
         {
             string path = Application.persistentDataPath + "/" + ech.challenge.id;
 
@@ -356,7 +367,9 @@ namespace Monetizr.Challenges
 
                 if (data == null)
                 {
-                    ech.isChallengeLoaded = false;
+                    if(!isOptional)
+                        ech.isChallengeLoaded = false;
+
                     return;
                 }
 
@@ -370,7 +383,9 @@ namespace Monetizr.Challenges
 
                 if (data == null)
                 {
-                    ech.isChallengeLoaded = false;
+                    if (!isOptional)
+                        ech.isChallengeLoaded = false;
+
                     return;
                 }
 
@@ -480,6 +495,7 @@ namespace Monetizr.Challenges
             await Task.Delay(10000);
             Debug.Log(">>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>");
 #endif
+            Color c;
 
             foreach (var ch in challenges)
             {
@@ -529,6 +545,39 @@ namespace Monetizr.Challenges
 
                         case "html":
                             await PreloadAssetToCache(ech, asset, AssetsType.Html5ZipFilePathString,false);
+
+                            break;
+
+                        case "campaign_text_color":
+                            
+                            if(ColorUtility.TryParseHtmlString(asset.title,out c))
+                                ech.SetAsset<Color>(AssetsType.CampaignTextColor, c);
+
+                            break;
+
+                        case "campaign_header_text_color":
+                            
+                            if (ColorUtility.TryParseHtmlString(asset.title, out c))
+                                ech.SetAsset<Color>(AssetsType.CampaignHeaderTextColor, c);
+
+                            break;
+
+                        case "header_text_color":
+
+                            if (ColorUtility.TryParseHtmlString(asset.title, out c))
+                                ech.SetAsset<Color>(AssetsType.HeaderTextColor, c);
+
+                            break;
+
+                        case "campaign_background_color":
+
+                            if (ColorUtility.TryParseHtmlString(asset.title, out c))
+                                ech.SetAsset<Color>(AssetsType.CampaignBackgroundColor, c);
+
+                            break;
+
+                        case "tiled_background":
+                            await AssignAssetTextures(ech, asset, AssetsType.Unknown, AssetsType.TiledBackgroundSprite, true);
 
                             break;
 

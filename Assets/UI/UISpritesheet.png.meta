@@ -794,10 +794,10 @@ TextureImporter:
       name: PremiumIcone
       rect:
         serializedVersion: 2
-        x: 791
-        y: 437
-        width: 66
-        height: 67
+        x: 796
+        y: 444
+        width: 50
+        height: 51
       alignment: 0
       pivot: {x: 0.5, y: 0.5}
       border: {x: 0, y: 0, z: 0, w: 0}
@@ -1297,7 +1297,7 @@ TextureImporter:
     outline: []
     physicsShape: []
     bones: []
-    spriteID: 
+    spriteID: fd237925eabca4f6cab926e9fe7faad1
     internalID: 0
     vertices: []
     indices: 
