@@ -11,9 +11,10 @@
 
     "documentationUrl": "https://docs.themonetizr.com/docs/monetizr-challenges-sdk"
 
-    "dependencies": {
-    "com.mixpanel.unity": "3.0.2",
- },
+  "dependencies": {
+    "com.mixpanel.unity": "3.0.2"
+  },
+
     "keywords": [
         "monetizr"
     ],
