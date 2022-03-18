@@ -339,9 +339,9 @@ namespace Monetizr.Challenges
 
 
         //TODO: shouldn't have possibility to show video directly by game
-        internal static void _PlayVideo(Action<bool> onComplete)
+        internal static void _PlayVideo(string videoPath, Action<bool> onComplete)
         {
-            instance.uiController.PlayVideo(null, onComplete);
+            instance.uiController.PlayVideo(videoPath, onComplete);
         }
 
         /// <summary>

@@ -119,18 +119,18 @@ namespace Monetizr.Challenges
             }
         }
 
-        private void AddSponsoredChallenge(MissionUIDescription m, string ch)
+        private void AddSponsoredChallenge(MissionUIDescription m, string campaignId)
         {
-            string brandName = MonetizrManager.Instance.GetAsset<string>(ch, AssetsType.BrandTitleString);
+            string brandName = MonetizrManager.Instance.GetAsset<string>(campaignId, AssetsType.BrandTitleString);
 
-            m.brandBanner = MonetizrManager.Instance.GetAsset<Sprite>(ch, AssetsType.BrandBannerSprite);
+            m.brandBanner = MonetizrManager.Instance.GetAsset<Sprite>(campaignId, AssetsType.BrandBannerSprite);
             m.missionTitle = $"{brandName} video";
             m.missionDescription = $"Watch video by {brandName} and get 2 Energy Boosters";
-            m.missionIcon = MonetizrManager.Instance.GetAsset<Sprite>(ch, AssetsType.BrandRewardLogoSprite);
+            m.missionIcon = MonetizrManager.Instance.GetAsset<Sprite>(campaignId, AssetsType.BrandRewardLogoSprite);
             m.progress = 1;
 
             //show video, then claim rewards if it's completed
-            m.onClaimButtonPress = () => { OnVideoPlayPress(m); };
+            m.onClaimButtonPress = () => { OnVideoPlayPress(campaignId,m); };
 
             var go = GameObject.Instantiate<GameObject>(itemUI.gameObject, contentRoot);
 
@@ -141,7 +141,7 @@ namespace Monetizr.Challenges
 
             item.UpdateWithDescription(this, m);
 
-            MonetizrManager.Analytics.BeginShowAdAsset(AdType.IntroBanner, ch);
+            MonetizrManager.Analytics.BeginShowAdAsset(AdType.IntroBanner, campaignId);
         }
 
        
@@ -173,22 +173,24 @@ namespace Monetizr.Challenges
             
         }
 
-        public void OnVideoPlayPress(MissionUIDescription m)
+        public void OnVideoPlayPress(string campaignId, MissionUIDescription m)
         {
             MonetizrManager.Analytics.TrackEvent("Claim button press");
 
-            MonetizrManager._PlayVideo((bool isSkipped) => {
+            var videoPath = MonetizrManager.Instance.GetAsset<string>(campaignId, AssetsType.VideoFilePathString);
+
+            MonetizrManager._PlayVideo(videoPath,(bool isSkipped) => {
 
                 if (!isSkipped)
                 {   
-                    if (MonetizrManager.Instance.HasChallengesAndActive())
-                    {
-                        var ch = MonetizrManager.Instance.GetActiveChallenge();
+                    //if (MonetizrManager.Instance.HasChallengesAndActive())
+                    //{
+                    //    var ch = MonetizrManager.Instance.GetActiveChallenge();
 
-                        MonetizrManager.Instance.ClaimReward(ch);
+                        MonetizrManager.Instance.ClaimReward(campaignId);
 
                         m.onUserDefinedClaim.Invoke(m.reward);
-                    }
+                    //}
 
                     MonetizrManager.ShowCongratsNotification(null);
 

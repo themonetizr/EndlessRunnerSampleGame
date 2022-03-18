@@ -18,10 +18,10 @@ namespace Monetizr.Challenges
 
         }
 
-        public void Play(string path, Action<bool> onComplete)
+        public void Play(string videoPath, Action<bool> onComplete)
         {
             this.onComplete = onComplete;
-            var videoPath = MonetizrManager.Instance.GetAsset<string>(MonetizrManager.Instance.GetActiveChallenge(), AssetsType.VideoFilePathString);
+            //var videoPath = MonetizrManager.Instance.GetAsset<string>(MonetizrManager.Instance.GetActiveChallenge(), AssetsType.VideoFilePathString);
 
           
             var videoPlayer = GetComponent<VideoPlayer>();
