@@ -120,7 +120,7 @@ public class SettingPopup : MonoBehaviour
     // Invoked when the value of the text field changes.
     public void ValueChangeCheck()
     {
-        SponsoredMissionsManager.instance.changeAPIKey(apiKeyInput.text);
+        //SponsoredMissionsManager.instance.changeAPIKey(apiKeyInput.text);
     }
 
     public void MonetizrToggleChange()

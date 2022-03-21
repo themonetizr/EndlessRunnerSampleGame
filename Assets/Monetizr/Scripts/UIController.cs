@@ -21,6 +21,7 @@ namespace Monetizr.Challenges
     {
         public int sponsoredId;
         public bool isSponsored;
+        public string brandName;
 
         public Sprite brandBanner;
         public string missionTitle;
@@ -32,40 +33,9 @@ namespace Monetizr.Challenges
         public float progress;
         public Action onClaimButtonPress;
         public Action<int> onUserDefinedClaim;
-
-        public MissionUIDescription()
-        {
-        }
-
-        public MissionUIDescription(string missionTitle,
-                                    string missionDescription,
-                                    Sprite missionIcon,
-                                    Sprite rewardIcon,
-                                    int reward,
-                                    float progress,
-                                    Action onClaimButtonPress)
-        {
-            if (string.IsNullOrEmpty(missionTitle))
-            {
-                throw new ArgumentException($"'{nameof(missionTitle)}' cannot be null or empty", nameof(missionTitle));
-            }
-
-            if (string.IsNullOrEmpty(missionDescription))
-            {
-                throw new ArgumentException($"'{nameof(missionDescription)}' cannot be null or empty", nameof(missionDescription));
-            }
-
-            this.isSponsored = false;
-
-            this.brandBanner = null;
-            this.missionTitle = missionTitle;
-            this.missionDescription = missionDescription;
-            this.missionIcon = missionIcon;// ?? throw new ArgumentNullException(nameof(missionIcon));
-            this.rewardIcon = rewardIcon;// ?? throw new ArgumentNullException(nameof(rewardIcon));
-            this.reward = reward;
-            this.progress = progress;
-            this.onClaimButtonPress = onClaimButtonPress;
-        }
+        internal Sprite brandLogo;
+        internal Sprite brandRewardBanner;
+        internal string rewardTitle;
     }
 
     public class UIController
@@ -96,12 +66,12 @@ namespace Monetizr.Challenges
             panels = new Dictionary<PanelId, PanelController>();
         }
 
-        internal void CleanMissionsList()
+        internal void CleanUserDefinedMissions()
         {
             //if (missionsDescriptions == null)
             //    missionsDescriptions = new List<MissionUIDescription>();
-
-            missionsDescriptions.Clear();
+                        
+            missionsDescriptions.RemoveAll((e) => { return e.isSponsored == false;  });
         }
 
         public int HasDuplicateSponsoredMissionWithId(MissionUIDescription m2)
@@ -146,12 +116,10 @@ namespace Monetizr.Challenges
             var player = prefab.GetComponent<MonetizrVideoPlayer>();
 
             player.Play(path, (bool isSkip) => {
-
-                    MonetizrManager.ShowRewardCenter();
-
+                
                     onComplete?.Invoke(isSkip);
-                    GameObject.Destroy(prefab);
 
+                    GameObject.Destroy(prefab);
                     isVideoPlaying = false;
             } );
         }
@@ -181,7 +149,7 @@ namespace Monetizr.Challenges
             panels[id].EnableInput(enable);
         }
 
-        public void ShowPanel(PanelId id = PanelId.Unknown, Action onComplete = null, bool rememberPrevious = false)
+        /*public void ShowPanel(PanelId id = PanelId.Unknown, Action onComplete = null, bool rememberPrevious = false)
         {
             Debug.Log("ShowPanel: " + id);
 
@@ -201,9 +169,9 @@ namespace Monetizr.Challenges
 
             if (rememberPrevious)
                 previousPanel = id;
-        }
+        }*/
 
-        public void ShowPanelFromPrefab(String prefab, PanelId id = PanelId.Unknown, Action onComplete = null, bool rememberPrevious = false)
+        public void ShowPanelFromPrefab(String prefab, PanelId id = PanelId.Unknown, Action onComplete = null, bool rememberPrevious = false, MissionUIDescription m = null)
         {
             Debug.Log("ShowPanel: " + id);
 
@@ -225,7 +193,7 @@ namespace Monetizr.Challenges
 
             ctrlPanel.uiController = this;
 
-            ctrlPanel.PreparePanel(id, complete);
+            ctrlPanel.PreparePanel(id, complete, m);
 
             ctrlPanel.SetActive(true);
 
@@ -254,7 +222,7 @@ namespace Monetizr.Challenges
             if (teaser.IsVisible())
                 return;
 
-            teaser.PreparePanel(PanelId.TinyMenuTeaser, null);
+            teaser.PreparePanel(PanelId.TinyMenuTeaser, null, null);
 
             //previousPanel = PanelId.TinyMenuTeaser;
 

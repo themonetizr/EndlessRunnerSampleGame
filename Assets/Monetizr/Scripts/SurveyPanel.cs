@@ -15,7 +15,7 @@ namespace Monetizr.Challenges
 
         //private Action onComplete;
 
-        internal override void PreparePanel(PanelId id, Action onComplete)
+        internal override void PreparePanel(PanelId id, Action onComplete, MissionUIDescription m)
         {
             MonetizrManager.Analytics.TrackEvent("Survey started");
 

@@ -38,7 +38,7 @@ namespace Monetizr.Challenges
             AddUserdefineChallenges();
         }
 
-        internal override void PreparePanel(PanelId id, Action onComplete)
+        internal override void PreparePanel(PanelId id, Action onComplete, MissionUIDescription m)
         {
             hasSponsoredChallenges = false;
 
@@ -125,9 +125,14 @@ namespace Monetizr.Challenges
 
             m.brandBanner = MonetizrManager.Instance.GetAsset<Sprite>(campaignId, AssetsType.BrandBannerSprite);
             m.missionTitle = $"{brandName} video";
-            m.missionDescription = $"Watch video by {brandName} and get 2 Energy Boosters";
+            m.missionDescription = $"Watch video by {brandName} and get {m.reward} Energy Boosters";
             m.missionIcon = MonetizrManager.Instance.GetAsset<Sprite>(campaignId, AssetsType.BrandRewardLogoSprite);
             m.progress = 1;
+            m.brandName = brandName;
+            //m.brandBanner = MonetizrManager.Instance.GetAsset<Sprite>(campaignId, AssetsType.BrandBannerSprite);
+            m.brandLogo = MonetizrManager.Instance.GetAsset<Sprite>(campaignId, AssetsType.BrandLogoSprite); ;
+            m.brandRewardBanner = MonetizrManager.Instance.GetAsset<Sprite>(campaignId, AssetsType.BrandRewardBannerSprite);
+
 
             //show video, then claim rewards if it's completed
             m.onClaimButtonPress = () => { OnVideoPlayPress(campaignId,m); };
@@ -181,20 +186,15 @@ namespace Monetizr.Challenges
 
             MonetizrManager._PlayVideo(videoPath,(bool isSkipped) => {
 
-                if (!isSkipped)
-                {   
-                    //if (MonetizrManager.Instance.HasChallengesAndActive())
-                    //{
-                    //    var ch = MonetizrManager.Instance.GetActiveChallenge();
+                MonetizrManager.ShowRewardCenter();
+
+                //if (!isSkipped)
+                {
+                        //m.onUserDefinedClaim.Invoke(m.reward);
+                                            
+                        MonetizrManager.ShowCongratsNotification(null,m);
 
                         MonetizrManager.Instance.ClaimReward(campaignId);
-
-                        m.onUserDefinedClaim.Invoke(m.reward);
-                    //}
-
-                    MonetizrManager.ShowCongratsNotification(null);
-
-                    
                 }
 
             });

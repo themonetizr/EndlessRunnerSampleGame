@@ -256,25 +256,65 @@ namespace Monetizr.Challenges
                 return;
             }
 
-            instance.uiController.ShowPanelFromPrefab("MonetizrNotifyPanel", PanelId.StartNotification, onComplete, true);
+            MissionUIDescription m = null;
+
+            foreach (var sponsoredMsns in instance.uiController.missionsDescriptions)
+            {
+                if (!sponsoredMsns.isSponsored)
+                    continue;
+
+                var ch = MonetizrManager.Instance.GetActiveChallenge();
+
+                m = new MissionUIDescription()
+                {
+                    brandBanner = MonetizrManager.Instance.GetAsset<Sprite>(ch, AssetsType.BrandBannerSprite),
+                    brandLogo = MonetizrManager.Instance.GetAsset<Sprite>(ch, AssetsType.BrandLogoSprite),
+                    brandName = MonetizrManager.Instance.GetAsset<string>(ch, AssetsType.BrandTitleString),
+                    reward = sponsoredMsns.reward,
+                    rewardTitle = sponsoredMsns.rewardTitle,
+                };
+            
+                break;
+            }
+
+
+           
+            
+            instance.uiController.ShowPanelFromPrefab("MonetizrNotifyPanel", PanelId.StartNotification, onComplete, true, m);
         }
 
-        internal static void ShowCongratsNotification(Action onComplete)
+        internal static void ShowCongratsNotification(Action onComplete, MissionUIDescription m)
         {
             Assert.IsNotNull(instance, MonetizrErrors.msg[ErrorType.NotinitializedSDK]);
 
-            instance.uiController.ShowPanelFromPrefab("MonetizrNotifyPanel", PanelId.CongratsNotification, onComplete, true);
+            instance.uiController.ShowPanelFromPrefab("MonetizrNotifyPanel", 
+                PanelId.CongratsNotification, 
+                onComplete, 
+                true,
+                m);
         }
 
         internal static void RegisterUserDefinedMission(string missionTitle, string missionDescription, Sprite missionIcon, Sprite rewardIcon, int reward, float progress, Action onClaimButtonPress)
         {
             Assert.IsNotNull(instance, MonetizrErrors.msg[ErrorType.NotinitializedSDK]);
 
-            MissionUIDescription m = new MissionUIDescription(missionTitle, missionDescription, missionIcon, rewardIcon, reward, progress, onClaimButtonPress);
+            MissionUIDescription m = new MissionUIDescription()
+            {
+                missionTitle = missionTitle,
+                missionDescription = missionDescription,
+                missionIcon = missionIcon,
+                rewardIcon = rewardIcon,
+                reward = reward,
+                progress = progress,
+                isSponsored = false,
+                onClaimButtonPress = onClaimButtonPress,
+                brandBanner = null,
+            };
+
             instance.uiController.AddMission(m);
         }
 
-        internal static void RegisterSponsoredMission(int id, Sprite rewardIcon, int rewardAmount, Action<int> onSponsoredClaim)
+        internal static void RegisterSponsoredMission(int id, Sprite rewardIcon, int rewardAmount, string rewardTitle, Action<int> onSponsoredClaim)
         {
             Assert.IsNotNull(instance, MonetizrErrors.msg[ErrorType.NotinitializedSDK]);
 
@@ -284,7 +324,8 @@ namespace Monetizr.Challenges
                 rewardIcon = rewardIcon,
                 reward = rewardAmount,
                 isSponsored = true,
-                onUserDefinedClaim = onSponsoredClaim
+                onUserDefinedClaim = onSponsoredClaim,
+                rewardTitle = rewardTitle,
             };
                        
             instance.uiController.AddMission(m);
@@ -292,7 +333,7 @@ namespace Monetizr.Challenges
 
         internal static void CleanUserDefinedMissions()
         {
-            instance.uiController.CleanMissionsList();
+            instance.uiController.CleanUserDefinedMissions();
         }
 
         internal static void ShowRewardCenter(Action onComplete = null)
@@ -662,16 +703,7 @@ namespace Monetizr.Challenges
             var challenge = challenges[challengeId].challenge;
 
             try
-            {
-                /*if (progress < 100)
-                {
-                    await _challengesClient.UpdateStatus(challenge, progress);
-                }
-                else
-                {
-                    await _challengesClient.Claim(challenge);
-                }*/
-
+            {              
                 await _challengesClient.Claim(challenge);
             }
             catch (Exception e)

@@ -24,7 +24,7 @@ namespace Monetizr.Challenges
         public UIController uiController;
         public PanelId nextPanelId = PanelId.Unknown;
 
-        internal abstract void PreparePanel(PanelId id, Action onComplete);
+        internal abstract void PreparePanel(PanelId id, Action onComplete, MissionUIDescription m);
         internal abstract void FinalizePanel(PanelId id);
 
         protected void Awake()

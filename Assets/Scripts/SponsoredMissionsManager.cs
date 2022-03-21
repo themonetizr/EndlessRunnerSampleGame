@@ -12,11 +12,11 @@ public class SponsoredMissionsManager : MonoBehaviour
     public Animator menuEnv = null;
     public MusicPlayer musicPlayer = null;
 
-    [SerializeField] private string apiKey;
-      
-    private bool turnedOn = true;
+    public Sprite defaultRewardIcon;
 
-    private static Dictionary<string, SponsoredPickupCoinMission> missions = new Dictionary<string, SponsoredPickupCoinMission>();
+    [SerializeField] private string apiKey;
+
+    
 
     private void Awake()
     {
@@ -31,7 +31,7 @@ public class SponsoredMissionsManager : MonoBehaviour
 
         MonetizrManager.Initialize(apiKey, (bool isOK) =>
             {
-               
+                InitializeSponsoredMissions();
             },
             (bool soundOn) => 
             {
@@ -45,37 +45,25 @@ public class SponsoredMissionsManager : MonoBehaviour
 
     }
 
+    public void InitializeSponsoredMissions()
+    {
+        MonetizrManager.RegisterSponsoredMission(1, defaultRewardIcon, 2, "Dog Poops", 
+            (int reward) => { PlayerData.instance.ClaimSponsoredMission(reward); } 
+            
+            );
+
+        MonetizrManager.RegisterSponsoredMission(1, defaultRewardIcon, 4, "Dog Poops",
+          (int reward) => { PlayerData.instance.ClaimSponsoredMission(reward); }
+
+          );
+
+        MonetizrManager.RegisterSponsoredMission(1, defaultRewardIcon, 8, "Dog Poops",
+          (int reward) => { PlayerData.instance.ClaimSponsoredMission(reward); }
+
+          );
+    }
+      
+
+
    
-
-    public void changeAPIKey(string apiKeyValue)
-    {
-        //apiKey = apiKeyValue;
-        //_challengesClient = new ChallengesClient(apiKey)
-        //{
-        //    playerInfo = new PlayerInfo(city, age, gameType, playerid)
-        //};
-
-        //if (turnedOn)
-        //{
-        //    RemoveMissions();
-        //    AddSponsoredMissions();
-        //}
-    }
-       
-
-    public void changeOnOff(bool toggleOn)
-    {
-        turnedOn = toggleOn;
-
-        if (toggleOn)
-        {
-            // Turned on
-            //AddSponsoredMissions();
-        }
-        else
-        {
-            // Turned off
-            //RemoveMissions();
-        }
-    }
 }

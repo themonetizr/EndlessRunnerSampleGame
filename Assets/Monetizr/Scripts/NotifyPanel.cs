@@ -20,14 +20,14 @@ namespace Monetizr.Challenges
 
         //private Action onComplete;
 
-        internal override void PreparePanel(PanelId id, Action onComplete)
+        internal override void PreparePanel(PanelId id, Action onComplete, MissionUIDescription m)
         {
             this.onComplete = onComplete;
             this.panelId = id;
 
             switch(id) {
-                case PanelId.CongratsNotification: PrepareCongratsPanel(); break;
-                case PanelId.StartNotification: PrepareNotificationPanel(); break;
+                case PanelId.CongratsNotification: PrepareCongratsPanel(m); break;
+                case PanelId.StartNotification: PrepareNotificationPanel(m); break;
             }
         }
 
@@ -47,19 +47,20 @@ namespace Monetizr.Challenges
             
         }
 
-        private void PrepareNotificationPanel()
+        //TODO: Fix notification panel!
+        private void PrepareNotificationPanel(MissionUIDescription m)
         {
             if (MonetizrManager.Instance.HasChallengesAndActive())
             {
                 var challengeId = MonetizrManager.Instance.GetActiveChallenge();
 
-                banner.sprite = MonetizrManager.Instance.GetAsset<Sprite>(challengeId, AssetsType.BrandBannerSprite);
-                logo.sprite = MonetizrManager.Instance.GetAsset<Sprite>(challengeId, AssetsType.BrandLogoSprite);
+                banner.sprite = m.brandBanner;
+                logo.sprite = m.brandLogo;
 
-                string brandTitle = MonetizrManager.Instance.GetAsset<string>(challengeId, AssetsType.BrandTitleString);
+                string brandTitle = m.brandName;
 
                 title.text = $"{brandTitle} video";
-                text.text = $"<color=#F05627>Watch video</color> by {brandTitle} to get 2 Energy Boosts";
+                text.text = $"<color=#F05627>Watch video</color> by {brandTitle} to get <color=#F05627>{m.reward} {m.rewardTitle}</color>";
 
                 //buttonText.text = "Learn More";
                 buttonText.text = "Got it!";
@@ -74,19 +75,17 @@ namespace Monetizr.Challenges
             }
         }
 
-        private void PrepareCongratsPanel()
+        private void PrepareCongratsPanel(MissionUIDescription m)
         {
             if (MonetizrManager.Instance.HasChallengesAndActive())
             {
                 var challengeId = MonetizrManager.Instance.GetActiveChallenge();
 
-                banner.sprite = MonetizrManager.Instance.GetAsset<Sprite>(challengeId, AssetsType.BrandRewardBannerSprite);
-                logo.sprite = MonetizrManager.Instance.GetAsset<Sprite>(challengeId, AssetsType.BrandLogoSprite);
-
-                string brandTitle = MonetizrManager.Instance.GetAsset<string>(challengeId, AssetsType.BrandTitleString);
+                banner.sprite = m.brandLogo;
+                logo.sprite = m.brandLogo; 
 
                 title.text = $"Congrats!";
-                text.text = $"You got <color=#F05627>2 Energy Boosts</color> from {brandTitle}";
+                text.text = $"You got <color=#F05627>{m.reward} {m.rewardTitle}</color> from {m.brandName}";
 
                 //buttonText.text = "Learn More";
                 buttonText.text = "Awesome!";
@@ -115,19 +114,6 @@ namespace Monetizr.Challenges
             SetActive(false);
         }
 
-        
-
-        //// Start is called before the first frame update
-        //void Start()
-        //{
-
-        //}
-
-        //// Update is called once per frame
-        //void Update()
-        //{
-
-        //}
     }
 
 }
