@@ -74,7 +74,7 @@ namespace Monetizr.Challenges
             missionsDescriptions.RemoveAll((e) => { return e.isSponsored == false;  });
         }
 
-        public int HasDuplicateSponsoredMissionWithId(MissionUIDescription m2)
+        /*public int HasDuplicateSponsoredMissionWithId(MissionUIDescription m2)
         {
             if (!m2.isSponsored)
                 return -1;
@@ -90,16 +90,16 @@ namespace Monetizr.Challenges
             }
 
             return -1;
-        }
+        }*/
 
         public void AddMission(MissionUIDescription m)
         {
-            int i = HasDuplicateSponsoredMissionWithId(m);
+            /*int i = HasDuplicateSponsoredMissionWithId(m);
 
             if(i >= 0)
             {
                 missionsDescriptions.RemoveAt(i);
-            }
+            }*/
 
             missionsDescriptions.Add(m);
         }

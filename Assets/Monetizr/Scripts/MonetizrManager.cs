@@ -256,31 +256,27 @@ namespace Monetizr.Challenges
                 return;
             }
 
-            MissionUIDescription m = null;
+            MissionUIDescription sponsoredMsns = instance.uiController.missionsDescriptions.Find((MissionUIDescription item) => { return item.isSponsored; });
 
-            foreach (var sponsoredMsns in instance.uiController.missionsDescriptions)
+            if (sponsoredMsns == null)
+                return;
+
+            var ch = MonetizrManager.Instance.GetActiveChallenge();
+
+            sponsoredMsns = new MissionUIDescription()
             {
-                if (!sponsoredMsns.isSponsored)
-                    continue;
-
-                var ch = MonetizrManager.Instance.GetActiveChallenge();
-
-                m = new MissionUIDescription()
-                {
-                    brandBanner = MonetizrManager.Instance.GetAsset<Sprite>(ch, AssetsType.BrandBannerSprite),
-                    brandLogo = MonetizrManager.Instance.GetAsset<Sprite>(ch, AssetsType.BrandLogoSprite),
-                    brandName = MonetizrManager.Instance.GetAsset<string>(ch, AssetsType.BrandTitleString),
-                    reward = sponsoredMsns.reward,
-                    rewardTitle = sponsoredMsns.rewardTitle,
-                };
-            
-                break;
-            }
-
-
-           
-            
-            instance.uiController.ShowPanelFromPrefab("MonetizrNotifyPanel", PanelId.StartNotification, onComplete, true, m);
+                brandBanner = MonetizrManager.Instance.GetAsset<Sprite>(ch, AssetsType.BrandBannerSprite),
+                brandLogo = MonetizrManager.Instance.GetAsset<Sprite>(ch, AssetsType.BrandLogoSprite),
+                brandName = MonetizrManager.Instance.GetAsset<string>(ch, AssetsType.BrandTitleString),
+                reward = sponsoredMsns.reward,
+                rewardTitle = sponsoredMsns.rewardTitle,
+            };
+                       
+            instance.uiController.ShowPanelFromPrefab("MonetizrNotifyPanel", 
+                PanelId.StartNotification, 
+                onComplete, 
+                true,
+                sponsoredMsns);
         }
 
         internal static void ShowCongratsNotification(Action onComplete, MissionUIDescription m)
@@ -314,13 +310,13 @@ namespace Monetizr.Challenges
             instance.uiController.AddMission(m);
         }
 
-        internal static void RegisterSponsoredMission(int id, Sprite rewardIcon, int rewardAmount, string rewardTitle, Action<int> onSponsoredClaim)
+        internal static void RegisterSponsoredMission(/*int id, */Sprite rewardIcon, int rewardAmount, string rewardTitle, Action<int> onSponsoredClaim)
         {
             Assert.IsNotNull(instance, MonetizrErrors.msg[ErrorType.NotinitializedSDK]);
 
             MissionUIDescription m = new MissionUIDescription()
             {
-                sponsoredId = id,
+                //sponsoredId = id,
                 rewardIcon = rewardIcon,
                 reward = rewardAmount,
                 isSponsored = true,

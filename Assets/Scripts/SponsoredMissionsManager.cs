@@ -47,17 +47,17 @@ public class SponsoredMissionsManager : MonoBehaviour
 
     public void InitializeSponsoredMissions()
     {
-        MonetizrManager.RegisterSponsoredMission(1, defaultRewardIcon, 2, "Dog Poops", 
+        MonetizrManager.RegisterSponsoredMission(defaultRewardIcon, 2, "Dog Poops", 
             (int reward) => { PlayerData.instance.ClaimSponsoredMission(reward); } 
             
             );
 
-        MonetizrManager.RegisterSponsoredMission(1, defaultRewardIcon, 4, "Dog Poops",
+        MonetizrManager.RegisterSponsoredMission(defaultRewardIcon, 4, "Dog Poops",
           (int reward) => { PlayerData.instance.ClaimSponsoredMission(reward); }
 
           );
 
-        MonetizrManager.RegisterSponsoredMission(1, defaultRewardIcon, 8, "Dog Poops",
+        MonetizrManager.RegisterSponsoredMission(defaultRewardIcon, 8, "Dog Poops",
           (int reward) => { PlayerData.instance.ClaimSponsoredMission(reward); }
 
           );
