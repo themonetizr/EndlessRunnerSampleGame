@@ -125,7 +125,7 @@ namespace Monetizr.Challenges
 
             m.brandBanner = MonetizrManager.Instance.GetAsset<Sprite>(campaignId, AssetsType.BrandBannerSprite);
             m.missionTitle = $"{brandName} video";
-            m.missionDescription = $"Watch video by {brandName} and get {m.reward} Energy Boosters";
+            m.missionDescription = $"Watch video by {brandName} and get {m.reward} {m.rewardTitle}";
             m.missionIcon = MonetizrManager.Instance.GetAsset<Sprite>(campaignId, AssetsType.BrandRewardLogoSprite);
             m.progress = 1;
             m.brandName = brandName;
@@ -187,14 +187,16 @@ namespace Monetizr.Challenges
             MonetizrManager._PlayVideo(videoPath,(bool isSkipped) => {
 
                 MonetizrManager.ShowRewardCenter();
-
+                        
                 //if (!isSkipped)
                 {
-                        //m.onUserDefinedClaim.Invoke(m.reward);
+                        m.onUserDefinedClaim.Invoke(m.reward);
                                             
                         MonetizrManager.ShowCongratsNotification(null,m);
 
-                        MonetizrManager.Instance.ClaimReward(campaignId);
+                        //MonetizrManager.Instance.ClaimReward(campaignId);
+
+                        //TODO: request tasks again!        
                 }
 
             });

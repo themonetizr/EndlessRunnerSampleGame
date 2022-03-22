@@ -47,7 +47,6 @@ namespace Monetizr.Challenges
             
         }
 
-        //TODO: Fix notification panel!
         private void PrepareNotificationPanel(MissionUIDescription m)
         {
             if (MonetizrManager.Instance.HasChallengesAndActive())
@@ -81,7 +80,7 @@ namespace Monetizr.Challenges
             {
                 var challengeId = MonetizrManager.Instance.GetActiveChallenge();
 
-                banner.sprite = m.brandLogo;
+                banner.sprite = m.brandRewardBanner;
                 logo.sprite = m.brandLogo; 
 
                 title.text = $"Congrats!";

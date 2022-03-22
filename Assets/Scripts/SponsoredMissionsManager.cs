@@ -47,17 +47,17 @@ public class SponsoredMissionsManager : MonoBehaviour
 
     public void InitializeSponsoredMissions()
     {
-        MonetizrManager.RegisterSponsoredMission(defaultRewardIcon, 2, "Dog Poops", 
+        MonetizrManager.RegisterSponsoredMission(defaultRewardIcon, 2, "Enegry Boosters", 
             (int reward) => { PlayerData.instance.ClaimSponsoredMission(reward); } 
             
             );
 
-        MonetizrManager.RegisterSponsoredMission(defaultRewardIcon, 4, "Dog Poops",
+        MonetizrManager.RegisterSponsoredMission(defaultRewardIcon, 4, "Super Coins",
           (int reward) => { PlayerData.instance.ClaimSponsoredMission(reward); }
 
           );
 
-        MonetizrManager.RegisterSponsoredMission(defaultRewardIcon, 8, "Dog Poops",
+        MonetizrManager.RegisterSponsoredMission(defaultRewardIcon, 8, "Magic Crystals",
           (int reward) => { PlayerData.instance.ClaimSponsoredMission(reward); }
 
           );
