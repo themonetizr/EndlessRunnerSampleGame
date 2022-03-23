@@ -7,7 +7,7 @@ using UnityEngine.UI;
 namespace Monetizr.Challenges
 {
 
-    public class SurveyPanel : PanelController
+    public class WebViewPanel : PanelController
     {
         public Button closeButton;
         private UniWebView webView;
@@ -44,9 +44,9 @@ namespace Monetizr.Challenges
 
             //var page = MonetizrManager.Instance.GetAsset<string>(MonetizrManager.Instance.GetActiveChallenge(), AssetsType.SurveyURLString);
 
-            var page = "file://" + MonetizrManager.Instance.GetAsset<string>(MonetizrManager.Instance.GetActiveChallenge(), AssetsType.Html5ZipFilePathString);
+            var page = "file://" + MonetizrManager.Instance.GetAsset<string>(m.campaignId, AssetsType.Html5PathString);
 
-
+            
 
             Debug.Log($"Url to show {page}");
 
@@ -74,6 +74,11 @@ namespace Monetizr.Challenges
         void OnMessageReceived(UniWebView webView, UniWebViewMessage message)
         {
             Debug.Log($"OnMessageReceived: {message.RawMessage} {message.Args.ToString()}");
+
+            if(message.RawMessage.Contains("close"))
+            {
+                OnButtonPress();
+            }
         }
 
         void OnPageStarted(UniWebView webView, string url)
@@ -114,8 +119,8 @@ namespace Monetizr.Challenges
                     Debug.Log("Update: " + webView.Url);
 
                     if (webUrl.Contains("https://www.pollfish.com/lp/withdraw-consent") ||
-                        webUrl.Contains("app.themonetizr.com") ||
-                        webUrl.Contains("uniwebview"))
+                        webUrl.Contains("app.themonetizr.com") /*||
+                        webUrl.Contains("uniwebview")*/)
                     {
                         MonetizrManager.Analytics.TrackEvent("Survey completed");
 

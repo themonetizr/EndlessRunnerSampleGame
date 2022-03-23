@@ -16,13 +16,13 @@ namespace Monetizr.Challenges
         public Image background;
 
         //public List<MissionUIDescription> missionsDescriptions;
-        
+
         private new void Awake()
         {
             base.Awake();
-            
+
         }
-        
+
         internal void UpdateUI()
         {
             Debug.Log("UpdateUI");
@@ -34,7 +34,7 @@ namespace Monetizr.Challenges
                 hasSponsoredChallenges = true;
                 AddSponsoredChallenges();
             }
-                        
+
             AddUserdefineChallenges();
         }
 
@@ -44,7 +44,7 @@ namespace Monetizr.Challenges
 
             //this.missionsDescriptions = missionsDescriptions;
 
-             
+
 
             MonetizrManager.Analytics.TrackEvent("Reward center opened");
 
@@ -69,7 +69,7 @@ namespace Monetizr.Challenges
 
                 Debug.Log(m.missionTitle);
 
-                item.UpdateWithDescription(this,m);
+                item.UpdateWithDescription(this, m);
             }
         }
 
@@ -93,11 +93,11 @@ namespace Monetizr.Challenges
 
                 var ch = challenges[curChallenge];
 
-                if(ch == activeChallenge)
+                if (ch == activeChallenge)
                 {
                     var color = MonetizrManager.Instance.GetAsset<Color>(ch, AssetsType.HeaderTextColor);
 
-                    if(color != default(Color))
+                    if (color != default(Color))
                         headerText.color = color;
 
 
@@ -107,9 +107,9 @@ namespace Monetizr.Challenges
                         background.sprite = bgSprite;
                 }
 
-                
 
-                AddSponsoredChallenge(m,ch);
+
+                AddSponsoredChallenge(m, ch);
 
                 curChallenge++;
 
@@ -135,7 +135,7 @@ namespace Monetizr.Challenges
 
 
             //show video, then claim rewards if it's completed
-            m.onClaimButtonPress = () => { OnVideoPlayPress(campaignId,m); };
+            m.onClaimButtonPress = () => { OnVideoPlayPress(campaignId, m); };
 
             var go = GameObject.Instantiate<GameObject>(itemUI.gameObject, contentRoot);
 
@@ -149,7 +149,7 @@ namespace Monetizr.Challenges
             MonetizrManager.Analytics.BeginShowAdAsset(AdType.IntroBanner, campaignId);
         }
 
-       
+
 
         private void CleanListView()
         {
@@ -175,31 +175,42 @@ namespace Monetizr.Challenges
 
             if (!missionDescription.isSponsored)
                 UpdateUI();
-            
+
+        }
+
+        public void OnClaimRewardComplete(MissionUIDescription m, bool isSkipped)
+        {
+            MonetizrManager.ShowRewardCenter();
+
+            //if (!isSkipped)
+            {
+                m.onUserDefinedClaim.Invoke(m.reward);
+
+                MonetizrManager.ShowCongratsNotification(null, m);
+
+                //MonetizrManager.Instance.ClaimReward(campaignId);
+
+                //TODO: request tasks again!        
+            }
         }
 
         public void OnVideoPlayPress(string campaignId, MissionUIDescription m)
         {
             MonetizrManager.Analytics.TrackEvent("Claim button press");
 
-            var videoPath = MonetizrManager.Instance.GetAsset<string>(campaignId, AssetsType.VideoFilePathString);
+            var htmlPath = MonetizrManager.Instance.GetAsset<string>(campaignId, AssetsType.Html5PathString);
 
-            MonetizrManager._PlayVideo(videoPath,(bool isSkipped) => {
+            if (htmlPath != null)
+            {
+                m.campaignId = campaignId;
+                MonetizrManager.ShowSurvey(() => { OnClaimRewardComplete(m, false); }, m);
+            }
+            else
+            {
+                var videoPath = MonetizrManager.Instance.GetAsset<string>(campaignId, AssetsType.VideoFilePathString);
 
-                MonetizrManager.ShowRewardCenter();
-                        
-                //if (!isSkipped)
-                {
-                        m.onUserDefinedClaim.Invoke(m.reward);
-                                            
-                        MonetizrManager.ShowCongratsNotification(null,m);
-
-                        //MonetizrManager.Instance.ClaimReward(campaignId);
-
-                        //TODO: request tasks again!        
-                }
-
-            });
+                MonetizrManager._PlayVideo(videoPath, (bool isSkipped) => { OnClaimRewardComplete(m, isSkipped); });
+            }
         }
 
         internal override void FinalizePanel(PanelId id)

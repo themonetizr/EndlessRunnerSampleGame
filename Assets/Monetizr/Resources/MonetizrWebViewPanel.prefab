@@ -222,7 +222,7 @@ GameObject:
   - component: {fileID: 8476186599705654310}
   - component: {fileID: 8476186599705654305}
   m_Layer: 5
-  m_Name: MonetizrSurveyPanel
+  m_Name: MonetizrWebViewPanel
   m_TagString: Untagged
   m_Icon: {fileID: 0}
   m_NavMeshLayer: 0

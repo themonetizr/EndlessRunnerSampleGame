@@ -51,7 +51,7 @@ namespace Monetizr.Challenges
         BrandTitleString, //text
         TinyTeaserTexture, //text
         //Html5ZipURLString,
-        Html5ZipFilePathString,
+        Html5PathString,
         TiledBackgroundSprite,
         CampaignHeaderTextColor,
         CampaignTextColor,
@@ -78,7 +78,7 @@ namespace Monetizr.Challenges
             { AssetsType.BrandTitleString, typeof(String) },
             { AssetsType.TinyTeaserTexture, typeof(Texture2D) },
             //{ AssetsType.Html5ZipURLString, typeof(String) },
-            { AssetsType.Html5ZipFilePathString, typeof(String) },
+            { AssetsType.Html5PathString, typeof(String) },
             { AssetsType.HeaderTextColor, typeof(Color) },
             { AssetsType.CampaignTextColor, typeof(Color) },
             { AssetsType.CampaignHeaderTextColor, typeof(Color) },
@@ -344,14 +344,14 @@ namespace Monetizr.Challenges
              instance.uiController.HidePanel(PanelId.RewardCenter);
         }
 
-        internal static void ShowSurvey(Action onComplete)
+        internal static void ShowSurvey(Action onComplete, MissionUIDescription m = null)
         {
             Assert.IsNotNull(instance, MonetizrErrors.msg[ErrorType.NotinitializedSDK]);
 
             if (!instance.isActive)
                 return;
 
-            instance.uiController.ShowPanelFromPrefab("MonetizrSurveyPanel", PanelId.Survey, onComplete);
+            instance.uiController.ShowPanelFromPrefab("MonetizrWebViewPanel", PanelId.Survey, onComplete, false, m);
         }
 
         public static void ShowTinyMenuTeaser(Action onTap)
@@ -581,7 +581,7 @@ namespace Monetizr.Challenges
                             break;
 
                         case "html":
-                            await PreloadAssetToCache(ech, asset, AssetsType.Html5ZipFilePathString,false);
+                            await PreloadAssetToCache(ech, asset, AssetsType.Html5PathString,false);
 
                             break;
 

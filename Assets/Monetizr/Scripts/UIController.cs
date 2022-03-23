@@ -19,6 +19,7 @@ namespace Monetizr.Challenges
 
     public class MissionUIDescription
     {
+        public string campaignId;
         public int sponsoredId;
         public bool isSponsored;
         public string brandName;
