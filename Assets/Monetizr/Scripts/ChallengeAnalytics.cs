@@ -102,7 +102,7 @@ namespace Monetizr.Challenges
 
             //Assert.IsFalse(visibleAdAsset.ContainsKey(type), MonetizrErrors.msg[ErrorType.AdAssetStillShowing]);
 
-            var ch = challengeId == null ? MonetizrManager.Instance.GetActiveChallenge() : challengeId;
+            var ch = (challengeId == null) ? MonetizrManager.Instance.GetActiveChallenge() : challengeId;
 
             var adAsset = new VisibleAdAsset() {
                 adType = type,
