@@ -20,7 +20,7 @@ namespace Monetizr.Challenges
 
         //private Action onComplete;
 
-        internal override void PreparePanel(PanelId id, Action onComplete, MissionUIDescription m)
+        internal override void PreparePanel(PanelId id, Action<bool> onComplete, MissionUIDescription m)
         {
             this.onComplete = onComplete;
             this.panelId = id;
@@ -51,7 +51,7 @@ namespace Monetizr.Challenges
         {
             if (MonetizrManager.Instance.HasChallengesAndActive())
             {
-                var challengeId = MonetizrManager.Instance.GetActiveChallenge();
+                var challengeId = m.campaignId;//MonetizrManager.Instance.GetActiveChallenge();
 
                 banner.sprite = m.brandBanner;
                 logo.sprite = m.brandLogo;
@@ -69,7 +69,7 @@ namespace Monetizr.Challenges
 
                 closeButton.onClick.AddListener(OnButtonPress);
 
-                MonetizrManager.Analytics.TrackEvent("Notification shown");
+                MonetizrManager.Analytics.TrackEvent("Notification shown",m);
                 MonetizrManager.Analytics.BeginShowAdAsset(AdType.IntroBanner);
             }
         }
@@ -78,7 +78,7 @@ namespace Monetizr.Challenges
         {
             if (MonetizrManager.Instance.HasChallengesAndActive())
             {
-                var challengeId = MonetizrManager.Instance.GetActiveChallenge();
+                var challengeId = m.campaignId;//MonetizrManager.Instance.GetActiveChallenge();
 
                 banner.sprite = m.brandRewardBanner;
                 logo.sprite = m.brandLogo; 
@@ -94,7 +94,7 @@ namespace Monetizr.Challenges
 
                 closeButton.onClick.AddListener(OnButtonPress);
 
-                MonetizrManager.Analytics.TrackEvent("Reward notification shown");
+                MonetizrManager.Analytics.TrackEvent("Reward notification shown",m);
                 MonetizrManager.Analytics.BeginShowAdAsset(AdType.RewardBanner);
             }
         }

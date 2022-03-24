@@ -38,7 +38,7 @@ namespace Monetizr.Challenges
             AddUserdefineChallenges();
         }
 
-        internal override void PreparePanel(PanelId id, Action onComplete, MissionUIDescription m)
+        internal override void PreparePanel(PanelId id, Action<bool> onComplete, MissionUIDescription m)
         {
             hasSponsoredChallenges = false;
 
@@ -46,7 +46,7 @@ namespace Monetizr.Challenges
 
 
 
-            MonetizrManager.Analytics.TrackEvent("Reward center opened");
+            MonetizrManager.Analytics.TrackEvent("Reward center opened",null);
 
             MonetizrManager.HideTinyMenuTeaser();
 
@@ -123,6 +123,7 @@ namespace Monetizr.Challenges
         {
             string brandName = MonetizrManager.Instance.GetAsset<string>(campaignId, AssetsType.BrandTitleString);
 
+            m.campaignId = campaignId;
             m.brandBanner = MonetizrManager.Instance.GetAsset<Sprite>(campaignId, AssetsType.BrandBannerSprite);
             m.missionTitle = $"{brandName} video";
             m.missionDescription = $"Watch video by {brandName} and get {m.reward} {m.rewardTitle}";
@@ -196,20 +197,21 @@ namespace Monetizr.Challenges
 
         public void OnVideoPlayPress(string campaignId, MissionUIDescription m)
         {
-            MonetizrManager.Analytics.TrackEvent("Claim button press");
+            MonetizrManager.Analytics.TrackEvent("Claim button press",m);
 
             var htmlPath = MonetizrManager.Instance.GetAsset<string>(campaignId, AssetsType.Html5PathString);
 
             if (htmlPath != null)
             {
-                m.campaignId = campaignId;
-                MonetizrManager.ShowSurvey(() => { OnClaimRewardComplete(m, false); }, m);
+                MonetizrManager.ShowHTML5((bool isSkipped) => { OnClaimRewardComplete(m, false); }, m);
             }
             else
             {
                 var videoPath = MonetizrManager.Instance.GetAsset<string>(campaignId, AssetsType.VideoFilePathString);
 
-                MonetizrManager._PlayVideo(videoPath, (bool isSkipped) => { OnClaimRewardComplete(m, isSkipped); });
+                //MonetizrManager._PlayVideo(videoPath, (bool isSkipped) => { OnClaimRewardComplete(m, isSkipped); });
+
+                MonetizrManager.ShowWebVideo((bool isSkipped) => { OnClaimRewardComplete(m, isSkipped); }, m);
             }
         }
 

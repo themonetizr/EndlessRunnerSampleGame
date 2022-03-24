@@ -8,20 +8,18 @@ namespace Monetizr.Challenges
 {
 
     public class WebViewPanel : PanelController
-    {
+    {   
+        
         public Button closeButton;
         private UniWebView webView;
         private string webUrl;
+        private MissionUIDescription currentMissionDesc;
+        private string eventsPrefix;
 
         //private Action onComplete;
 
-        internal override void PreparePanel(PanelId id, Action onComplete, MissionUIDescription m)
+        internal void PrepareWebViewComponent()
         {
-            MonetizrManager.Analytics.TrackEvent("Survey started");
-
-            this.onComplete = onComplete;
-            this.panelId = id;
-
             webView = gameObject.AddComponent<UniWebView>();
 
             var w = Screen.width;
@@ -41,35 +39,66 @@ namespace Monetizr.Challenges
 
             webView.Frame = new Rect(x, y, w, h);
 
-
-            //var page = MonetizrManager.Instance.GetAsset<string>(MonetizrManager.Instance.GetActiveChallenge(), AssetsType.SurveyURLString);
-
-            var page = "file://" + MonetizrManager.Instance.GetAsset<string>(m.campaignId, AssetsType.Html5PathString);
-
-            
-
-            Debug.Log($"Url to show {page}");
-
-            webUrl = page;
-
-            //Debug.Log(page);
-
             webView.OnMessageReceived += OnMessageReceived;
-
             webView.OnPageStarted += OnPageStarted;
-
             webView.OnPageFinished += OnPageFinished;
-
             webView.OnPageErrorReceived += OnPageErrorReceived;
+        }
+
+        internal void PrepareSurveyPanel()
+        {
+            MonetizrManager.Analytics.TrackEvent("Survey started", currentMissionDesc);
+            webUrl = MonetizrManager.Instance.GetAsset<string>(currentMissionDesc.campaignId, AssetsType.SurveyURLString);
+            eventsPrefix = "Survey";
+
+            webView.Load(webUrl);
+
+        }
+
+        private void PrepareHtml5Panel()
+        {
+            webUrl = "file://" + MonetizrManager.Instance.GetAsset<string>(currentMissionDesc.campaignId, AssetsType.Html5PathString);
+            eventsPrefix = "Html5";
+
+            webView.Load(webUrl);
+        }
+
+        private void PrepareVideoPanel()
+        {
+            UniWebView.SetAllowAutoPlay(true);
+
+            webUrl = "file://" + MonetizrManager.Instance.GetAsset<string>(currentMissionDesc.campaignId, AssetsType.VideoFilePathString);
+
+            var page = $"<video autoplay><source src = \"{webUrl}\" type = \"video/mp4\"/></video>";
+
+            webView.LoadHTMLString(page,"http://test.com");
+
+            eventsPrefix = "WebVideo";
+        }
+
+        internal override void PreparePanel(PanelId id, Action<bool> onComplete, MissionUIDescription m)
+        {
+            this.onComplete = onComplete;
+            panelId = id;
+            currentMissionDesc = m;
+
+            PrepareWebViewComponent();
+
+
+            switch (id)
+            {
+                case PanelId.SurveyWebView: PrepareSurveyPanel(); break;
+                case PanelId.VideoWebView: PrepareVideoPanel(); break;
+                case PanelId.Html5WebView: PrepareHtml5Panel(); break;
+            }
+
 
             // Load a URL.
-            webView.Load(page);
-
-            //webView.LoadHTMLString("<p>Hello World</p>", "https://domain.com");
-
-            // Show it.
+            Debug.Log($"Url to show {webUrl}");
             webView.Show();
         }
+
+       
 
         void OnMessageReceived(UniWebView webView, UniWebViewMessage message)
         {
@@ -77,7 +106,9 @@ namespace Monetizr.Challenges
 
             if(message.RawMessage.Contains("close"))
             {
-                OnButtonPress();
+                OnCompleteEvent();
+
+                ClosePanel();
             }
         }
 
@@ -92,9 +123,9 @@ namespace Monetizr.Challenges
 
             if (statusCode >= 300)
             {
-                MonetizrManager.Analytics.TrackEvent("Survey error");
+                MonetizrManager.Analytics.TrackEvent($"{eventsPrefix} error", currentMissionDesc);
 
-                OnButtonPress();
+                ClosePanel();
             }
         }
 
@@ -102,14 +133,14 @@ namespace Monetizr.Challenges
         {
             Debug.Log($"OnPageErrorReceived: {url} code: {errorCode}");
 
-            MonetizrManager.Analytics.TrackEvent("Survey error");
+            MonetizrManager.Analytics.TrackEvent($"{eventsPrefix} error", currentMissionDesc);
 
-            OnButtonPress();
+            ClosePanel();
         }
 
         private void Update()
         {
-            if (webView != null)
+            if (webView != null && panelId == PanelId.SurveyWebView)
             {
                 var currentUrl = webView.Url;
 
@@ -122,7 +153,7 @@ namespace Monetizr.Challenges
                         webUrl.Contains("app.themonetizr.com") /*||
                         webUrl.Contains("uniwebview")*/)
                     {
-                        MonetizrManager.Analytics.TrackEvent("Survey completed");
+                        OnCompleteEvent();
 
                         OnButtonPress();
 
@@ -134,6 +165,22 @@ namespace Monetizr.Challenges
             }
         }
 
+
+        private void OnCompleteEvent()
+        {
+            MonetizrManager.Analytics.TrackEvent($"{eventsPrefix} completed",currentMissionDesc);
+            isSkipped = false; 
+
+        }
+
+        private void ClosePanel()
+        {
+            Destroy(webView);
+            webView = null;
+
+            SetActive(false);
+        }
+
         private new void Awake()
         {
             base.Awake();
@@ -143,12 +190,11 @@ namespace Monetizr.Challenges
 
         public void OnButtonPress()
         {
-            MonetizrManager.Analytics.TrackEvent("Survey skipped");
+            isSkipped = true;
+            
+            MonetizrManager.Analytics.TrackEvent($"{eventsPrefix} skipped", currentMissionDesc);
 
-            Destroy(webView);
-            webView = null;
-
-            SetActive(false);
+            ClosePanel();
         }
 
         internal override void FinalizePanel(PanelId id)

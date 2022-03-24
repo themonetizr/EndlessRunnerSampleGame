@@ -13,8 +13,11 @@ namespace Monetizr.Challenges
         StartNotification,
         RewardCenter,
         CongratsNotification,
-        Survey,
-        TinyMenuTeaser
+        SurveyWebView,
+        VideoWebView,
+        Html5WebView,
+        TinyMenuTeaser,
+
     }
 
     public class MissionUIDescription
@@ -172,7 +175,7 @@ namespace Monetizr.Challenges
                 previousPanel = id;
         }*/
 
-        public void ShowPanelFromPrefab(String prefab, PanelId id = PanelId.Unknown, Action onComplete = null, bool rememberPrevious = false, MissionUIDescription m = null)
+        public void ShowPanelFromPrefab(String prefab, PanelId id = PanelId.Unknown, Action<bool> onComplete = null, bool rememberPrevious = false, MissionUIDescription m = null)
         {
             Debug.Log("ShowPanel: " + id);
 
@@ -181,9 +184,9 @@ namespace Monetizr.Challenges
 
             var panel = GameObject.Instantiate<GameObject>(Resources.Load(prefab) as GameObject, mainCanvas.transform);
 
-            Action complete = () =>
+            Action<bool> complete = (bool isSkipped) =>
                 {
-                    onComplete?.Invoke();
+                    onComplete?.Invoke(isSkipped);
                     GameObject.Destroy(panel);
 
                     panels.Remove(id);

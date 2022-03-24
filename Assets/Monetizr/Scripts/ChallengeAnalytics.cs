@@ -102,7 +102,7 @@ namespace Monetizr.Challenges
 
             //Assert.IsFalse(visibleAdAsset.ContainsKey(type), MonetizrErrors.msg[ErrorType.AdAssetStillShowing]);
 
-            var ch = MonetizrManager.Instance.GetActiveChallenge();
+            var ch = challengeId == null ? MonetizrManager.Instance.GetActiveChallenge() : challengeId;
 
             var adAsset = new VisibleAdAsset() {
                 adType = type,
@@ -203,7 +203,7 @@ namespace Monetizr.Challenges
             return SystemInfo.deviceUniqueIdentifier;
         }
 
-        public void TrackEvent(string name)
+        public void TrackEvent(string name, MissionUIDescription currentMissionDesc)
         {
             var eventName = $"[UNITY_SDK] {name}";
 
@@ -212,9 +212,9 @@ namespace Monetizr.Challenges
             string app_id = "none";
             string brand_name = "none";
                 
-            if (MonetizrManager.Instance.HasChallengesAndActive())
+            if (currentMissionDesc != null)
             {
-                var ch = MonetizrManager.Instance.GetActiveChallenge();
+                var ch = currentMissionDesc.campaignId;
                 brand_id = MonetizrManager.Instance.GetChallenge(ch).brand_id;
                 app_id = MonetizrManager.Instance.GetChallenge(ch).application_id;
                 brand_name = MonetizrManager.Instance.GetAsset<string>(ch, AssetsType.BrandTitleString);

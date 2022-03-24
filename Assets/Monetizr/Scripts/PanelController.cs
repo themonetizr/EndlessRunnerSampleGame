@@ -18,13 +18,14 @@ namespace Monetizr.Challenges
 
         private Animator animator;
         private CanvasGroup canvasGroup;
-        protected Action onComplete;
+        protected Action<bool> onComplete;
         protected PanelId panelId;
         private State state;
         public UIController uiController;
         public PanelId nextPanelId = PanelId.Unknown;
+        protected bool isSkipped = false;
 
-        internal abstract void PreparePanel(PanelId id, Action onComplete, MissionUIDescription m);
+        internal abstract void PreparePanel(PanelId id, Action<bool> onComplete, MissionUIDescription m);
         internal abstract void FinalizePanel(PanelId id);
 
         protected void Awake()
@@ -116,7 +117,7 @@ namespace Monetizr.Challenges
 
             gameObject.SetActive(false);
             
-            onComplete?.Invoke();
+            onComplete?.Invoke(isSkipped);
         }
     }
 

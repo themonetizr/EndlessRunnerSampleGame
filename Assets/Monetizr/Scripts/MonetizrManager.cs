@@ -220,6 +220,11 @@ namespace Monetizr.Challenges
         /// </summary>
         private void Initalize(string apiKey, Action<bool> onRequestComplete, Action<bool> soundSwitch)
         {
+            if (!UniWebView.IsWebViewSupported)
+            {
+                Debug.Log("WebView isn't supported on current platform!");
+            }
+
             this.soundSwitch = soundSwitch;
 
             _challengesClient = new ChallengesClient(apiKey);
@@ -246,13 +251,13 @@ namespace Monetizr.Challenges
             uiController = new UIController();
         }
 
-        internal static void ShowStartupNotification(Action onComplete)
+        internal static void ShowStartupNotification(Action<bool> onComplete)
         {
             Assert.IsNotNull(instance, MonetizrErrors.msg[ErrorType.NotinitializedSDK]);
 
             if (!instance.HasChallengesAndActive())
             {
-                onComplete?.Invoke();
+                onComplete?.Invoke(false);
                 return;
             }
 
@@ -265,6 +270,7 @@ namespace Monetizr.Challenges
 
             sponsoredMsns = new MissionUIDescription()
             {
+                campaignId = ch,
                 brandBanner = MonetizrManager.Instance.GetAsset<Sprite>(ch, AssetsType.BrandBannerSprite),
                 brandLogo = MonetizrManager.Instance.GetAsset<Sprite>(ch, AssetsType.BrandLogoSprite),
                 brandName = MonetizrManager.Instance.GetAsset<string>(ch, AssetsType.BrandTitleString),
@@ -279,7 +285,7 @@ namespace Monetizr.Challenges
                 sponsoredMsns);
         }
 
-        internal static void ShowCongratsNotification(Action onComplete, MissionUIDescription m)
+        internal static void ShowCongratsNotification(Action<bool> onComplete, MissionUIDescription m)
         {
             Assert.IsNotNull(instance, MonetizrErrors.msg[ErrorType.NotinitializedSDK]);
 
@@ -332,7 +338,7 @@ namespace Monetizr.Challenges
             instance.uiController.CleanUserDefinedMissions();
         }
 
-        internal static void ShowRewardCenter(Action onComplete = null)
+        internal static void ShowRewardCenter(Action<bool> onComplete = null)
         {
             Assert.IsNotNull(instance, MonetizrErrors.msg[ErrorType.NotinitializedSDK]);
             
@@ -344,15 +350,33 @@ namespace Monetizr.Challenges
              instance.uiController.HidePanel(PanelId.RewardCenter);
         }
 
-        internal static void ShowSurvey(Action onComplete, MissionUIDescription m = null)
+        internal static void _ShowWebView(Action<bool> onComplete, PanelId id, MissionUIDescription m = null)
         {
             Assert.IsNotNull(instance, MonetizrErrors.msg[ErrorType.NotinitializedSDK]);
 
             if (!instance.isActive)
                 return;
 
-            instance.uiController.ShowPanelFromPrefab("MonetizrWebViewPanel", PanelId.Survey, onComplete, false, m);
+            instance.uiController.ShowPanelFromPrefab("MonetizrWebViewPanel", id, onComplete, false, m);
         }
+
+
+        internal static void ShowSurvey(Action<bool> onComplete, MissionUIDescription m = null)
+        {
+            _ShowWebView(onComplete, PanelId.SurveyWebView, m);
+        }
+
+        internal static void ShowHTML5(Action<bool> onComplete, MissionUIDescription m = null)
+        {
+            _ShowWebView(onComplete, PanelId.Html5WebView, m);
+        }
+
+        internal static void ShowWebVideo(Action<bool> onComplete, MissionUIDescription m = null)
+        {
+            _ShowWebView(onComplete, PanelId.VideoWebView, m);
+        }
+
+
 
         public static void ShowTinyMenuTeaser(Action onTap)
         {

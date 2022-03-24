@@ -104,7 +104,7 @@ public class StartButton : MonoBehaviour
     {
         
 
-        MonetizrManager.ShowStartupNotification(() =>
+        MonetizrManager.ShowStartupNotification((bool _) =>
         {
             if (PlayerData.instance.ftueLevel == 0)
             {
