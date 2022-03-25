@@ -12,6 +12,7 @@ using UnityEngine.UI;
 using System.IO;
 using UnityEngine.Assertions;
 using System.IO.Compression;
+using System.Text;
 
 namespace Monetizr.Campaigns
 {
@@ -516,7 +517,7 @@ namespace Monetizr.Campaigns
                     if (!Directory.Exists(zipFolder))
                         Directory.CreateDirectory(zipFolder);
 
-                    ZipFile.ExtractToDirectory(fpath, zipFolder, true);
+                    ZipFile.ExtractToDirectory(fpath, zipFolder, Encoding.UTF8, true);
                     
                     File.Delete(fpath);
                 }
