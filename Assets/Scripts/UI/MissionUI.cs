@@ -71,9 +71,9 @@ public class MissionUI : MonoBehaviour
         //gameObject.SetActive(true);
         //StartCoroutine(Open());
 
-        UpdateGameUI();
+        MonetizrManager.ShowRewardCenter(()=>UpdateGameUI());
 
-        MonetizrManager.ShowRewardCenter();
+        
     }
 
     public void Claim(MissionBase m)

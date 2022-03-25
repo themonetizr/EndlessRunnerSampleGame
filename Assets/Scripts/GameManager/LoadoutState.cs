@@ -77,7 +77,7 @@ public class LoadoutState : AState
         //missionPopup.InitializeSponsoredMissions();
 
         if(PlayerData.instance.tutorialDone)
-            MonetizrManager.ShowTinyMenuTeaser(()=> { missionPopup.CallOpen(); });
+            MonetizrManager.ShowTinyMenuTeaser(()=> { missionPopup.UpdateGameUI(); });
 
         tutorialBlocker.SetActive(!PlayerData.instance.tutorialDone);
         tutorialPrompt.SetActive(false);

@@ -339,10 +339,12 @@ namespace Monetizr.Campaigns
             instance.uiController.CleanUserDefinedMissions();
         }
 
-        public static void ShowRewardCenter(Action<bool> onComplete = null)
+        public static void ShowRewardCenter(Action UpdateGameUI, Action<bool> onComplete = null)
         {
             Assert.IsNotNull(instance, MonetizrErrors.msg[ErrorType.NotinitializedSDK]);
-            
+
+            UpdateGameUI?.Invoke();
+
             instance.uiController.ShowPanelFromPrefab("MonetizrRewardCenterPanel", PanelId.RewardCenter, onComplete, true);
         }
 
@@ -379,14 +381,14 @@ namespace Monetizr.Campaigns
 
 
 
-        public static void ShowTinyMenuTeaser(Action onTap)
+        public static void ShowTinyMenuTeaser(Action UpdateGameUI = null)
         {
             Assert.IsNotNull(instance, MonetizrErrors.msg[ErrorType.NotinitializedSDK]);
 
             if (!instance.HasChallengesAndActive())
                 return;
 
-            instance.uiController.ShowTinyMenuTeaser(onTap);
+            instance.uiController.ShowTinyMenuTeaser(UpdateGameUI);
         }
 
         public static void HideTinyMenuTeaser()

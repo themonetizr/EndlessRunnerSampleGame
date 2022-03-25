@@ -181,7 +181,7 @@ namespace Monetizr.Campaigns
 
         public void OnClaimRewardComplete(MissionUIDescription m, bool isSkipped)
         {
-            MonetizrManager.ShowRewardCenter();
+            MonetizrManager.ShowRewardCenter(null);
 
             //if (!isSkipped)
             {

@@ -207,7 +207,7 @@ namespace Monetizr.Campaigns
             panels.Add(id, ctrlPanel);
         }
 
-        public void ShowTinyMenuTeaser(Action onTap)
+        public void ShowTinyMenuTeaser(Action UpdateGameUI)
         {
              MonetizrMenuTeaser teaser;
 
@@ -216,7 +216,7 @@ namespace Monetizr.Campaigns
                 var obj = GameObject.Instantiate<GameObject>(Resources.Load("MonetizrMenuTeaser") as GameObject, mainCanvas.transform);
                 teaser = obj.GetComponent<MonetizrMenuTeaser>();
                 panels.Add(PanelId.TinyMenuTeaser, teaser);
-                teaser.button.onClick.AddListener(() => { onTap?.Invoke(); });
+                teaser.button.onClick.AddListener(() => { MonetizrManager.ShowRewardCenter(UpdateGameUI); });
             }
             else
             {
