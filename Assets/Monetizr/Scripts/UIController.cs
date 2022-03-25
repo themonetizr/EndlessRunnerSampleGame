@@ -4,10 +4,10 @@ using System.Collections.Generic;
 using UnityEngine;
 using UnityEngine.Assertions;
 
-namespace Monetizr.Challenges
+namespace Monetizr.Campaigns
 {
 
-    public enum PanelId
+    internal enum PanelId
     {
         Unknown = -1,
         StartNotification,
@@ -20,7 +20,7 @@ namespace Monetizr.Challenges
 
     }
 
-    public class MissionUIDescription
+    internal class MissionUIDescription
     {
         public string campaignId;
         public int sponsoredId;
@@ -42,7 +42,7 @@ namespace Monetizr.Challenges
         internal string rewardTitle;
     }
 
-    public class UIController
+    internal class UIController
     {
         public List<MissionUIDescription> missionsDescriptions = new List<MissionUIDescription>();
 
@@ -207,7 +207,7 @@ namespace Monetizr.Challenges
             panels.Add(id, ctrlPanel);
         }
 
-        public void ShowTinyMenuTeaser(Action onTap)
+        public void ShowTinyMenuTeaser(Vector2 screenPos, Action UpdateGameUI)
         {
              MonetizrMenuTeaser teaser;
 
@@ -216,7 +216,12 @@ namespace Monetizr.Challenges
                 var obj = GameObject.Instantiate<GameObject>(Resources.Load("MonetizrMenuTeaser") as GameObject, mainCanvas.transform);
                 teaser = obj.GetComponent<MonetizrMenuTeaser>();
                 panels.Add(PanelId.TinyMenuTeaser, teaser);
-                teaser.button.onClick.AddListener(() => { onTap?.Invoke(); });
+                teaser.button.onClick.AddListener(() => { MonetizrManager.ShowRewardCenter(UpdateGameUI); });
+
+                if (screenPos != null)
+                {
+                    teaser.rectTransform.anchoredPosition = screenPos;
+                }
             }
             else
             {

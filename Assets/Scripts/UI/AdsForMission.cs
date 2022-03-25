@@ -111,6 +111,6 @@ public class AdsForMission : MonoBehaviour
         PlayerData.instance.Save();
         //StartCoroutine(missionUI.Open());
 
-        missionUI.CallOpen();
+        //missionUI.CallOpen();
     }
 }

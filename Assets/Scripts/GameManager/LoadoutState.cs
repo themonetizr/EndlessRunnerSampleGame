@@ -4,7 +4,7 @@ using System.Collections;
 using System.Collections.Generic;
 using UnityEngine.AddressableAssets;
 using UnityEngine.ResourceManagement.AsyncOperations;
-using Monetizr.Challenges;
+using Monetizr.Campaigns;
 
 #if UNITY_ANALYTICS
 using UnityEngine.Analytics;
@@ -77,7 +77,7 @@ public class LoadoutState : AState
         //missionPopup.InitializeSponsoredMissions();
 
         if(PlayerData.instance.tutorialDone)
-            MonetizrManager.ShowTinyMenuTeaser(()=> { missionPopup.CallOpen(); });
+            MonetizrManager.ShowTinyMenuTeaser(()=> { missionPopup.UpdateGameUI(); });
 
         tutorialBlocker.SetActive(!PlayerData.instance.tutorialDone);
         tutorialPrompt.SetActive(false);

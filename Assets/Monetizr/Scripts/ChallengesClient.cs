@@ -6,9 +6,9 @@ using System.Text;
 using System.Threading.Tasks;
 using UnityEngine;
 
-namespace Monetizr.Challenges
+namespace Monetizr.Campaigns
 {
-    public class ChallengesClient
+    internal class ChallengesClient
     {
         //public PlayerInfo playerInfo { get; set; }
 
@@ -56,7 +56,7 @@ namespace Monetizr.Challenges
 
             var challengesString = await response.Content.ReadAsStringAsync();
 
-            Debug.Log(challengesString);
+            //Debug.Log(challengesString);
 
             if (response.IsSuccessStatusCode)
             {

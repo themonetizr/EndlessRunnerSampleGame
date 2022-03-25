@@ -1,6 +1,6 @@
 ﻿using System;
 using System.Collections;
-using Monetizr.Challenges;
+using Monetizr.Campaigns;
 using UnityEngine;
 using UnityEngine.AddressableAssets;
 using UnityEngine.ResourceManagement.AsyncOperations;
@@ -71,9 +71,9 @@ public class MissionUI : MonoBehaviour
         //gameObject.SetActive(true);
         //StartCoroutine(Open());
 
-        UpdateGameUI();
+        MonetizrManager.ShowRewardCenter(()=>UpdateGameUI());
 
-        MonetizrManager.ShowRewardCenter();
+        
     }
 
     public void Claim(MissionBase m)

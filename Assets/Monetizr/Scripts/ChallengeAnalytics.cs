@@ -12,9 +12,9 @@ using UnityEngine.Assertions;
     using Facebook.Unity;   
 #endif
 
-namespace Monetizr.Challenges
+namespace Monetizr.Campaigns
 {
-    public enum AdType
+    internal enum AdType
     {
         IntroBanner,
         BrandLogo,
@@ -25,7 +25,7 @@ namespace Monetizr.Challenges
 
     }
 
-    public class VisibleAdAsset
+    internal class VisibleAdAsset
     {
         public AdType adType;
         public string challengeId;
@@ -33,7 +33,7 @@ namespace Monetizr.Challenges
 
     }
 
-    public class MonetizrAnalytics
+    internal class MonetizrAnalytics
     {
         public static readonly Dictionary<AdType, string> adTypeNames = new Dictionary<AdType, string>()
         {
@@ -70,6 +70,7 @@ namespace Monetizr.Challenges
 #endif
 
             Mixpanel.Init();
+            Mixpanel.SetToken("d4de97058730720b3b8080881c6ba2e0");
 
 #if USING_FACEBOOK
             if (FB.IsInitialized)

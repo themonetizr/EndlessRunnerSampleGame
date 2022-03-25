@@ -6,10 +6,10 @@ using System.Text;
 using UnityEngine;
 using UnityEngine.UI;
 
-namespace Monetizr.Challenges
+namespace Monetizr.Campaigns
 {
 
-    public class WebViewPanel : PanelController
+    internal class WebViewPanel : PanelController
     {   
         
         public Button closeButton;

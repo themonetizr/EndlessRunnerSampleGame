@@ -3,18 +3,18 @@ using System.Collections.Generic;
 using UnityEngine;
 using UnityEngine.UI;
 
-namespace Monetizr.Challenges
+namespace Monetizr.Campaigns
 {
-    public enum ButtonType
+    internal enum ButtonType
     {
 
     }
 
     [RequireComponent(typeof(Button))]
-    public class ButtonController : MonoBehaviour
+    internal class ButtonController : MonoBehaviour
     {
-        public RewardCenterPanel clickReceiver;
-        public MissionUIDescription missionDescription;
+        internal RewardCenterPanel clickReceiver;
+        internal MissionUIDescription missionDescription;
         public ButtonType buttonType;
         Button button;
         public int id = 0;

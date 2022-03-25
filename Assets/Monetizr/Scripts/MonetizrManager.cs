@@ -3,7 +3,7 @@
 using System.Collections;
 using System.Collections.Generic;
 using UnityEngine;
-using Monetizr.Challenges;
+using Monetizr.Campaigns;
 using UnityEngine.Networking;
 using System;
 using System.Runtime.CompilerServices;
@@ -12,10 +12,11 @@ using UnityEngine.UI;
 using System.IO;
 using UnityEngine.Assertions;
 using System.IO.Compression;
+using System.Text;
 
-namespace Monetizr.Challenges
+namespace Monetizr.Campaigns
 {
-    public enum ErrorType
+    internal enum ErrorType
     {
         NotinitializedSDK,
         SimultaneusAdAssets,
@@ -23,7 +24,7 @@ namespace Monetizr.Challenges
         ConnectionError,
     };
 
-    public static class MonetizrErrors
+    internal static class MonetizrErrors
     {
         public static readonly Dictionary<ErrorType, string> msg = new Dictionary<ErrorType, string>()
         {
@@ -64,7 +65,7 @@ namespace Monetizr.Challenges
     /// ChallengeExtention for easier access to Challenge assets
     /// TODO: merge with Challenge
     /// </summary>
-    public class ChallengeExtention
+    internal class ChallengeExtention
     {
         private static readonly Dictionary<AssetsType, System.Type> AssetsSystemTypes = new Dictionary<AssetsType, System.Type>()
         {
@@ -120,7 +121,7 @@ namespace Monetizr.Challenges
     /// <summary>
     /// Extention to support async/await in the DownloadAssetData
     /// </summary>
-    public static class ExtensionMethods
+    internal static class ExtensionMethods
     {
         public static TaskAwaiter GetAwaiter(this AsyncOperation asyncOp)
         {
@@ -130,7 +131,7 @@ namespace Monetizr.Challenges
         }
     }
 
-    class DownloadHelper
+    internal class DownloadHelper
     {
         /// <summary>
         /// Downloads any type of asset and returns its data as an array of bytes
@@ -157,7 +158,10 @@ namespace Monetizr.Challenges
     /// </summary>
     public class MonetizrManager : MonoBehaviour
     {
-        public ChallengesClient _challengesClient { get; private set; }
+        //position relative to center with 1080x1920 screen resolution
+        private static Vector2 tinyTeaserPosition = new Vector2(-430,600);
+
+        internal ChallengesClient _challengesClient { get; private set; }
 
         private static MonetizrManager instance = null;
 
@@ -202,7 +206,7 @@ namespace Monetizr.Challenges
             }
         }
 
-        public static MonetizrAnalytics Analytics
+        internal static MonetizrAnalytics Analytics
         {
             get
             {
@@ -251,7 +255,7 @@ namespace Monetizr.Challenges
             uiController = new UIController();
         }
 
-        internal static void ShowStartupNotification(Action<bool> onComplete)
+        public static void ShowStartupNotification(Action<bool> onComplete)
         {
             Assert.IsNotNull(instance, MonetizrErrors.msg[ErrorType.NotinitializedSDK]);
 
@@ -296,7 +300,7 @@ namespace Monetizr.Challenges
                 m);
         }
 
-        internal static void RegisterUserDefinedMission(string missionTitle, string missionDescription, Sprite missionIcon, Sprite rewardIcon, int reward, float progress, Action onClaimButtonPress)
+        public static void RegisterUserDefinedMission(string missionTitle, string missionDescription, Sprite missionIcon, Sprite rewardIcon, int reward, float progress, Action onClaimButtonPress)
         {
             Assert.IsNotNull(instance, MonetizrErrors.msg[ErrorType.NotinitializedSDK]);
 
@@ -316,7 +320,7 @@ namespace Monetizr.Challenges
             instance.uiController.AddMission(m);
         }
 
-        internal static void RegisterSponsoredMission(/*int id, */Sprite rewardIcon, int rewardAmount, string rewardTitle, Action<int> onSponsoredClaim)
+        public static void RegisterSponsoredMission(/*int id, */Sprite rewardIcon, int rewardAmount, string rewardTitle, Action<int> onSponsoredClaim)
         {
             Assert.IsNotNull(instance, MonetizrErrors.msg[ErrorType.NotinitializedSDK]);
 
@@ -338,10 +342,12 @@ namespace Monetizr.Challenges
             instance.uiController.CleanUserDefinedMissions();
         }
 
-        internal static void ShowRewardCenter(Action<bool> onComplete = null)
+        public static void ShowRewardCenter(Action UpdateGameUI, Action<bool> onComplete = null)
         {
             Assert.IsNotNull(instance, MonetizrErrors.msg[ErrorType.NotinitializedSDK]);
-            
+
+            UpdateGameUI?.Invoke();
+
             instance.uiController.ShowPanelFromPrefab("MonetizrRewardCenterPanel", PanelId.RewardCenter, onComplete, true);
         }
 
@@ -361,9 +367,9 @@ namespace Monetizr.Challenges
         }
 
 
-        internal static void ShowSurvey(Action<bool> onComplete, MissionUIDescription m = null)
+        public static void ShowSurvey(Action<bool> onComplete)
         {
-            _ShowWebView(onComplete, PanelId.SurveyWebView, m);
+            _ShowWebView(onComplete, PanelId.SurveyWebView, null);
         }
 
         internal static void ShowHTML5(Action<bool> onComplete, MissionUIDescription m = null)
@@ -376,16 +382,19 @@ namespace Monetizr.Challenges
             _ShowWebView(onComplete, PanelId.VideoWebView, m);
         }
 
+        public static void SetTeaserPosition(Vector2 pos)
+        {
+            tinyTeaserPosition = pos;
+        }
 
-
-        public static void ShowTinyMenuTeaser(Action onTap)
+        public static void ShowTinyMenuTeaser(Action UpdateGameUI = null)
         {
             Assert.IsNotNull(instance, MonetizrErrors.msg[ErrorType.NotinitializedSDK]);
 
             if (!instance.HasChallengesAndActive())
                 return;
 
-            instance.uiController.ShowTinyMenuTeaser(onTap);
+            instance.uiController.ShowTinyMenuTeaser(tinyTeaserPosition,UpdateGameUI);
         }
 
         public static void HideTinyMenuTeaser()
@@ -418,7 +427,7 @@ namespace Monetizr.Challenges
             string fname = Path.GetFileName(asset.url);
             string fpath = path + "/" + fname;
 
-            Debug.Log(fname);
+            //Debug.Log(fname);
 
             byte[] data = null;
 
@@ -436,7 +445,7 @@ namespace Monetizr.Challenges
 
                 File.WriteAllBytes(fpath, data);
 
-                Debug.Log("saving: " + fpath);
+                //Debug.Log("saving: " + fpath);
             }
             else
             {
@@ -450,7 +459,7 @@ namespace Monetizr.Challenges
                     return;
                 }
 
-                Debug.Log("reading: " + fpath);
+                //Debug.Log("reading: " + fpath);
             }
 
 #if TEST_SLOW_LATENCY
@@ -483,14 +492,14 @@ namespace Monetizr.Challenges
             string zipFolder = null;
             string fileToCheck = fpath;
 
-            Debug.Log(fname);
+            //Debug.Log(fname);
 
             if (fname.Contains("zip"))
             {
                 zipFolder = path + "/" + fname.Replace(".zip", "");
                 fileToCheck = zipFolder + "/index.html";
 
-                Debug.Log($"archive: {zipFolder} {fileToCheck} {File.Exists(fileToCheck)}");
+                //Debug.Log($"archive: {zipFolder} {fileToCheck} {File.Exists(fileToCheck)}");
             }
 
             byte[] data = null;
@@ -511,29 +520,50 @@ namespace Monetizr.Challenges
 
                 if (zipFolder != null)
                 {
-                    Debug.Log("extracting to: " + zipFolder);
+                    //Debug.Log("extracting to: " + zipFolder);
 
-                    if (!Directory.Exists(zipFolder))
-                        Directory.CreateDirectory(zipFolder);
+                    if (Directory.Exists(zipFolder))
+                        DeleteDirectory(zipFolder);
 
-                    ZipFile.ExtractToDirectory(fpath, zipFolder, true);
+                    //if (!Directory.Exists(zipFolder))
+                    Directory.CreateDirectory(zipFolder);
+
+                    ZipFile.ExtractToDirectory(fpath, zipFolder);
                     
                     File.Delete(fpath);
                 }
                             
                                
-                Debug.Log("saving: " + fpath);
+                //Debug.Log("saving: " + fpath);
             }
 
             if(zipFolder != null)
                 fpath = fileToCheck;
 
-            Debug.Log("resource: " + fpath);
+            //Debug.Log("resource: " + fpath);
 
             //ech.SetAsset<string>(urlString, asset.url);
             ech.SetAsset<string>(fileString, fpath);
         }
-              
+
+        public static void DeleteDirectory(string target_dir)
+        {
+            string[] files = Directory.GetFiles(target_dir);
+            string[] dirs = Directory.GetDirectories(target_dir);
+
+            foreach (string file in files)
+            {
+                //File.SetAttributes(file, FileAttributes.Normal);
+                File.Delete(file);
+            }
+
+            foreach (string dir in dirs)
+            {
+                DeleteDirectory(dir);
+            }
+
+            Directory.Delete(target_dir, false);
+        }
 
         /// <summary>
         /// Request challenges from the server
@@ -673,7 +703,7 @@ namespace Monetizr.Challenges
         /// </summary>
         /// <returns></returns>
         [Obsolete("This Method is obsolete and don't recommended for use")]
-        public Challenge GetChallenge(String chId)
+        internal Challenge GetChallenge(String chId)
         {
             return challenges[chId].challenge;
         }

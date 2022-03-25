@@ -2,7 +2,7 @@
 using UnityEngine;
 using UnityEngine.UI;
 using UnityEngine.SceneManagement;
-using Monetizr.Challenges;
+using Monetizr.Campaigns;
 #if UNITY_ADS
 using UnityEngine.Advertisements;
 #endif

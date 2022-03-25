@@ -2,7 +2,7 @@
 using System.Collections.Generic;
 using UnityEngine;
 using UnityEngine.SceneManagement;
-using Monetizr.Challenges;
+using Monetizr.Campaigns;
 
 #if UNITY_ANALYTICS
 using UnityEngine.Analytics;

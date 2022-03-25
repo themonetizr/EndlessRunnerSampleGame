@@ -4,15 +4,16 @@ using System.Collections.Generic;
 using UnityEngine;
 using UnityEngine.UI;
 
-namespace Monetizr.Challenges
+namespace Monetizr.Campaigns
 {
 
-    public class MonetizrMenuTeaser : PanelController
+    internal class MonetizrMenuTeaser : PanelController
     {
         public Button button;
         public RawImage teaserImage;
         public float delayTime = 5f;
         public float moveTime = 1f;
+        public RectTransform rectTransform;
 
         private int state = 0;
         private float progress = 0f;

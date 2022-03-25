@@ -4,10 +4,10 @@ using System.Collections.Generic;
 using UnityEngine;
 using UnityEngine.UI;
 
-namespace Monetizr.Challenges
+namespace Monetizr.Campaigns
 {
 
-    public class RewardCenterPanel : PanelController
+    internal class RewardCenterPanel : PanelController
     {
         public Transform contentRoot;
         public MonetizrRewardedItem itemUI;
@@ -181,7 +181,7 @@ namespace Monetizr.Challenges
 
         public void OnClaimRewardComplete(MissionUIDescription m, bool isSkipped)
         {
-            MonetizrManager.ShowRewardCenter();
+            MonetizrManager.ShowRewardCenter(null);
 
             //if (!isSkipped)
             {

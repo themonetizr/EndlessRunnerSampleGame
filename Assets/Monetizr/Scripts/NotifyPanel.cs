@@ -4,10 +4,10 @@ using System.Collections.Generic;
 using UnityEngine;
 using UnityEngine.UI;
 
-namespace Monetizr.Challenges
+namespace Monetizr.Campaigns
 {
 
-    public class NotifyPanel : PanelController
+    internal class NotifyPanel : PanelController
     {
         public Image banner;
         public Image rewardImage;

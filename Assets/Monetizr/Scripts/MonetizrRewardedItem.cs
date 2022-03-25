@@ -3,10 +3,10 @@ using System.Collections.Generic;
 using UnityEngine;
 using UnityEngine.UI;
 
-namespace Monetizr.Challenges
+namespace Monetizr.Campaigns
 {
 
-    public class MonetizrRewardedItem : MonoBehaviour
+    internal class MonetizrRewardedItem : MonoBehaviour
     {
         public Image banner;
         public Image brandIcon;

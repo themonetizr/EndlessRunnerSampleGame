@@ -1,25 +1,17 @@
 {
     "name": "com.monetizr.unityplugin",
-    "version": "0.0.1",
+    "version": "0.0.2",
     "displayName": "Monetizr Unity SDK",
     "description": "A plugin to simplify the Unity integration of Monetizr Unity SDK.",
-
     "repository": {
-    "type": "git",
-    "url": "https://github.com/themonetizr/monetizr-challenges-unity-demo.git?path=/Assets/Monetizr"
-  },
-
+        "type": "git",
+        "url": "https://github.com/themonetizr/monetizr-challenges-unity-demo.git?path=/Assets/Monetizr"
+    },
     "documentationUrl": "https://docs.themonetizr.com/docs/monetizr-challenges-sdk",
-
-  "dependencies": {
-    "com.mixpanel.unity": "3.0.2"
-  },
-
     "keywords": [
         "monetizr"
     ],
     "category": "Mixpanel",
-    
     "author": {
         "name": "Monetizr",
         "email": "dev@themonetizr.com",
