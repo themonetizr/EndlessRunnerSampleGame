@@ -12,7 +12,7 @@ using UnityEngine.Assertions;
     using Facebook.Unity;   
 #endif
 
-namespace Monetizr.Challenges
+namespace Monetizr.Campaigns
 {
     public enum AdType
     {

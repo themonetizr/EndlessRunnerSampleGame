@@ -1,6 +1,6 @@
 ﻿using UnityEngine;
 using UnityEngine.UI;
-using Monetizr.Challenges;
+using Monetizr.Campaigns;
 #if UNITY_ANALYTICS
 using UnityEngine.Analytics;
 #endif

@@ -4,7 +4,7 @@ using System.Collections.Generic;
 using UnityEngine;
 using UnityEngine.Video;
 
-namespace Monetizr.Challenges
+namespace Monetizr.Campaigns
 {
 
     public class MonetizrVideoPlayer : MonoBehaviour

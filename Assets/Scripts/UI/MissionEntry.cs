@@ -3,7 +3,7 @@ using UnityEngine;
 using UnityEngine.UI;
 using System.Collections;
 using System.Linq;
-using Monetizr.Challenges;
+using Monetizr.Campaigns;
 using UnityEngine.Networking;
 using System.Text.RegularExpressions;
 

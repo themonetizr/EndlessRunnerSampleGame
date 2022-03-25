@@ -4,7 +4,7 @@ using System.Collections;
 using System.Collections.Generic;
 using UnityEngine.AddressableAssets;
 using UnityEngine.ResourceManagement.AsyncOperations;
-using Monetizr.Challenges;
+using Monetizr.Campaigns;
 
 #if UNITY_ANALYTICS
 using UnityEngine.Analytics;

@@ -1,6 +1,6 @@
 ﻿using System;
 using System.Collections;
-using Monetizr.Challenges;
+using Monetizr.Campaigns;
 using UnityEngine;
 using UnityEngine.AddressableAssets;
 using UnityEngine.ResourceManagement.AsyncOperations;

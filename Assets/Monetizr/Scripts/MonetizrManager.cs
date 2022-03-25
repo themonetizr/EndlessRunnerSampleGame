@@ -3,7 +3,7 @@
 using System.Collections;
 using System.Collections.Generic;
 using UnityEngine;
-using Monetizr.Challenges;
+using Monetizr.Campaigns;
 using UnityEngine.Networking;
 using System;
 using System.Runtime.CompilerServices;
@@ -13,7 +13,7 @@ using System.IO;
 using UnityEngine.Assertions;
 using System.IO.Compression;
 
-namespace Monetizr.Challenges
+namespace Monetizr.Campaigns
 {
     public enum ErrorType
     {

@@ -3,7 +3,7 @@ using System.Collections;
 using UnityEngine;
 using UnityEngine.Networking;
 
-namespace Monetizr.Challenges
+namespace Monetizr.Campaigns
 {
 
     public static class AssetsHelper

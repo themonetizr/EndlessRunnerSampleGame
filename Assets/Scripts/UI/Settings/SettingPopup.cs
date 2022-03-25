@@ -1,4 +1,4 @@
-﻿using Monetizr.Challenges;
+﻿using Monetizr.Campaigns;
 using System.Collections.Generic;
 using UnityEngine;
 using UnityEngine.Audio;

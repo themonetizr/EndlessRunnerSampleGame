@@ -1,4 +1,4 @@
-﻿using Monetizr.Challenges;
+﻿using Monetizr.Campaigns;
 using UnityEngine;
 
 public class SponsoredPickupCoinMission : MissionBase

@@ -4,7 +4,7 @@ using System.Collections.Generic;
 using UnityEngine;
 using UnityEngine.Assertions;
 
-namespace Monetizr.Challenges
+namespace Monetizr.Campaigns
 {
     public abstract class PanelController : MonoBehaviour
     {

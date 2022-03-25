@@ -22,7 +22,7 @@
                    "url":"https://wss.pollfish.com/link/cfb1a09e-8128-42ce-a313-20ed5de162d4"},
 */
 
-namespace Monetizr.Challenges
+namespace Monetizr.Campaigns
 {
     [System.Serializable]
     public class Challenge

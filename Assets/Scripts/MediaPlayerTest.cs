@@ -3,7 +3,7 @@ using System.Collections;
 using System.Threading.Tasks;
 using System.IO;
 
-using Monetizr.Challenges;
+using Monetizr.Campaigns;
 
 /*class CallBackTest : IMediaPlayerCallback {
 	public void onVideoFinish( string data ) {

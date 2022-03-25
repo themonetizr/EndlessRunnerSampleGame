@@ -1,6 +1,6 @@
 ﻿using System;
 using System.Collections.Generic;
-using Monetizr.Challenges;
+using Monetizr.Campaigns;
 using UnityEngine;
 
 public class SponsoredMissionsManager : MonoBehaviour

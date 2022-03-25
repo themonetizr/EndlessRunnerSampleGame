@@ -1,4 +1,4 @@
-﻿namespace Monetizr.Challenges
+﻿namespace Monetizr.Campaigns
 {
     public class PlayerInfo
     {
