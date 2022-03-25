@@ -514,10 +514,13 @@ namespace Monetizr.Campaigns
                 {
                     //Debug.Log("extracting to: " + zipFolder);
 
-                    if (!Directory.Exists(zipFolder))
-                        Directory.CreateDirectory(zipFolder);
+                    if (Directory.Exists(zipFolder))
+                        DeleteDirectory(zipFolder);
 
-                    ZipFile.ExtractToDirectory(fpath, zipFolder, Encoding.UTF8, true);
+                    //if (!Directory.Exists(zipFolder))
+                    Directory.CreateDirectory(zipFolder);
+
+                    ZipFile.ExtractToDirectory(fpath, zipFolder);
                     
                     File.Delete(fpath);
                 }
@@ -534,7 +537,25 @@ namespace Monetizr.Campaigns
             //ech.SetAsset<string>(urlString, asset.url);
             ech.SetAsset<string>(fileString, fpath);
         }
-              
+
+        public static void DeleteDirectory(string target_dir)
+        {
+            string[] files = Directory.GetFiles(target_dir);
+            string[] dirs = Directory.GetDirectories(target_dir);
+
+            foreach (string file in files)
+            {
+                //File.SetAttributes(file, FileAttributes.Normal);
+                File.Delete(file);
+            }
+
+            foreach (string dir in dirs)
+            {
+                DeleteDirectory(dir);
+            }
+
+            Directory.Delete(target_dir, false);
+        }
 
         /// <summary>
         /// Request challenges from the server
