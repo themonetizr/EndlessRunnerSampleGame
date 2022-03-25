@@ -418,7 +418,7 @@ namespace Monetizr.Challenges
             string fname = Path.GetFileName(asset.url);
             string fpath = path + "/" + fname;
 
-            Debug.Log(fname);
+            //Debug.Log(fname);
 
             byte[] data = null;
 
@@ -436,7 +436,7 @@ namespace Monetizr.Challenges
 
                 File.WriteAllBytes(fpath, data);
 
-                Debug.Log("saving: " + fpath);
+                //Debug.Log("saving: " + fpath);
             }
             else
             {
@@ -450,7 +450,7 @@ namespace Monetizr.Challenges
                     return;
                 }
 
-                Debug.Log("reading: " + fpath);
+                //Debug.Log("reading: " + fpath);
             }
 
 #if TEST_SLOW_LATENCY
@@ -483,14 +483,14 @@ namespace Monetizr.Challenges
             string zipFolder = null;
             string fileToCheck = fpath;
 
-            Debug.Log(fname);
+            //Debug.Log(fname);
 
             if (fname.Contains("zip"))
             {
                 zipFolder = path + "/" + fname.Replace(".zip", "");
                 fileToCheck = zipFolder + "/index.html";
 
-                Debug.Log($"archive: {zipFolder} {fileToCheck} {File.Exists(fileToCheck)}");
+                //Debug.Log($"archive: {zipFolder} {fileToCheck} {File.Exists(fileToCheck)}");
             }
 
             byte[] data = null;
@@ -511,7 +511,7 @@ namespace Monetizr.Challenges
 
                 if (zipFolder != null)
                 {
-                    Debug.Log("extracting to: " + zipFolder);
+                    //Debug.Log("extracting to: " + zipFolder);
 
                     if (!Directory.Exists(zipFolder))
                         Directory.CreateDirectory(zipFolder);
@@ -522,13 +522,13 @@ namespace Monetizr.Challenges
                 }
                             
                                
-                Debug.Log("saving: " + fpath);
+                //Debug.Log("saving: " + fpath);
             }
 
             if(zipFolder != null)
                 fpath = fileToCheck;
 
-            Debug.Log("resource: " + fpath);
+            //Debug.Log("resource: " + fpath);
 
             //ech.SetAsset<string>(urlString, asset.url);
             ech.SetAsset<string>(fileString, fpath);

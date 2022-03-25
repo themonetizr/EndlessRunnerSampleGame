@@ -70,6 +70,7 @@ namespace Monetizr.Challenges
 #endif
 
             Mixpanel.Init();
+            Mixpanel.SetToken("d4de97058730720b3b8080881c6ba2e0");
 
 #if USING_FACEBOOK
             if (FB.IsInitialized)

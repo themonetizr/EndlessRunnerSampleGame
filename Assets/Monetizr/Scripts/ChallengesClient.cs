@@ -56,7 +56,7 @@ namespace Monetizr.Challenges
 
             var challengesString = await response.Content.ReadAsStringAsync();
 
-            Debug.Log(challengesString);
+            //Debug.Log(challengesString);
 
             if (response.IsSuccessStatusCode)
             {
