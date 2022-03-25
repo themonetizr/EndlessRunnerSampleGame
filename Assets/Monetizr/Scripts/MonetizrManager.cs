@@ -16,7 +16,7 @@ using System.Text;
 
 namespace Monetizr.Campaigns
 {
-    public enum ErrorType
+    internal enum ErrorType
     {
         NotinitializedSDK,
         SimultaneusAdAssets,

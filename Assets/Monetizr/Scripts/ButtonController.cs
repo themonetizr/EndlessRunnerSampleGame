@@ -5,13 +5,13 @@ using UnityEngine.UI;
 
 namespace Monetizr.Campaigns
 {
-    public enum ButtonType
+    internal enum ButtonType
     {
 
     }
 
     [RequireComponent(typeof(Button))]
-    public class ButtonController : MonoBehaviour
+    internal class ButtonController : MonoBehaviour
     {
         internal RewardCenterPanel clickReceiver;
         internal MissionUIDescription missionDescription;

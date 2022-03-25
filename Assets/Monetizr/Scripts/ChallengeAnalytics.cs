@@ -14,7 +14,7 @@ using UnityEngine.Assertions;
 
 namespace Monetizr.Campaigns
 {
-    public enum AdType
+    internal enum AdType
     {
         IntroBanner,
         BrandLogo,
