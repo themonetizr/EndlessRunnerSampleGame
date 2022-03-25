@@ -23,6 +23,8 @@ namespace Monetizr.Campaigns
         internal void PrepareWebViewComponent()
         {
             UniWebView.SetAllowAutoPlay(true);
+            UniWebView.SetAllowInlinePlay(true);
+            UniWebView.SetWebContentsDebuggingEnabled(true);
 
 
             webView = gameObject.AddComponent<UniWebView>();
@@ -78,20 +80,25 @@ namespace Monetizr.Campaigns
 
                 //var page = $"<video autoplay><source src = \"{webUrl}\" type = \"video/mp4\"/></video>";
 
-            var page = $"<video autoplay><source src = \"{videoName}\" type = \"video/mp4\"/></video>";
+            var page = "<body style=\"margin: 0px; background-color: black; \">\n" +
+                $"<video playsinline autoplay width=\"100%\" id=\"myVideo\"><source src = \"{videoName}\" type = \"video/mp4\"/></video>" +
+                //"<script type='text/javascript'>\ndocument.getElementById('myVideo').addEventListener('ended',myHandler,false);\nfunction myHandler(e) { location.href = \"uniwebview://action?key=close\"; }\n</ script >\n
+
+                "<script type='text/javascript'>\nvar video = document.getElementsByTagName('video')[0];\nvideo.onended = function(e) { location.href = \"uniwebview://action?key=close\"; }; \n</ script >\n" +
+                "</head></body>";
 
 
             htmlFile = Path.GetDirectoryName(htmlFile) + "/" + Path.GetFileNameWithoutExtension(htmlFile) + ".html";
 
             Debug.Log("----------------" + htmlFile);
 
-            if (File.Exists(htmlFile))
-                File.Delete(htmlFile);
+            //if (File.Exists(htmlFile))
+            //    File.Delete(htmlFile);
 
             File.WriteAllBytes(htmlFile, Encoding.ASCII.GetBytes(page));
             
 
-            webView.LoadHTMLString(htmlFile,"http://test.com");
+            webView.Load("file://"+htmlFile);
 
             eventsPrefix = "WebVideo";
         }
