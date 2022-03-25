@@ -1,6 +1,8 @@
 ﻿using System;
 using System.Collections;
 using System.Collections.Generic;
+using System.IO;
+using System.Text;
 using UnityEngine;
 using UnityEngine.UI;
 
@@ -20,6 +22,9 @@ namespace Monetizr.Challenges
 
         internal void PrepareWebViewComponent()
         {
+            UniWebView.SetAllowAutoPlay(true);
+
+
             webView = gameObject.AddComponent<UniWebView>();
 
             var w = Screen.width;
@@ -65,13 +70,28 @@ namespace Monetizr.Challenges
 
         private void PrepareVideoPanel()
         {
-            UniWebView.SetAllowAutoPlay(true);
-
             webUrl = "file://" + MonetizrManager.Instance.GetAsset<string>(currentMissionDesc.campaignId, AssetsType.VideoFilePathString);
 
-            var page = $"<video autoplay><source src = \"{webUrl}\" type = \"video/mp4\"/></video>";
+            var htmlFile = MonetizrManager.Instance.GetAsset<string>(currentMissionDesc.campaignId, AssetsType.VideoFilePathString);
 
-            webView.LoadHTMLString(page,"http://test.com");
+            var videoName = Path.GetFileName(htmlFile);
+
+                //var page = $"<video autoplay><source src = \"{webUrl}\" type = \"video/mp4\"/></video>";
+
+            var page = $"<video autoplay><source src = \"{videoName}\" type = \"video/mp4\"/></video>";
+
+
+            htmlFile = Path.GetDirectoryName(htmlFile) + "/" + Path.GetFileNameWithoutExtension(htmlFile) + ".html";
+
+            Debug.Log("----------------" + htmlFile);
+
+            if (File.Exists(htmlFile))
+                File.Delete(htmlFile);
+
+            File.WriteAllBytes(htmlFile, Encoding.ASCII.GetBytes(page));
+            
+
+            webView.LoadHTMLString(htmlFile,"http://test.com");
 
             eventsPrefix = "WebVideo";
         }
