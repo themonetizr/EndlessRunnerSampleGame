@@ -252,7 +252,7 @@ namespace Monetizr.Campaigns
             uiController = new UIController();
         }
 
-        internal static void ShowStartupNotification(Action<bool> onComplete)
+        public static void ShowStartupNotification(Action<bool> onComplete)
         {
             Assert.IsNotNull(instance, MonetizrErrors.msg[ErrorType.NotinitializedSDK]);
 
@@ -297,7 +297,7 @@ namespace Monetizr.Campaigns
                 m);
         }
 
-        internal static void RegisterUserDefinedMission(string missionTitle, string missionDescription, Sprite missionIcon, Sprite rewardIcon, int reward, float progress, Action onClaimButtonPress)
+        public static void RegisterUserDefinedMission(string missionTitle, string missionDescription, Sprite missionIcon, Sprite rewardIcon, int reward, float progress, Action onClaimButtonPress)
         {
             Assert.IsNotNull(instance, MonetizrErrors.msg[ErrorType.NotinitializedSDK]);
 
@@ -317,7 +317,7 @@ namespace Monetizr.Campaigns
             instance.uiController.AddMission(m);
         }
 
-        internal static void RegisterSponsoredMission(/*int id, */Sprite rewardIcon, int rewardAmount, string rewardTitle, Action<int> onSponsoredClaim)
+        public static void RegisterSponsoredMission(/*int id, */Sprite rewardIcon, int rewardAmount, string rewardTitle, Action<int> onSponsoredClaim)
         {
             Assert.IsNotNull(instance, MonetizrErrors.msg[ErrorType.NotinitializedSDK]);
 
@@ -339,7 +339,7 @@ namespace Monetizr.Campaigns
             instance.uiController.CleanUserDefinedMissions();
         }
 
-        internal static void ShowRewardCenter(Action<bool> onComplete = null)
+        public static void ShowRewardCenter(Action<bool> onComplete = null)
         {
             Assert.IsNotNull(instance, MonetizrErrors.msg[ErrorType.NotinitializedSDK]);
             
@@ -362,7 +362,7 @@ namespace Monetizr.Campaigns
         }
 
 
-        internal static void ShowSurvey(Action<bool> onComplete, MissionUIDescription m = null)
+        public static void ShowSurvey(Action<bool> onComplete, MissionUIDescription m = null)
         {
             _ShowWebView(onComplete, PanelId.SurveyWebView, m);
         }
