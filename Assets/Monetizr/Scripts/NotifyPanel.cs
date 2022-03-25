@@ -7,7 +7,7 @@ using UnityEngine.UI;
 namespace Monetizr.Campaigns
 {
 
-    public class NotifyPanel : PanelController
+    internal class NotifyPanel : PanelController
     {
         public Image banner;
         public Image rewardImage;

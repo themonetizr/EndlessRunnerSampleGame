@@ -6,7 +6,7 @@ using UnityEngine.Networking;
 namespace Monetizr.Campaigns
 {
 
-    public static class AssetsHelper
+    internal static class AssetsHelper
     {
         /// <summary>
         /// Downloads a 2D asset and returns it as a Sprite in <paramref name="onAssetDownloaded"/>.

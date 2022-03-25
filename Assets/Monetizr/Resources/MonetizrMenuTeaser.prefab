@@ -371,6 +371,7 @@ MonoBehaviour:
   teaserImage: {fileID: 336197566610468165}
   delayTime: 5
   moveTime: 1
+  rectTransform: {fileID: 336197565933457736}
 --- !u!95 &8779468765280008942
 Animator:
   serializedVersion: 4

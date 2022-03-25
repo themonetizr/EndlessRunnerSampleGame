@@ -8,7 +8,7 @@ using UnityEngine;
 
 namespace Monetizr.Campaigns
 {
-    public class ChallengesClient
+    internal class ChallengesClient
     {
         //public PlayerInfo playerInfo { get; set; }
 

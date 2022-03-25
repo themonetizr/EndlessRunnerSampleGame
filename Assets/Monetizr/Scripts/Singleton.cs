@@ -5,7 +5,7 @@ using System.Collections.Generic;
 namespace Monetizr.Campaigns
 {
 
-    public abstract class Singleton<T> : MonoBehaviour where T : Component
+    internal abstract class Singleton<T> : MonoBehaviour where T : Component
     {
 
         private static T instance;

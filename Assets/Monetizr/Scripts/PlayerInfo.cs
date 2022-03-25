@@ -1,6 +1,6 @@
 ﻿namespace Monetizr.Campaigns
 {
-    public class PlayerInfo
+    internal class PlayerInfo
     {
         //public string location { get; }
         //public int age { get; }

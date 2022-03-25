@@ -38,6 +38,7 @@ public class SponsoredMissionsManager : MonoBehaviour
                 musicPlayer.SwitchMusic(soundOn);
             } );
 
+        MonetizrManager.SetTeaserPosition(new Vector2(-430, 100));
 
         loadingUI?.SetActive(false);
         menuActors?.Play("Take 001");

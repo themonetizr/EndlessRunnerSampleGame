@@ -6,7 +6,7 @@ using UnityEngine.Assertions;
 
 namespace Monetizr.Campaigns
 {
-    public abstract class PanelController : MonoBehaviour
+    internal abstract class PanelController : MonoBehaviour
     {
         enum State
         {

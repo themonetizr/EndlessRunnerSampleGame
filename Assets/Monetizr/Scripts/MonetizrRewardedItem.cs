@@ -6,7 +6,7 @@ using UnityEngine.UI;
 namespace Monetizr.Campaigns
 {
 
-    public class MonetizrRewardedItem : MonoBehaviour
+    internal class MonetizrRewardedItem : MonoBehaviour
     {
         public Image banner;
         public Image brandIcon;

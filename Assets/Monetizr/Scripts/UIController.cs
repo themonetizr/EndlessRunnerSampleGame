@@ -7,7 +7,7 @@ using UnityEngine.Assertions;
 namespace Monetizr.Campaigns
 {
 
-    public enum PanelId
+    internal enum PanelId
     {
         Unknown = -1,
         StartNotification,
@@ -20,7 +20,7 @@ namespace Monetizr.Campaigns
 
     }
 
-    public class MissionUIDescription
+    internal class MissionUIDescription
     {
         public string campaignId;
         public int sponsoredId;
@@ -42,7 +42,7 @@ namespace Monetizr.Campaigns
         internal string rewardTitle;
     }
 
-    public class UIController
+    internal class UIController
     {
         public List<MissionUIDescription> missionsDescriptions = new List<MissionUIDescription>();
 
@@ -207,7 +207,7 @@ namespace Monetizr.Campaigns
             panels.Add(id, ctrlPanel);
         }
 
-        public void ShowTinyMenuTeaser(Action UpdateGameUI)
+        public void ShowTinyMenuTeaser(Vector2 screenPos, Action UpdateGameUI)
         {
              MonetizrMenuTeaser teaser;
 
@@ -217,6 +217,11 @@ namespace Monetizr.Campaigns
                 teaser = obj.GetComponent<MonetizrMenuTeaser>();
                 panels.Add(PanelId.TinyMenuTeaser, teaser);
                 teaser.button.onClick.AddListener(() => { MonetizrManager.ShowRewardCenter(UpdateGameUI); });
+
+                if (screenPos != null)
+                {
+                    teaser.rectTransform.anchoredPosition = screenPos;
+                }
             }
             else
             {

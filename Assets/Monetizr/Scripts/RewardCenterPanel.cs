@@ -7,7 +7,7 @@ using UnityEngine.UI;
 namespace Monetizr.Campaigns
 {
 
-    public class RewardCenterPanel : PanelController
+    internal class RewardCenterPanel : PanelController
     {
         public Transform contentRoot;
         public MonetizrRewardedItem itemUI;

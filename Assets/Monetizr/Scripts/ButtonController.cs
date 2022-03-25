@@ -13,8 +13,8 @@ namespace Monetizr.Campaigns
     [RequireComponent(typeof(Button))]
     public class ButtonController : MonoBehaviour
     {
-        public RewardCenterPanel clickReceiver;
-        public MissionUIDescription missionDescription;
+        internal RewardCenterPanel clickReceiver;
+        internal MissionUIDescription missionDescription;
         public ButtonType buttonType;
         Button button;
         public int id = 0;

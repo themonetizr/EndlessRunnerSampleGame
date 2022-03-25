@@ -25,7 +25,7 @@ namespace Monetizr.Campaigns
 
     }
 
-    public class VisibleAdAsset
+    internal class VisibleAdAsset
     {
         public AdType adType;
         public string challengeId;
@@ -33,7 +33,7 @@ namespace Monetizr.Campaigns
 
     }
 
-    public class MonetizrAnalytics
+    internal class MonetizrAnalytics
     {
         public static readonly Dictionary<AdType, string> adTypeNames = new Dictionary<AdType, string>()
         {

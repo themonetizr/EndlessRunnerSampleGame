@@ -25,7 +25,7 @@
 namespace Monetizr.Campaigns
 {
     [System.Serializable]
-    public class Challenge
+    internal class Challenge
     {
         public string id;
         public string brand_id;

@@ -24,7 +24,7 @@ namespace Monetizr.Campaigns
         ConnectionError,
     };
 
-    public static class MonetizrErrors
+    internal static class MonetizrErrors
     {
         public static readonly Dictionary<ErrorType, string> msg = new Dictionary<ErrorType, string>()
         {
@@ -65,7 +65,7 @@ namespace Monetizr.Campaigns
     /// ChallengeExtention for easier access to Challenge assets
     /// TODO: merge with Challenge
     /// </summary>
-    public class ChallengeExtention
+    internal class ChallengeExtention
     {
         private static readonly Dictionary<AssetsType, System.Type> AssetsSystemTypes = new Dictionary<AssetsType, System.Type>()
         {
@@ -121,7 +121,7 @@ namespace Monetizr.Campaigns
     /// <summary>
     /// Extention to support async/await in the DownloadAssetData
     /// </summary>
-    public static class ExtensionMethods
+    internal static class ExtensionMethods
     {
         public static TaskAwaiter GetAwaiter(this AsyncOperation asyncOp)
         {
@@ -131,7 +131,7 @@ namespace Monetizr.Campaigns
         }
     }
 
-    class DownloadHelper
+    internal class DownloadHelper
     {
         /// <summary>
         /// Downloads any type of asset and returns its data as an array of bytes
@@ -158,7 +158,10 @@ namespace Monetizr.Campaigns
     /// </summary>
     public class MonetizrManager : MonoBehaviour
     {
-        public ChallengesClient _challengesClient { get; private set; }
+        //position relative to center with 1080x1920 screen resolution
+        private static Vector2 tinyTeaserPosition = new Vector2(-430,600);
+
+        internal ChallengesClient _challengesClient { get; private set; }
 
         private static MonetizrManager instance = null;
 
@@ -203,7 +206,7 @@ namespace Monetizr.Campaigns
             }
         }
 
-        public static MonetizrAnalytics Analytics
+        internal static MonetizrAnalytics Analytics
         {
             get
             {
@@ -364,9 +367,9 @@ namespace Monetizr.Campaigns
         }
 
 
-        public static void ShowSurvey(Action<bool> onComplete, MissionUIDescription m = null)
+        public static void ShowSurvey(Action<bool> onComplete)
         {
-            _ShowWebView(onComplete, PanelId.SurveyWebView, m);
+            _ShowWebView(onComplete, PanelId.SurveyWebView, null);
         }
 
         internal static void ShowHTML5(Action<bool> onComplete, MissionUIDescription m = null)
@@ -379,7 +382,10 @@ namespace Monetizr.Campaigns
             _ShowWebView(onComplete, PanelId.VideoWebView, m);
         }
 
-
+        public static void SetTeaserPosition(Vector2 pos)
+        {
+            tinyTeaserPosition = pos;
+        }
 
         public static void ShowTinyMenuTeaser(Action UpdateGameUI = null)
         {
@@ -388,7 +394,7 @@ namespace Monetizr.Campaigns
             if (!instance.HasChallengesAndActive())
                 return;
 
-            instance.uiController.ShowTinyMenuTeaser(UpdateGameUI);
+            instance.uiController.ShowTinyMenuTeaser(tinyTeaserPosition,UpdateGameUI);
         }
 
         public static void HideTinyMenuTeaser()
@@ -697,7 +703,7 @@ namespace Monetizr.Campaigns
         /// </summary>
         /// <returns></returns>
         [Obsolete("This Method is obsolete and don't recommended for use")]
-        public Challenge GetChallenge(String chId)
+        internal Challenge GetChallenge(String chId)
         {
             return challenges[chId].challenge;
         }

@@ -7,7 +7,7 @@ using UnityEngine.Video;
 namespace Monetizr.Campaigns
 {
 
-    public class MonetizrVideoPlayer : MonoBehaviour
+    internal class MonetizrVideoPlayer : MonoBehaviour
     {
         public VideoPlayer videoPlayer;
         Action<bool> onComplete;
