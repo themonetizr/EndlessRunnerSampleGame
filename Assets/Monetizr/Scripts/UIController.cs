@@ -17,7 +17,7 @@ namespace Monetizr.Campaigns
         VideoWebView,
         Html5WebView,
         TinyMenuTeaser,
-
+        SurveyNotification,
     }
 
     internal class MissionUIDescription
@@ -128,7 +128,7 @@ namespace Monetizr.Campaigns
             } );
         }
 
-        public GameObject GetActiveElement(PanelId id, string name)
+        /*public GameObject GetActiveElement(PanelId id, string name)
         {
             return panels[id].GetActiveElement(name);
         }
@@ -151,7 +151,7 @@ namespace Monetizr.Campaigns
         public void EnableInput(PanelId id, bool enable)
         {
             panels[id].EnableInput(enable);
-        }
+        }*/
 
         /*public void ShowPanel(PanelId id = PanelId.Unknown, Action onComplete = null, bool rememberPrevious = false)
         {
@@ -177,7 +177,7 @@ namespace Monetizr.Campaigns
 
         public void ShowPanelFromPrefab(String prefab, PanelId id = PanelId.Unknown, Action<bool> onComplete = null, bool rememberPrevious = false, MissionUIDescription m = null)
         {
-            Debug.Log("ShowPanel: " + id);
+            Debug.Log($"ShowPanel: {id} Mission: {m==null}");
 
             if (panels.ContainsKey(previousPanel) && previousPanel != PanelId.Unknown)
                 panels[previousPanel].SetActive(false);

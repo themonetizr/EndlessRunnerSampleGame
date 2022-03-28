@@ -404,16 +404,19 @@ public class LoadoutState : AState
 
     public void StartGame()
     {
-        if (PlayerData.instance.tutorialDone)
-        {
-            if (PlayerData.instance.ftueLevel == 1)
+        MonetizrManager.OnStartGameLevel((bool _) => {
+            if (PlayerData.instance.tutorialDone)
             {
-                PlayerData.instance.ftueLevel = 2;
-                PlayerData.instance.Save();
+                if (PlayerData.instance.ftueLevel == 1)
+                {
+                    PlayerData.instance.ftueLevel = 2;
+                    PlayerData.instance.Save();
+                }
             }
-        }
 
-        manager.SwitchState("Game");
+            manager.SwitchState("Game"); }
+        );
+
     }
 
 	public void Openleaderboard()

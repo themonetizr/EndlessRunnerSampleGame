@@ -255,20 +255,12 @@ namespace Monetizr.Campaigns
             uiController = new UIController();
         }
 
-        public static void ShowStartupNotification(Action<bool> onComplete)
+        private static MissionUIDescription SelectSponsoredMissionAndFillInfo()
         {
-            Assert.IsNotNull(instance, MonetizrErrors.msg[ErrorType.NotinitializedSDK]);
-
-            if (!instance.HasChallengesAndActive())
-            {
-                onComplete?.Invoke(false);
-                return;
-            }
-
             MissionUIDescription sponsoredMsns = instance.uiController.missionsDescriptions.Find((MissionUIDescription item) => { return item.isSponsored; });
 
             if (sponsoredMsns == null)
-                return;
+                return null;
 
             var ch = MonetizrManager.Instance.GetActiveChallenge();
 
@@ -278,27 +270,76 @@ namespace Monetizr.Campaigns
                 brandBanner = MonetizrManager.Instance.GetAsset<Sprite>(ch, AssetsType.BrandBannerSprite),
                 brandLogo = MonetizrManager.Instance.GetAsset<Sprite>(ch, AssetsType.BrandLogoSprite),
                 brandName = MonetizrManager.Instance.GetAsset<string>(ch, AssetsType.BrandTitleString),
+                brandRewardBanner = MonetizrManager.Instance.GetAsset<Sprite>(ch, AssetsType.BrandRewardBannerSprite),
                 reward = sponsoredMsns.reward,
                 rewardTitle = sponsoredMsns.rewardTitle,
             };
-                       
-            instance.uiController.ShowPanelFromPrefab("MonetizrNotifyPanel", 
-                PanelId.StartNotification, 
-                onComplete, 
+
+            return sponsoredMsns;
+        }
+
+        internal static void ShowNotification(Action<bool> onComplete, MissionUIDescription m, PanelId panelId)
+        {
+            Assert.IsNotNull(instance, MonetizrErrors.msg[ErrorType.NotinitializedSDK]);
+
+            MissionUIDescription sponsoredMsns = null;
+
+            //no mission for notification, get active
+            if (m == null)
+            {
+                if (!instance.HasChallengesAndActive())
+                {
+                    onComplete?.Invoke(false);
+                    return;
+                }
+
+                sponsoredMsns = SelectSponsoredMissionAndFillInfo();
+
+                if (sponsoredMsns == null)
+                    return;
+            }
+            else //otherwise use predefined
+            {
+                sponsoredMsns = m;
+            }
+
+            //no survey link for survey notification
+            if (panelId == PanelId.SurveyNotification && MonetizrManager.Instance.GetAsset<string>(sponsoredMsns.campaignId, AssetsType.SurveyURLString) == null)
+            {
+                onComplete?.Invoke(false);
+                return;
+            }
+            else
+            {
+                onComplete = (bool _) =>
+                {
+                    ShowSurvey(onComplete, sponsoredMsns);
+                };
+            }
+
+            instance.uiController.ShowPanelFromPrefab("MonetizrNotifyPanel",
+                panelId,
+                onComplete,
                 true,
                 sponsoredMsns);
         }
 
+        public static void ShowStartupNotification(Action<bool> onComplete)
+        {
+            ShowNotification(onComplete, null, PanelId.StartNotification);
+        }
+
         internal static void ShowCongratsNotification(Action<bool> onComplete, MissionUIDescription m)
         {
-            Assert.IsNotNull(instance, MonetizrErrors.msg[ErrorType.NotinitializedSDK]);
-
-            instance.uiController.ShowPanelFromPrefab("MonetizrNotifyPanel", 
-                PanelId.CongratsNotification, 
-                onComplete, 
-                true,
-                m);
+            ShowNotification(onComplete, m, PanelId.CongratsNotification);
         }
+
+        internal static void ShowSurveyNotification(Action<bool> onComplete)
+        {
+            ShowNotification(onComplete, null, PanelId.SurveyNotification);
+        }
+
+
 
         public static void RegisterUserDefinedMission(string missionTitle, string missionDescription, Sprite missionIcon, Sprite rewardIcon, int reward, float progress, Action onClaimButtonPress)
         {
@@ -320,6 +361,8 @@ namespace Monetizr.Campaigns
             instance.uiController.AddMission(m);
         }
 
+        //TODO: need to connect now this mission and campaign from the server
+        //next time once we register the mission it should connect with the same campaign
         public static void RegisterSponsoredMission(/*int id, */Sprite rewardIcon, int rewardAmount, string rewardTitle, Action<int> onSponsoredClaim)
         {
             Assert.IsNotNull(instance, MonetizrErrors.msg[ErrorType.NotinitializedSDK]);
@@ -367,9 +410,9 @@ namespace Monetizr.Campaigns
         }
 
 
-        public static void ShowSurvey(Action<bool> onComplete)
+        public static void ShowSurvey(Action<bool> onComplete, MissionUIDescription m = null)
         {
-            _ShowWebView(onComplete, PanelId.SurveyWebView, null);
+            _ShowWebView(onComplete, PanelId.SurveyWebView, m);
         }
 
         internal static void ShowHTML5(Action<bool> onComplete, MissionUIDescription m = null)
@@ -385,6 +428,13 @@ namespace Monetizr.Campaigns
         public static void SetTeaserPosition(Vector2 pos)
         {
             tinyTeaserPosition = pos;
+        }
+
+        public static void OnStartGameLevel(Action<bool> onComplete)
+        {
+            //TODO: find finished challenge with necessary date
+
+            ShowSurveyNotification(onComplete);
         }
 
         public static void ShowTinyMenuTeaser(Action UpdateGameUI = null)

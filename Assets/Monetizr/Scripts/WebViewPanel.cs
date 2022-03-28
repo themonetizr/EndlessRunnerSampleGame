@@ -26,6 +26,7 @@ namespace Monetizr.Campaigns
             UniWebView.SetAllowInlinePlay(true);
             UniWebView.SetWebContentsDebuggingEnabled(true);
 
+            MonetizrManager.Instance.SoundSwitch(false);
 
             webView = gameObject.AddComponent<UniWebView>();
 
@@ -55,6 +56,8 @@ namespace Monetizr.Campaigns
         internal void PrepareSurveyPanel()
         {
             MonetizrManager.Analytics.TrackEvent("Survey started", currentMissionDesc);
+
+            Debug.Log($"currentMissionDesc: {currentMissionDesc==null}");
             webUrl = MonetizrManager.Instance.GetAsset<string>(currentMissionDesc.campaignId, AssetsType.SurveyURLString);
             eventsPrefix = "Survey";
 
@@ -78,14 +81,17 @@ namespace Monetizr.Campaigns
 
             var videoName = Path.GetFileName(htmlFile);
 
-                //var page = $"<video autoplay><source src = \"{webUrl}\" type = \"video/mp4\"/></video>";
+            //var page = $"<video autoplay><source src = \"{webUrl}\" type = \"video/mp4\"/></video>";
+            //"<script type='text/javascript'>\ndocument.getElementById('myVideo').addEventListener('ended',myHandler,false);\nfunction myHandler(e) { location.href = \"uniwebview://action?key=close\"; }\n</ script >\n
 
-            var page = "<body style=\"margin: 0px; background-color: black; \">\n" +
-                $"<video playsinline autoplay width=\"100%\" id=\"myVideo\"><source src = \"{videoName}\" type = \"video/mp4\"/></video>" +
-                //"<script type='text/javascript'>\ndocument.getElementById('myVideo').addEventListener('ended',myHandler,false);\nfunction myHandler(e) { location.href = \"uniwebview://action?key=close\"; }\n</ script >\n
+            //"<script type='text/javascript'>\nvar video = document.getElementById('myVideo');\nvideo.onended = function(e) { location.href = \"mntzr://action?key=close\"; console.log('Close button!'); }; \n</ script >\n" +
 
-                "<script type='text/javascript'>\nvar video = document.getElementsByTagName('video')[0];\nvideo.onended = function(e) { location.href = \"uniwebview://action?key=close\"; }; \n</ script >\n" +
-                "</head></body>";
+
+            var page =  "<body style='margin: 0px; background-color: black; '>\n" +
+                "<style type='text/css'> body { overflow: hidden; overflow-y: hidden; } video { left: 50%; position: absolute; top: 50%; transform: translate(-50%, -50%); }</style>\n" +
+                         $"<video class='video' playsinline autoplay webkit-playsinline disablePictureInPicture controlsList='nodownload nofullscreen noremoteplayback' style='width: 100%; height: auto;' id='myVideo' onEnded='myHandler()'>\n" +
+                         $"<source src = '{videoName}' type = 'video/mp4'/></video>\n"+
+                         "<script>\nfunction myHandler() { location.href = 'uniwebview://action?key=close\'; }\n</script></head></body>";
 
 
             htmlFile = Path.GetDirectoryName(htmlFile) + "/" + Path.GetFileNameWithoutExtension(htmlFile) + ".html";
@@ -147,6 +153,8 @@ namespace Monetizr.Campaigns
         void OnPageFinished(UniWebView webView, int statusCode, string url)
         {
             Debug.Log($"OnPageFinished: {url} code: {statusCode}");
+
+            webView.AddUrlScheme("mntzr");
 
             if (statusCode >= 300)
             {
@@ -226,7 +234,7 @@ namespace Monetizr.Campaigns
 
         internal override void FinalizePanel(PanelId id)
         {
-            
+            MonetizrManager.Instance.SoundSwitch(true);
         }
 
         //// Start is called before the first frame update
