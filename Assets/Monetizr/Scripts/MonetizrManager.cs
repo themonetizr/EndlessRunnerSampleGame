@@ -410,7 +410,7 @@ namespace Monetizr.Campaigns
         }
 
 
-        public static void ShowSurvey(Action<bool> onComplete, MissionUIDescription m = null)
+        internal static void ShowSurvey(Action<bool> onComplete, MissionUIDescription m = null)
         {
             _ShowWebView(onComplete, PanelId.SurveyWebView, m);
         }
