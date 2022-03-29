@@ -37,7 +37,7 @@ public class StartButton : MonoBehaviour
 
         //webView.Show();
 
-        MonetizrManager.ShowSurvey(null);
+        //MonetizrManager.ShowSurvey(null);
 
     }
 

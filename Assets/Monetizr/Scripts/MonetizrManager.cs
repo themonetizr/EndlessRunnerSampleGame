@@ -304,13 +304,14 @@ namespace Monetizr.Campaigns
             }
 
             //no survey link for survey notification
-            if (panelId == PanelId.SurveyNotification && MonetizrManager.Instance.GetAsset<string>(sponsoredMsns.campaignId, AssetsType.SurveyURLString) == null)
+            if (panelId == PanelId.SurveyNotification)
             {
-                onComplete?.Invoke(false);
-                return;
-            }
-            else
-            {
+                if (MonetizrManager.Instance.GetAsset<string>(sponsoredMsns.campaignId, AssetsType.SurveyURLString) == null)
+                {
+                    onComplete?.Invoke(false);
+                    return;
+                }
+            
                 onComplete = (bool _) =>
                 {
                     ShowSurvey(onComplete, sponsoredMsns);
