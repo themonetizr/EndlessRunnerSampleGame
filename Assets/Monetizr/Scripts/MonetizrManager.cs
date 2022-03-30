@@ -104,6 +104,11 @@ namespace Monetizr.Campaigns
             assets.Add(t, asset);
         }
 
+        public bool HasAsset(AssetsType t)
+        {
+            return assets.ContainsKey(t);
+        }
+
         public T GetAsset<T>(AssetsType t)
         {
             if (AssetsSystemTypes[t] != typeof(T))
@@ -345,7 +350,23 @@ namespace Monetizr.Campaigns
 
             FillInfo(sponsoredMsns);
 
-            ShowNotification((bool _) => { ShowSurvey(onComplete, sponsoredMsns); }, 
+            Action<bool> onSurveyComplete = (bool isSkipped) =>
+            {
+                if (!isSkipped)
+                {
+                    sponsoredMsns.onUserDefinedClaim.Invoke(sponsoredMsns.reward);
+
+                    ShowCongratsNotification(onComplete, sponsoredMsns);
+                }
+                else
+                {
+                    onComplete?.Invoke(false);
+                }
+
+                
+            };
+
+            ShowNotification((bool _) => { ShowSurvey(onSurveyComplete, sponsoredMsns); }, 
                 sponsoredMsns, 
                 PanelId.SurveyNotification);
         }
@@ -806,6 +827,12 @@ namespace Monetizr.Campaigns
         public T GetAsset<T>(String challengeId, AssetsType t)
         {
             return challenges[challengeId].GetAsset<T>(t);
+        }
+
+
+        public bool HasAsset(String challengeId, AssetsType t)
+        {
+            return challenges[challengeId].HasAsset(t);
         }
 
         /// <summary>

@@ -184,16 +184,20 @@ namespace Monetizr.Campaigns
                     webUrl = currentUrl;
                     Debug.Log("Update: " + webView.Url);
 
-                    if (webUrl.Contains("https://www.pollfish.com/lp/withdraw-consent") ||
+
+                    if (webUrl.Contains("https://www.pollfish.com/lp/withdraw-consent"))
+                    {
+                        OnButtonPress();
+                        return;
+                    }
+
+
+                    if (webUrl.Contains("https://wss.pollfish.com/v2/surveys/282225321/end-page-gateway") ||
                         webUrl.Contains("app.themonetizr.com") /*||
                         webUrl.Contains("uniwebview")*/)
                     {
                         OnCompleteEvent();
-
-                        OnButtonPress();
-
-                        //Destroy(webView);
-                        //webView = null;
+                        return;
                     }
 
                 }
@@ -204,12 +208,15 @@ namespace Monetizr.Campaigns
         private void OnCompleteEvent()
         {
             MonetizrManager.Analytics.TrackEvent($"{eventsPrefix} completed",currentMissionDesc);
-            isSkipped = false; 
+            isSkipped = false;
+
+            ClosePanel();
 
         }
 
         private void ClosePanel()
         {
+            Debug.Log($"Closing webview isSkipped: {isSkipped}");
             Destroy(webView);
             webView = null;
 

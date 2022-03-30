@@ -131,7 +131,9 @@ namespace Monetizr.Campaigns
                     continue;
                 
                 sponsoredMission.campaignId = ch;
-                sponsoredMission.surveyUrl = MonetizrManager.Instance.GetAsset<string>(ch, AssetsType.SurveyURLString);
+
+                if(MonetizrManager.Instance.HasAsset(ch, AssetsType.SurveyURLString))
+                    sponsoredMission.surveyUrl = MonetizrManager.Instance.GetAsset<string>(ch, AssetsType.SurveyURLString);
 
                 break;
             }

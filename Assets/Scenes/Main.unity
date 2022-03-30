@@ -12847,8 +12847,8 @@ MonoBehaviour:
     m_PersistentCalls:
       m_Calls:
       - m_Target: {fileID: 1245236425}
-        m_TargetAssemblyTypeName: 
-        m_MethodName: GameOver
+        m_TargetAssemblyTypeName: GameState, Assembly-CSharp
+        m_MethodName: QuitToLoadout
         m_Mode: 1
         m_Arguments:
           m_ObjectArgument: {fileID: 0}
@@ -19965,6 +19965,7 @@ MonoBehaviour:
   menuActors: {fileID: 0}
   menuEnv: {fileID: 0}
   musicPlayer: {fileID: 0}
+  defaultRewardIcon: {fileID: 0}
   apiKey: PUHzF8UQLXJUuaW0vX0D0lTAFlWU2G0J2NaN2SHk6AA
 --- !u!4 &1815485552
 Transform:
