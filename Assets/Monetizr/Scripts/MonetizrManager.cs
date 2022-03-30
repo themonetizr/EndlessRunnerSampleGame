@@ -159,7 +159,7 @@ namespace Monetizr.Campaigns
     public class MonetizrManager : MonoBehaviour
     {
         //position relative to center with 1080x1920 screen resolution
-        private static Vector2 tinyTeaserPosition = new Vector2(-430,600);
+        private static Vector2 tinyTeaserPosition = new Vector2(-430, 600);
 
         internal ChallengesClient _challengesClient { get; private set; }
 
@@ -240,7 +240,7 @@ namespace Monetizr.Campaigns
                 {
                     if (isOk)
                         isActive = true;
-                    
+
                     onRequestComplete(isOk);
                 });
         }
@@ -255,34 +255,22 @@ namespace Monetizr.Campaigns
             uiController = new UIController();
         }
 
-        private static MissionUIDescription SelectSponsoredMissionAndFillInfo()
+        private static void FillInfo(MissionUIDescription m)
         {
-            MissionUIDescription sponsoredMsns = instance.uiController.missionsDescriptions.Find((MissionUIDescription item) => { return item.isSponsored; });
+            var ch = m.campaignId;//MonetizrManager.Instance.GetActiveChallenge();
 
-            if (sponsoredMsns == null)
-                return null;
-
-            var ch = MonetizrManager.Instance.GetActiveChallenge();
-
-            sponsoredMsns = new MissionUIDescription()
-            {
-                campaignId = ch,
-                brandBanner = MonetizrManager.Instance.GetAsset<Sprite>(ch, AssetsType.BrandBannerSprite),
-                brandLogo = MonetizrManager.Instance.GetAsset<Sprite>(ch, AssetsType.BrandLogoSprite),
-                brandName = MonetizrManager.Instance.GetAsset<string>(ch, AssetsType.BrandTitleString),
-                brandRewardBanner = MonetizrManager.Instance.GetAsset<Sprite>(ch, AssetsType.BrandRewardBannerSprite),
-                reward = sponsoredMsns.reward,
-                rewardTitle = sponsoredMsns.rewardTitle,
-            };
-
-            return sponsoredMsns;
+            m.brandBanner = MonetizrManager.Instance.GetAsset<Sprite>(ch, AssetsType.BrandBannerSprite);
+            m.brandLogo = MonetizrManager.Instance.GetAsset<Sprite>(ch, AssetsType.BrandLogoSprite);
+            m.brandName = MonetizrManager.Instance.GetAsset<string>(ch, AssetsType.BrandTitleString);
+            m.brandRewardBanner = MonetizrManager.Instance.GetAsset<Sprite>(ch, AssetsType.BrandRewardBannerSprite);
         }
 
         internal static void ShowNotification(Action<bool> onComplete, MissionUIDescription m, PanelId panelId)
         {
             Assert.IsNotNull(instance, MonetizrErrors.msg[ErrorType.NotinitializedSDK]);
 
-            MissionUIDescription sponsoredMsns = null;
+
+            /*MissionUIDescription sponsoredMsns = null;
 
             //no mission for notification, get active
             if (m == null)
@@ -316,18 +304,28 @@ namespace Monetizr.Campaigns
                 {
                     ShowSurvey(onComplete, sponsoredMsns);
                 };
-            }
+            }*/
 
             instance.uiController.ShowPanelFromPrefab("MonetizrNotifyPanel",
                 panelId,
                 onComplete,
                 true,
-                sponsoredMsns);
+                m);
         }
 
         public static void ShowStartupNotification(Action<bool> onComplete)
         {
-            ShowNotification(onComplete, null, PanelId.StartNotification);
+            MissionUIDescription sponsoredMsns = instance.uiController.missionsDescriptions.Find((MissionUIDescription item) => { return item.isSponsored; });
+
+            if (sponsoredMsns == null)
+            {
+                onComplete?.Invoke(false);
+                return;
+            }
+
+            FillInfo(sponsoredMsns);
+
+            ShowNotification(onComplete, sponsoredMsns, PanelId.StartNotification);
         }
 
         internal static void ShowCongratsNotification(Action<bool> onComplete, MissionUIDescription m)
@@ -337,7 +335,19 @@ namespace Monetizr.Campaigns
 
         internal static void ShowSurveyNotification(Action<bool> onComplete)
         {
-            ShowNotification(onComplete, null, PanelId.SurveyNotification);
+            MissionUIDescription sponsoredMsns = instance.uiController.missionsDescriptions.Find((MissionUIDescription item) => { return item.isSponsored && item.surveyUrl != null; });
+
+            if (sponsoredMsns == null)
+            {
+                onComplete?.Invoke(false);
+                return;
+            }
+
+            FillInfo(sponsoredMsns);
+
+            ShowNotification((bool _) => { ShowSurvey(onComplete, sponsoredMsns); }, 
+                sponsoredMsns, 
+                PanelId.SurveyNotification);
         }
 
 
@@ -377,8 +387,9 @@ namespace Monetizr.Campaigns
                 onUserDefinedClaim = onSponsoredClaim,
                 rewardTitle = rewardTitle,
             };
-                       
-            instance.uiController.AddMission(m);
+
+            //
+            instance.uiController.AddMissionAndBindToCampaign(m);
         }
 
         internal static void CleanUserDefinedMissions()
@@ -397,7 +408,7 @@ namespace Monetizr.Campaigns
 
         internal static void HideRewardCenter()
         {
-             instance.uiController.HidePanel(PanelId.RewardCenter);
+            instance.uiController.HidePanel(PanelId.RewardCenter);
         }
 
         internal static void _ShowWebView(Action<bool> onComplete, PanelId id, MissionUIDescription m = null)
@@ -445,7 +456,7 @@ namespace Monetizr.Campaigns
             if (!instance.HasChallengesAndActive())
                 return;
 
-            instance.uiController.ShowTinyMenuTeaser(tinyTeaserPosition,UpdateGameUI);
+            instance.uiController.ShowTinyMenuTeaser(tinyTeaserPosition, UpdateGameUI);
         }
 
         public static void HideTinyMenuTeaser()
@@ -488,7 +499,7 @@ namespace Monetizr.Campaigns
 
                 if (data == null)
                 {
-                    if(!isOptional)
+                    if (!isOptional)
                         ech.isChallengeLoaded = false;
 
                     return;
@@ -561,7 +572,7 @@ namespace Monetizr.Campaigns
 
                 if (data == null)
                 {
-                    if(required)
+                    if (required)
                         ech.isChallengeLoaded = false;
 
                     return;
@@ -580,15 +591,15 @@ namespace Monetizr.Campaigns
                     Directory.CreateDirectory(zipFolder);
 
                     ZipFile.ExtractToDirectory(fpath, zipFolder);
-                    
+
                     File.Delete(fpath);
                 }
-                            
-                               
+
+
                 //Debug.Log("saving: " + fpath);
             }
 
-            if(zipFolder != null)
+            if (zipFolder != null)
                 fpath = fileToCheck;
 
             //Debug.Log("resource: " + fpath);
@@ -623,14 +634,15 @@ namespace Monetizr.Campaigns
         {
             List<Challenge> challenges = new List<Challenge>();
 
-            try {
+            try
+            {
 
                 challenges = await _challengesClient.GetList();
             }
             catch (Exception)
             {
-               Debug.Log(MonetizrErrors.msg[ErrorType.ConnectionError]);
-               onRequestComplete?.Invoke(false);
+                Debug.Log(MonetizrErrors.msg[ErrorType.ConnectionError]);
+                onRequestComplete?.Invoke(false);
             }
 
 #if TEST_SLOW_LATENCY
@@ -686,19 +698,19 @@ namespace Monetizr.Campaigns
                             break;
 
                         case "html":
-                            await PreloadAssetToCache(ech, asset, AssetsType.Html5PathString,false);
+                            await PreloadAssetToCache(ech, asset, AssetsType.Html5PathString, false);
 
                             break;
 
                         case "campaign_text_color":
-                            
-                            if(ColorUtility.TryParseHtmlString(asset.title,out c))
+
+                            if (ColorUtility.TryParseHtmlString(asset.title, out c))
                                 ech.SetAsset<Color>(AssetsType.CampaignTextColor, c);
 
                             break;
 
                         case "campaign_header_text_color":
-                            
+
                             if (ColorUtility.TryParseHtmlString(asset.title, out c))
                                 ech.SetAsset<Color>(AssetsType.CampaignHeaderTextColor, c);
 
@@ -804,7 +816,7 @@ namespace Monetizr.Campaigns
             var challenge = challenges[challengeId].challenge;
 
             try
-            {              
+            {
                 await _challengesClient.Claim(challenge);
             }
             catch (Exception e)
@@ -813,7 +825,7 @@ namespace Monetizr.Campaigns
             }
         }
 
-       
+
     }
 
 }

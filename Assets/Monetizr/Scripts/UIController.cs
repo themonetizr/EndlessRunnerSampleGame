@@ -22,24 +22,25 @@ namespace Monetizr.Campaigns
 
     internal class MissionUIDescription
     {
-        public string campaignId;
-        public int sponsoredId;
-        public bool isSponsored;
-        public string brandName;
+        internal string campaignId;
+        internal int sponsoredId;
+        internal bool isSponsored;
+        internal string brandName;
 
-        public Sprite brandBanner;
-        public string missionTitle;
-        public string missionDescription;
-        public Sprite missionIcon;
+        internal Sprite brandBanner;
+        internal string missionTitle;
+        internal string missionDescription;
+        internal Sprite missionIcon;
 
-        public Sprite rewardIcon;
-        public int reward;
-        public float progress;
-        public Action onClaimButtonPress;
-        public Action<int> onUserDefinedClaim;
+        internal Sprite rewardIcon;
+        internal int reward;
+        internal float progress;
+        internal Action onClaimButtonPress;
+        internal Action<int> onUserDefinedClaim;
         internal Sprite brandLogo;
         internal Sprite brandRewardBanner;
         internal string rewardTitle;
+        internal string surveyUrl;
     }
 
     internal class UIController
@@ -108,6 +109,35 @@ namespace Monetizr.Campaigns
             missionsDescriptions.Add(m);
         }
 
+        internal void AddMissionAndBindToCampaign(MissionUIDescription sponsoredMission)
+        {
+            //bind to server campagns
+            var challenges = MonetizrManager.Instance.GetAvailableChallenges();
+
+            //check already binded campaigns
+            HashSet<string> bindedCampaigns = new HashSet<string>();
+            missionsDescriptions.ForEach((MissionUIDescription _m) => { if (_m.campaignId != null) bindedCampaigns.Add(_m.campaignId); });
+
+            var activeChallenge = MonetizrManager.Instance.GetActiveChallenge();
+
+            //bind to active challenge first
+            challenges.Remove(activeChallenge);
+            challenges.Insert(0, activeChallenge);
+
+            //search unbinded campaign
+            foreach (string ch in challenges)
+            {
+                if (bindedCampaigns.Contains(ch))
+                    continue;
+                
+                sponsoredMission.campaignId = ch;
+                sponsoredMission.surveyUrl = MonetizrManager.Instance.GetAsset<string>(ch, AssetsType.SurveyURLString);
+
+                break;
+            }
+
+            missionsDescriptions.Add(sponsoredMission);
+        }
 
         public void PlayVideo(String path, Action<bool> onComplete)
         {

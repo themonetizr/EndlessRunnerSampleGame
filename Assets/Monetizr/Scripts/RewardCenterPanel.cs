@@ -75,23 +75,23 @@ namespace Monetizr.Campaigns
 
         private void AddSponsoredChallenges()
         {
-            var challenges = MonetizrManager.Instance.GetAvailableChallenges();
+            //var challenges = MonetizrManager.Instance.GetAvailableChallenges();
             var activeChallenge = MonetizrManager.Instance.GetActiveChallenge();
-            int curChallenge = 0;
+            //int curChallenge = 0;
 
-            if (challenges.Count == 0)
-                return;
+            //if (challenges.Count == 0)
+            //    return;
 
             //put active challenge to the first place
-            challenges.Remove(activeChallenge);
-            challenges.Insert(0, activeChallenge);
+            //challenges.Remove(activeChallenge);
+            //challenges.Insert(0, activeChallenge);
 
             foreach (var m in uiController.missionsDescriptions)
             {
                 if (!m.isSponsored)
                     continue;
 
-                var ch = challenges[curChallenge];
+                var ch = m.campaignId;
 
                 if (ch == activeChallenge)
                 {
@@ -111,11 +111,11 @@ namespace Monetizr.Campaigns
 
                 AddSponsoredChallenge(m, ch);
 
-                curChallenge++;
+                //curChallenge++;
 
                 //if there's no room for sponsored campagn
-                if (challenges.Count == curChallenge)
-                    break;
+                //if (challenges.Count == curChallenge)
+                //    break;
             }
         }
 
