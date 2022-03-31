@@ -13,6 +13,7 @@ public class SponsoredMissionsManager : MonoBehaviour
     public MusicPlayer musicPlayer = null;
 
     public Sprite defaultRewardIcon;
+    public Sprite defaultRegularCoinIcon;
 
     [SerializeField] private string apiKey;
 
@@ -48,14 +49,14 @@ public class SponsoredMissionsManager : MonoBehaviour
 
     public void InitializeSponsoredMissions()
     {
-        MonetizrManager.RegisterSponsoredMission(defaultRewardIcon, 2, "Enegry Boosters", 
+        MonetizrManager.RegisterSponsoredMission(defaultRewardIcon, 2, "Gold Cans", 
             (int reward) => { PlayerData.instance.ClaimSponsoredMission(reward); } 
             
             );
 
-        MonetizrManager.RegisterSponsoredMission(defaultRewardIcon, 4, "Super Coins",
-          (int reward) => { PlayerData.instance.ClaimSponsoredMission(reward); }
-
+        MonetizrManager.RegisterSponsoredMission2(defaultRegularCoinIcon, 200, "Fish Bones",
+          () => { return PlayerData.instance.coins;  },
+          (int coins) => { PlayerData.instance.AddCoins(coins); }
           );
 
         MonetizrManager.RegisterSponsoredMission(defaultRewardIcon, 8, "Magic Crystals",

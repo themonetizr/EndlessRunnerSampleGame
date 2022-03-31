@@ -39,8 +39,8 @@ namespace Monetizr.Campaigns
                 buttonText.text = "Claim reward";
             }
             else
-            {
-                buttonText.text = "Watch video";
+            {                
+                buttonText.text = md.claimButtonText;
             }
 
 
@@ -84,7 +84,7 @@ namespace Monetizr.Campaigns
 
             rewardLine.fillAmount = md.progress;
 
-            rewardPercent.text = $"{md.progress*100.0f:F2}";
+            rewardPercent.text = $"{md.progress*100.0f:F1}%";
 
             if(md.progress < 1.0f) //reward isn't completed
             {

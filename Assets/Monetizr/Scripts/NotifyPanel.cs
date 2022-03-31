@@ -64,6 +64,7 @@ namespace Monetizr.Campaigns
 
             banner.sprite = m.brandBanner;
             logo.sprite = m.brandLogo;
+            rewardAmount.text = m.reward.ToString();
 
             string brandTitle = m.brandName;
 
@@ -92,6 +93,7 @@ namespace Monetizr.Campaigns
 
             banner.sprite = m.brandRewardBanner;
             logo.sprite = m.brandLogo;
+            rewardAmount.text = m.reward.ToString();
 
             title.text = $"Congrats!";
             text.text = $"You got <color=#F05627>{m.reward} {m.rewardTitle}</color> from {m.brandName}";
@@ -118,6 +120,7 @@ namespace Monetizr.Campaigns
 
             banner.sprite = m.brandRewardBanner;
             logo.sprite = m.brandLogo;
+            rewardAmount.text = m.reward.ToString();
 
             title.text = $"Survey!";
             //text.text = $"Please spend some time and  <color=#F05627>{m.reward} {m.rewardTitle}</color> from {m.brandName}";

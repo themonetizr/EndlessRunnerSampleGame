@@ -161,6 +161,18 @@ public class PlayerData
         Save();
     }
 
+    public void AddCoins(int c)
+    {
+        coins += c;
+
+        Save();
+    }
+
+    public int GetCoins()
+    {
+        return coins;
+    }
+
     public void ClaimMission(MissionBase mission)
     {        
         premium += mission.reward;

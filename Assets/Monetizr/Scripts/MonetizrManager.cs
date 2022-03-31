@@ -354,7 +354,7 @@ namespace Monetizr.Campaigns
             {
                 if (!isSkipped)
                 {
-                    sponsoredMsns.onUserDefinedClaim.Invoke(sponsoredMsns.reward);
+                    sponsoredMsns.AddPremiumCurrencyAction.Invoke(sponsoredMsns.reward);
 
                     ShowCongratsNotification(onComplete, sponsoredMsns);
                 }
@@ -395,23 +395,54 @@ namespace Monetizr.Campaigns
 
         //TODO: need to connect now this mission and campaign from the server
         //next time once we register the mission it should connect with the same campaign
-        public static void RegisterSponsoredMission(/*int id, */Sprite rewardIcon, int rewardAmount, string rewardTitle, Action<int> onSponsoredClaim)
+        public static void RegisterSponsoredMission(/*int id, */Sprite rewardIcon, int rewardAmount, string rewardTitle, Action<int> AddPremiumCurrencyAction)
         {
             Assert.IsNotNull(instance, MonetizrErrors.msg[ErrorType.NotinitializedSDK]);
 
             MissionUIDescription m = new MissionUIDescription()
             {
                 //sponsoredId = id,
+                type = MissionType.VideoReward,
                 rewardIcon = rewardIcon,
                 reward = rewardAmount,
                 isSponsored = true,
-                onUserDefinedClaim = onSponsoredClaim,
+                AddPremiumCurrencyAction = AddPremiumCurrencyAction,
                 rewardTitle = rewardTitle,
             };
 
             //
             instance.uiController.AddMissionAndBindToCampaign(m);
         }
+
+        /// <summary>
+        /// You need to earn goal amount of money to double it
+        /// </summary>
+        /// <param name="rewardIcon">Coins icon</param>
+        /// <param name="goalAmount">How much you need to earn</param>
+        /// <param name="rewardTitle">Coins</param>
+        /// <param name="GetNormalCurrencyFunc">Get coins func</param>
+        /// <param name="AddNormalCurrencyAction">Add coins to user account</param>
+        public static void RegisterSponsoredMission2(/*int id, */Sprite rewardIcon, int goalAmount, string rewardTitle, Func<int> GetNormalCurrencyFunc, Action<int> AddNormalCurrencyAction)
+        {
+            Assert.IsNotNull(instance, MonetizrErrors.msg[ErrorType.NotinitializedSDK]);
+
+            MissionUIDescription m = new MissionUIDescription()
+            {
+                //sponsoredId = id,
+                startMoney = GetNormalCurrencyFunc(),
+                type = MissionType.MutiplyReward,
+                rewardIcon = rewardIcon,
+                reward = goalAmount,
+                isSponsored = true,
+                AddNormalCurrencyAction = AddNormalCurrencyAction,
+                GetNormalCurrencyFunc = GetNormalCurrencyFunc,
+                rewardTitle = rewardTitle,
+            };
+
+            //
+            instance.uiController.AddMissionAndBindToCampaign(m);
+        }
+
 
         internal static void CleanUserDefinedMissions()
         {

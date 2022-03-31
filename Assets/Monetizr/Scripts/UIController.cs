@@ -20,8 +20,20 @@ namespace Monetizr.Campaigns
         SurveyNotification,
     }
 
+    internal enum MissionType
+    {
+        VideoReward,
+        MutiplyReward,
+    }
+
     internal class MissionUIDescription
     {
+        internal MissionType type;
+        internal Func<int> GetNormalCurrencyFunc;
+        internal Action<int> AddNormalCurrencyAction;
+        internal int startMoney;
+        internal int goalMoney;
+
         internal string campaignId;
         internal int sponsoredId;
         internal bool isSponsored;
@@ -36,11 +48,13 @@ namespace Monetizr.Campaigns
         internal int reward;
         internal float progress;
         internal Action onClaimButtonPress;
-        internal Action<int> onUserDefinedClaim;
+        internal Action<int> AddPremiumCurrencyAction;
         internal Sprite brandLogo;
         internal Sprite brandRewardBanner;
         internal string rewardTitle;
         internal string surveyUrl;
+
+        internal string claimButtonText;
     }
 
     internal class UIController

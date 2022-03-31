@@ -107,9 +107,7 @@ namespace Monetizr.Campaigns
                         background.sprite = bgSprite;
                 }
 
-
-
-                AddSponsoredChallenge(m, ch);
+                AddSponsoredChallenge(m);
 
                 //curChallenge++;
 
@@ -119,11 +117,12 @@ namespace Monetizr.Campaigns
             }
         }
 
-        private void AddSponsoredChallenge(MissionUIDescription m, string campaignId)
+        private void AddRewardedVideoChallenge(MissionUIDescription m)
         {
+            string campaignId = m.campaignId;
+
             string brandName = MonetizrManager.Instance.GetAsset<string>(campaignId, AssetsType.BrandTitleString);
 
-            m.campaignId = campaignId;
             m.brandBanner = MonetizrManager.Instance.GetAsset<Sprite>(campaignId, AssetsType.BrandBannerSprite);
             m.missionTitle = $"{brandName} video";
             m.missionDescription = $"Watch video by {brandName} and get {m.reward} {m.rewardTitle}";
@@ -133,7 +132,7 @@ namespace Monetizr.Campaigns
             //m.brandBanner = MonetizrManager.Instance.GetAsset<Sprite>(campaignId, AssetsType.BrandBannerSprite);
             m.brandLogo = MonetizrManager.Instance.GetAsset<Sprite>(campaignId, AssetsType.BrandLogoSprite); ;
             m.brandRewardBanner = MonetizrManager.Instance.GetAsset<Sprite>(campaignId, AssetsType.BrandRewardBannerSprite);
-
+            m.claimButtonText = "Watch video";           
 
             //show video, then claim rewards if it's completed
             m.onClaimButtonPress = () => { OnVideoPlayPress(campaignId, m); };
@@ -150,7 +149,52 @@ namespace Monetizr.Campaigns
             MonetizrManager.Analytics.BeginShowAdAsset(AdType.IntroBanner, campaignId);
         }
 
+        private void AddMultiplyCoinsChallenge(MissionUIDescription m)
+        {
+            string campaignId = m.campaignId;
 
+            string brandName = MonetizrManager.Instance.GetAsset<string>(campaignId, AssetsType.BrandTitleString);
+
+            m.brandBanner = MonetizrManager.Instance.GetAsset<Sprite>(campaignId, AssetsType.BrandBannerSprite);
+            m.missionTitle = $"{brandName} multiply";
+            m.missionDescription = $"Earn {m.reward} {m.rewardTitle} and double it with {brandName}";
+            m.missionIcon = MonetizrManager.Instance.GetAsset<Sprite>(campaignId, AssetsType.BrandRewardLogoSprite);
+
+            m.progress = ((float)(m.GetNormalCurrencyFunc() - m.startMoney))/(float)m.reward;
+
+            m.brandName = brandName;
+            //m.brandBanner = MonetizrManager.Instance.GetAsset<Sprite>(campaignId, AssetsType.BrandBannerSprite);
+            m.brandLogo = MonetizrManager.Instance.GetAsset<Sprite>(campaignId, AssetsType.BrandLogoSprite); ;
+            m.brandRewardBanner = MonetizrManager.Instance.GetAsset<Sprite>(campaignId, AssetsType.BrandRewardBannerSprite);
+            m.claimButtonText = "Claim reward";
+
+            //show video, then claim rewards if it's completed
+            m.onClaimButtonPress = () => { OnClaimRewardComplete(m, false); };
+
+            var go = GameObject.Instantiate<GameObject>(itemUI.gameObject, contentRoot);
+
+            var item = go.GetComponent<MonetizrRewardedItem>();
+
+            
+            Debug.Log(m.missionTitle);
+                  
+            item.UpdateWithDescription(this, m);
+
+            MonetizrManager.Analytics.BeginShowAdAsset(AdType.IntroBanner, campaignId);
+        }
+
+        private void AddSponsoredChallenge(MissionUIDescription m)
+        {
+            switch (m.type)
+            {
+                case MissionType.VideoReward: AddRewardedVideoChallenge(m); break;
+                case MissionType.MutiplyReward: AddMultiplyCoinsChallenge(m); break;
+
+            }
+
+        }
+
+        
 
         private void CleanListView()
         {
@@ -181,11 +225,19 @@ namespace Monetizr.Campaigns
 
         public void OnClaimRewardComplete(MissionUIDescription m, bool isSkipped)
         {
-            MonetizrManager.ShowRewardCenter(null);
-
+            
             //if (!isSkipped)
             {
-                m.onUserDefinedClaim.Invoke(m.reward);
+                if (m.type == MissionType.VideoReward)
+                {
+                    MonetizrManager.ShowRewardCenter(null);
+                    m.AddPremiumCurrencyAction.Invoke(m.reward);
+                }
+                else if (m.type == MissionType.MutiplyReward)
+                {
+                    m.reward *= 2;
+                    m.AddNormalCurrencyAction.Invoke(m.reward);
+                }
 
                 MonetizrManager.ShowCongratsNotification(null, m);
 

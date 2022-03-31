@@ -3175,6 +3175,8 @@ MonoBehaviour:
   menuEnv: {fileID: 877515967}
   musicPlayer: {fileID: 1931665100}
   defaultRewardIcon: {fileID: 21300060, guid: e1a536f74c7ef384a8d7132148ace0c8, type: 3}
+  defaultRegularCoinIcon: {fileID: 21300062, guid: e1a536f74c7ef384a8d7132148ace0c8,
+    type: 3}
   apiKey: PUHzF8UQLXJUuaW0vX0D0lTAFlWU2G0J2NaN2SHk6AA
 --- !u!4 &1409410823
 Transform:
